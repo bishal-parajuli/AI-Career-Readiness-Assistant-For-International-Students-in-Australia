@@ -6,4 +6,4 @@ Examples:
 - Architecture Diagram
 - WBS
 - Gantt Chart
-- Screenshots
+
