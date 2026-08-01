@@ -30,12 +30,10 @@ An AI-powered platform that integrates resume feedback and interview preparation
 *Planned for Part B — development has not yet started. Setup instructions will be added once the environment is built.*
 
 ```bash
-# Planned setup (Part B)
-git clone https://github.com/bishal-parajuli/AI-Career-Readiness-Assistant-For-International-Students-in-Australia.git
+git clone <https://github.com/bishal-parajuli/AI-Career-Readiness-Assistant-For-
+International-Students-in-Australia.git>
 cd AI-Career-Readiness-Assistant-For-International-Students-in-Australia
-pip install -r requirements.txt
-python app.py
-```
+python src/app.py
 
 ## Project plan
 Key Part B milestones:
