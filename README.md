@@ -51,12 +51,13 @@ Built on the ACS Code of Professional Ethics, the Australian Privacy Principles 
 Built on cloud-based AI services rather than training models from scratch, minimising computational and energy costs. Designed for equitable access across the international student population and aligned with WCAG 2.2 AA accessibility standards.
 
 ## Documents
-- [Project Proposal (PDF)](./docs)
-- [Updated Project Charter](./docs)
-- [Risk Register](./docs)
-- [RACI Matrix](./docs)
-- [Methodology Document](./docs)
-
+- [Project Proposal (PDF)](./docs/Project_Proposal.pdf)
+- [Updated Project Charter](./docs/Project_Charter.pdf)
+- [Risk Register](./docs/Risk_Register.pdf)
+- [RACI Matrix](./docs/RACI_Matrix.pdf)
+- [Methodology Document](./docs/Methodology.pdf)
+- [AI Use Statement](./docs/AI_Use_Statement.pdf)
+  
 ## Contact
 Bishal Parajuli
 bikeshp97@gmail.com
