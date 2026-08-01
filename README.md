@@ -41,6 +41,7 @@ Key Part B milestones:
 - Week 6 — Working MVP delivered (resume feedback + interview coaching)
 - Week 8 — Usability testing complete (10 participants)
 - Week 10 — Final evaluation and recommendations delivered
+[View the GitHub Project Baord] (https://github.com/users/bishal-parajuli/projects/1)
 
 ## Ethics, privacy and responsible AI
 Built on the ACS Code of Professional Ethics, the Australian Privacy Principles (APPs), and the NIST AI Risk Management Framework. Fairness, transparency, and human oversight are treated as design requirements — users are informed when they're receiving AI-generated content and are directed to verify recommendations against other sources. Full detail in [`/docs`](./docs).
