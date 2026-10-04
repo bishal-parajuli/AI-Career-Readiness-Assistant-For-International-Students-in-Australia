@@ -1553,22 +1553,44 @@ function AuthScreen({ onSuccess }: { onSuccess: (name: string, email: string, is
 
   const UNIS = ["University of Sydney", "University of Melbourne", "UNSW Sydney", "Monash University", "University of Queensland", "University of Adelaide", "Macquarie University", "Other"];
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     setSiError("");
-    if (!siEmail || !siPassword) { setSiError("Please enter your email and password."); return; }
+
+    if (!siEmail || !siPassword) {
+      setSiError("Please enter your email and password.");
+      return;
+    }
+
     setSiLoading(true);
-    setTimeout(() => {
-      setSiLoading(false);
-      const match = DEMO_ACCOUNTS.find((a) => a.email.toLowerCase() === siEmail.toLowerCase() && a.password === siPassword);
-      if (match) {
-        onSuccess(match.name, match.email, false);
-      } else if (siEmail.includes("@") && siPassword.length >= 6) {
-        const name = siEmail.split("@")[0].split(".")[0];
-        onSuccess(name.charAt(0).toUpperCase() + name.slice(1), siEmail, false);
-      } else {
-        setSiError("Email or password is incorrect. Try the demo credentials below.");
+
+    try {
+      const response = await fetch("http://localhost:8000/api/login.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: siEmail.trim(),
+          password: siPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setSiError(data.message || "Email or password is incorrect.");
+        return;
       }
-    }, 900);
+
+      const name = data.user.email.split("@")[0].split(".")[0];
+      const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+
+      onSuccess(displayName, data.user.email, false);
+    } catch (error) {
+      setSiError("Unable to connect to the server. Please try again.");
+    } finally {
+      setSiLoading(false);
+    }
   };
 
   const handleSignUp = async () => {
