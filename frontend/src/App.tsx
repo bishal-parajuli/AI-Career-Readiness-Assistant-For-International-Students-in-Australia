@@ -1571,15 +1571,61 @@ function AuthScreen({ onSuccess }: { onSuccess: (name: string, email: string, is
     }, 900);
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     setSuError("");
-    if (!suName.trim())              { setSuError("Please enter your preferred name."); return; }
-    if (!suEmail.includes("@"))      { setSuError("Please enter a valid email address."); return; }
-    if (suPassword.length < 8)       { setSuError("Password must be at least 8 characters."); return; }
-    if (suPassword !== suConfirm)    { setSuError("Passwords do not match."); return; }
-    if (!suAgree)                    { setSuError("Please accept the privacy notice to continue."); return; }
+
+    if (!suName.trim()) {
+      setSuError("Please enter your preferred name.");
+      return;
+    }
+
+    if (!suEmail.includes("@")) {
+      setSuError("Please enter a valid email address.");
+      return;
+    }
+
+    if (suPassword.length < 8) {
+      setSuError("Password must be at least 8 characters.");
+      return;
+    }
+
+    if (suPassword !== suConfirm) {
+      setSuError("Passwords do not match.");
+      return;
+    }
+
+    if (!suAgree) {
+      setSuError("Please accept the privacy notice to continue.");
+      return;
+    }
+
     setSuLoading(true);
-    setTimeout(() => { setSuLoading(false); onSuccess(suName.trim(), suEmail.trim(), true); }, 1000);
+
+    try {
+      const response = await fetch("http://localhost:8000/api/register.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: suEmail.trim(),
+          password: suPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setSuError(data.message || "Unable to create account.");
+        return;
+      }
+
+      onSuccess(suName.trim(), suEmail.trim(), true);
+    } catch (error) {
+      setSuError("Unable to connect to the server. Please try again.");
+    } finally {
+      setSuLoading(false);
+    }
   };
 
   const Logo = () => (
