@@ -1,0 +1,9 @@
+# Schema Changes
+
+## Week 5 Implementation Update
+
+The ERD was modified to represent the changes to the prototype based on feedback from the lecture team and further development. The Interview Session and Interview Question entities were extended to provide storage for additional settings such as industry, interview type, difficulty level, number of questions, question type, guidance, and sample answers.
+
+In addition, two new entities, Job Advertisement and Job Match Analysis, were developed to accommodate the job advertisement matching feature, which compares users' resumes with job advertisement information entered by users.
+
+These modifications increased the model from seven entities to nine entities while maintaining the existing structure for providing resume feedback and interview preparation.
