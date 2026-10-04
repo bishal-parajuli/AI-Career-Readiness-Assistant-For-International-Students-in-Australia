@@ -1530,7 +1530,7 @@ const DEMO_ACCOUNTS = [
   { email: "arjun.sharma@uni.edu.au",  password: "CareerReady1", name: "Arjun" },
 ];
 
-function AuthScreen({ onSuccess }: { onSuccess: (name: string, email: string, isNew: boolean) => void }) {
+function AuthScreen({ onSuccess }: { onSuccess: (userId: number, name: string, email: string, isNew: boolean) => void }) {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
 
   /* Sign-in state */
@@ -1585,7 +1585,8 @@ function AuthScreen({ onSuccess }: { onSuccess: (name: string, email: string, is
       const name = data.user.email.split("@")[0].split(".")[0];
       const displayName = name.charAt(0).toUpperCase() + name.slice(1);
 
-      onSuccess(displayName, data.user.email, false);
+      onSuccess(data.user.user_id, displayName, data.user.email, false);
+
     } catch (error) {
       setSiError("Unable to connect to the server. Please try again.");
     } finally {
@@ -1642,7 +1643,8 @@ function AuthScreen({ onSuccess }: { onSuccess: (name: string, email: string, is
         return;
       }
 
-      onSuccess(suName.trim(), suEmail.trim(), true);
+      onSuccess(data.user.user_id, suName.trim(), suEmail.trim(), true);
+
     } catch (error) {
       setSuError("Unable to connect to the server. Please try again.");
     } finally {
@@ -2369,8 +2371,10 @@ function ResumeUploadScreen({ onAnalyse }: { onAnalyse: (content: string, role: 
     setError("");
   };
 
-  const canAnalyse = file && (resumeText.trim().length > 50 || inputMode === "upload");
-
+  const canAnalyse =
+  inputMode === "paste"
+    ? resumeText.trim().length > 50
+    : !!file;
   return (
     <div className="py-8 px-8 max-w-2xl mx-auto">
       <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">Resume Feedback</h1>
@@ -2441,8 +2445,15 @@ function ResumeUploadScreen({ onAnalyse }: { onAnalyse: (content: string, role: 
             <label className="text-xs font-medium text-[#0f172a]">Paste your resume text</label>
             {file && <span className="text-xs text-emerald-700 font-medium">📄 {file}</span>}
           </div>
-          <textarea rows={10} value={resumeText} onChange={(e) => { setResumeText(e.target.value); if (!file) setFile("My_Resume.pdf"); }}
-            placeholder="Paste the full text of your resume here. Include your name, education, work experience, skills and any other sections…"
+
+<textarea
+  rows={10}
+  value={resumeText}
+  onChange={(e) => {
+    setResumeText(e.target.value);
+    setFile(null);
+  }}
+           placeholder="Paste the full text of your resume here. Include your name, education, work experience, skills and any other sections…"
             className="w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-xs text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent resize-none leading-relaxed font-mono" />
           <p className="text-xs text-[#94a3b8] mt-2">{resumeText.length > 0 ? `${resumeText.trim().split(/\s+/).length} words detected` : "Minimum 50 words required for analysis"}</p>
         </Card>
@@ -2458,7 +2469,12 @@ function ResumeUploadScreen({ onAnalyse }: { onAnalyse: (content: string, role: 
 
       <PrivacyNotice text="Your resume may contain personal information. Only upload information you are comfortable using for this assessment." />
       <div className="mt-4">
-        <Btn onClick={() => onAnalyse(resumeText || file || "", role || "the target role", file || "Resume")} size="lg" full disabled={!canAnalyse}>
+
+<Btn onClick={() => onAnalyse(
+  resumeText || file || "",
+  role || "the target role",
+  inputMode === "paste" ? "Pasted resume text" : file || "Resume"
+)} size="lg" full disabled={!canAnalyse}>
           {canAnalyse ? "Analyse Resume →" : "Upload or paste your resume to continue"}
         </Btn>
       </div>
@@ -3837,6 +3853,7 @@ const EMPTY_ACTIVITY: ActivityState = {
 export default function App() {
   const [screen, setScreen] = useState<Screen>("landing");
   const [activeNav, setActiveNav] = useState<NavItem>("dashboard");
+const [userId, setUserId] = useState<number | null>(null);
   const [userName, setUserName] = useState("Mei");
   const [userEmail, setUserEmail] = useState("mei.zhang@student.edu.au");
   const [interviewConfig, setInterviewConfig] = useState({ role: "Software Developer", industry: "Technology", type: "Behavioural", difficulty: "Intermediate", count: 5 });
@@ -3889,14 +3906,15 @@ export default function App() {
       {/* Landing / Auth / Onboarding — no sidebar */}
       {screen === "landing" && <LandingScreen onStart={() => go("auth")} onLearn={() => go("auth")} />}
       {screen === "auth" && (
-        <AuthScreen
-          onSuccess={(name, email, isNew) => {
-            resetActivity();
-            setUserName(name);
-            setUserEmail(email);
-            go(isNew ? "onboarding" : "dashboard");
-          }}
-        />
+       <AuthScreen
+  onSuccess={(id, name, email, isNew) => {
+    resetActivity();
+    setUserId(id);
+    setUserName(name);
+    setUserEmail(email);
+    go(isNew ? "onboarding" : "dashboard");
+  }}
+/>
       )}
       {screen === "onboarding" && <OnboardingScreen onDone={(name) => { setUserName(name); go("dashboard"); }} />}
 
@@ -3927,10 +3945,45 @@ export default function App() {
               />
             )}
             {screen === "resume-upload" && (
-              <ResumeUploadScreen onAnalyse={(content, role, fileName) => {
-                setResumeFeedback(generateFeedback(content, role, fileName));
-                go("resume-analysing");
-              }} />
+              <ResumeUploadScreen onAnalyse={async (content, role, fileName) => {
+  if (!userId) {
+    console.error("No logged-in user ID is available.");
+    go("resume-error");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:8000/api/resume.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        resume_text: content,
+        target_role: role,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(data.message || "Unable to submit resume.");
+      go("resume-error");
+      return;
+    }
+
+    console.log("Resume stored successfully:", data.resume_id);
+
+    // Temporary mock feedback until OpenAI integration is implemented.
+    setResumeFeedback(generateFeedback(content, role, fileName));
+    go("resume-analysing");
+
+  } catch (error) {
+    console.error("Resume submission failed:", error);
+    go("resume-error");
+  }
+}} />
             )}
             {screen === "resume-analysing" && (
               <ResumeAnalysingScreen
