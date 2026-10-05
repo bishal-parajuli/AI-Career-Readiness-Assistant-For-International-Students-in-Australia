@@ -3896,7 +3896,53 @@ const [questionIds, setQuestionIds] = useState<number[]>([]);
   };
 
   const go = (s: Screen) => { setScreen(s); window.scrollTo(0, 0); };
+const completeInterviewSession = async (
+  sessionStatus: "completed" | "ended_early" = "completed"
+) => {
+  
+  if (!interviewSessionId) {
+    console.error("No active interview session ID found.");
+    go("interview-summary");
+    return;
+  }
 
+  try {
+    const response = await fetch(
+      "http://localhost:8000/api/interview-complete.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+  session_id: interviewSessionId,
+  session_status: sessionStatus,
+}),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(
+        data.message || "Unable to complete interview session."
+      );
+
+      // The student can still view the local summary.
+      go("interview-summary");
+      return;
+    }
+
+    console.log("Interview session completed:", data.session_id);
+
+    go("interview-summary");
+  } catch (error) {
+    console.error("Interview completion request failed:", error);
+
+    // Do not block the student from viewing their summary.
+    go("interview-summary");
+  }
+};
   const handleNav = (n: NavItem) => {
     setActiveNav(n);
     if (n === "resume") go("resume-upload");
@@ -4233,10 +4279,10 @@ go("resume-analysing");
     );
 
     const next = qIndex + 1;
-
 if (next >= interviewConfig.count) {
-  go("interview-summary");
-} else {
+  completeInterviewSession();
+}
+else {
   setQIndex(next);
   setCurrentAnswer("");
   go("interview-question");
@@ -4247,10 +4293,14 @@ if (next >= interviewConfig.count) {
   }
 }}
                 onSkip={() => {
-                  if (qIndex + 1 >= interviewConfig.count) go("interview-summary");
-                  else { setQIndex((i) => i + 1); }
-                }}
-                onEnd={() => go("interview-summary")}
+  if (qIndex + 1 >= interviewConfig.count) {
+    completeInterviewSession();
+  } else {
+    setQIndex((i) => i + 1);
+  }
+}}
+onEnd={() => completeInterviewSession("ended_early")}
+                
               />
             )}
             {screen === "interview-feedback-generating" && (
