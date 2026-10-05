@@ -3811,9 +3811,9 @@ function ResponsibleAIScreen() {
   ];
 
   const FAQS = [
-    { q: "How is AI used on this platform?", a: "Generative AI assists with analysing resume content for Australian employment contexts, generating contextualised interview questions, and producing constructive, structured feedback on practice responses." },
+    { q: "How is AI used on this platform?", a: "The MVP is designed to use generative AI for resume feedback, interview preparation and job advertisement comparison. AI-dependent results are only displayed when the AI service successfully returns a result. If the service is unavailable, the platform displays an error rather than fabricating feedback." },
     { q: "What are the limitations of AI-generated feedback?", a: "AI can produce inaccurate, incomplete or inappropriate recommendations. Users should verify important career information independently. The platform does not guarantee employment outcomes." },
-    { q: "What information is collected?", a: "Only information necessary to personalise career preparation is collected — such as your preferred name, field of study and target role. Sensitive personal information is not requested." },
+    { q: "What information is collected?", a: "The MVP stores account information such as your email address, together with career preparation data you submit, including resume content, target roles, interview session details and responses, and job advertisement text used for comparison. Users should avoid entering unnecessary sensitive personal information." },
     { q: "What frameworks guide this platform?", a: "The platform is informed by the NIST AI Risk Management Framework, the Australian Privacy Principles, and the Australian AI Ethics Principles. These frameworks support trustworthy, fair and accountable AI design." },
   ];
 
@@ -3838,9 +3838,16 @@ function ResponsibleAIScreen() {
       {/* How AI is used */}
       <Card className="p-5 mb-5">
         <h3 className="text-sm font-semibold text-[#0f172a] mb-3">How AI is used</h3>
-        <p className="text-xs text-[#64748b] leading-relaxed mb-3">Generative AI assists with the following functions on this platform:</p>
+        <p className="text-xs text-[#64748b] leading-relaxed mb-3">
+  The MVP is designed to use generative AI to support the following career preparation functions:
+</p>
         <ul className="space-y-2">
-          {["Analysing resume content against Australian graduate employment expectations", "Generating contextualised interview questions relevant to your target role", "Producing constructive, structured feedback on interview practice responses"].map((item) => (
+{[
+  "Analysing resume content against Australian graduate employment expectations",
+  "Supporting interview preparation with role-relevant questions and feedback",
+  "Comparing submitted resume information with job advertisement content",
+  "Providing career preparation guidance rather than recruitment or employment decisions"
+].map((item) => (
             <li key={item} className="flex items-start gap-2 text-xs text-[#475569]">
               <span className="text-[#a5b4fc] mt-0.5 flex-shrink-0">→</span>
               {item}
@@ -3858,6 +3865,7 @@ function ResponsibleAIScreen() {
         <ul className="space-y-2">
           {[
             "AI can produce inaccurate, incomplete or inappropriate recommendations.",
+            "AI-dependent feedback is not generated when the AI service is unavailable; the platform displays an error rather than creating a fabricated result.",
             "Users should verify important career information independently.",
             "The platform does not guarantee employment outcomes.",
             "Users should seek professional career advice from their university career service when appropriate.",
