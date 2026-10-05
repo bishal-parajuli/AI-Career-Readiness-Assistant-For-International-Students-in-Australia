@@ -1125,13 +1125,57 @@ function SidebarContents({ active, onNav, userId, userName, userEmail, onLogout,
     setProfileSaved(false); setProfileError("");
     closeMenu(); setShowProfile(true);
   };
-  const saveProfile = () => {
-    setProfileError("");
-    if (!editName.trim()) { setProfileError("Name cannot be empty."); return; }
-    if (!editEmail.trim() || !editEmail.includes("@")) { setProfileError("Please enter a valid email address."); return; }
-    onUpdateUser(editName.trim(), editEmail.trim());
+  const saveProfile = async () => {
+  setProfileError("");
+  setProfileSaved(false);
+
+  if (!editName.trim()) {
+    setProfileError("Name cannot be empty.");
+    return;
+  }
+
+  if (!editEmail.trim() || !editEmail.includes("@")) {
+    setProfileError("Please enter a valid email address.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "http://localhost:8000/api/update-profile.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          preferred_name: editName.trim(),
+          email: editEmail.trim(),
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setProfileError(data.message || "Unable to update profile.");
+      return;
+    }
+
+    onUpdateUser(
+      data.user.preferred_name,
+      data.user.email
+    );
+
+    setEditName(data.user.preferred_name);
+    setEditEmail(data.user.email);
     setProfileSaved(true);
-  };
+
+  } catch (error) {
+    console.error("Profile update failed:", error);
+    setProfileError("Unable to update profile. Please try again.");
+  }
+};
 
   const openPassword = () => {
     setCurrentPw(""); setNewPw(""); setConfirmPw("");
@@ -1627,11 +1671,16 @@ function AuthScreen({ onSuccess }: { onSuccess: (userId: number, name: string, e
         setSiError(data.message || "Email or password is incorrect.");
         return;
       }
+const displayName =
+  data.user.preferred_name?.trim() ||
+  data.user.email.split("@")[0].split(".")[0];
 
-      const name = data.user.email.split("@")[0].split(".")[0];
-      const displayName = name.charAt(0).toUpperCase() + name.slice(1);
-
-      onSuccess(data.user.user_id, displayName, data.user.email, false);
+onSuccess(
+  data.user.user_id,
+  displayName,
+  data.user.email,
+  false
+);
 
     } catch (error) {
       setSiError("Unable to connect to the server. Please try again.");
@@ -1677,9 +1726,10 @@ function AuthScreen({ onSuccess }: { onSuccess: (userId: number, name: string, e
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: suEmail.trim(),
-          password: suPassword,
-        }),
+  preferred_name: suName.trim(),
+  email: suEmail.trim(),
+  password: suPassword,
+}),
       });
 
       const data = await response.json();
@@ -1689,8 +1739,12 @@ function AuthScreen({ onSuccess }: { onSuccess: (userId: number, name: string, e
         return;
       }
 
-      onSuccess(data.user.user_id, suName.trim(), suEmail.trim(), true);
-
+      onSuccess(
+  data.user.user_id,
+  data.user.preferred_name,
+  data.user.email,
+  true
+);
     } catch (error) {
       setSuError("Unable to connect to the server. Please try again.");
     } finally {

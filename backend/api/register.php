@@ -25,17 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Read JSON sent by the frontend.
 $input = json_decode(file_get_contents('php://input'), true);
+$preferredName = trim($input['preferred_name'] ?? '');
 
 $email = trim($input['email'] ?? '');
 $password = $input['password'] ?? '';
 
 // Validate required fields.
-if ($email === '' || $password === '') {
+if ($preferredName === '' || $email === '' || $password === '') {
     http_response_code(400);
 
     echo json_encode([
         'status' => 'error',
-        'message' => 'Email and password are required'
+        'message' => 'Preferred name, email and password are required'
     ]);
     exit;
 }
@@ -86,14 +87,15 @@ try {
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
     $stmt = $pdo->prepare(
-        'INSERT INTO user (email, password_hash)
-         VALUES (:email, :password_hash)'
-    );
+    'INSERT INTO user (preferred_name, email, password_hash)
+     VALUES (:preferred_name, :email, :password_hash)'
+);
 
-    $stmt->execute([
-        'email' => $email,
-        'password_hash' => $passwordHash
-    ]);
+$stmt->execute([
+    'preferred_name' => $preferredName,
+    'email' => $email,
+    'password_hash' => $passwordHash
+]);
 
     http_response_code(201);
 
@@ -101,9 +103,10 @@ try {
         'status' => 'success',
         'message' => 'Account created successfully',
         'user' => [
-            'user_id' => (int) $pdo->lastInsertId(),
-            'email' => $email
-        ]
+    'user_id' => (int) $pdo->lastInsertId(),
+    'preferred_name' => $preferredName,
+    'email' => $email
+]
     ]);
 
 } catch (Throwable $e) {

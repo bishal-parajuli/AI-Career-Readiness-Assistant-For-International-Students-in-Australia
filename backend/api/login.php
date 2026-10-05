@@ -49,10 +49,10 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 try {
     $stmt = $pdo->prepare(
-        'SELECT user_id, email, password_hash
-         FROM user
-         WHERE email = :email
-         LIMIT 1'
+       'SELECT user_id, preferred_name, email, password_hash
+ FROM user
+ WHERE email = :email
+ LIMIT 1'
     );
 
     $stmt->execute([
@@ -77,9 +77,10 @@ try {
         'status' => 'success',
         'message' => 'Login successful',
         'user' => [
-            'user_id' => (int) $user['user_id'],
-            'email' => $user['email']
-        ]
+    'user_id' => (int) $user['user_id'],
+    'preferred_name' => $user['preferred_name'],
+    'email' => $user['email']
+]
     ]);
 
 } catch (Throwable $e) {

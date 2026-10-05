@@ -40,6 +40,9 @@ The Week 5 application foundation currently includes:
 - Backend health-check endpoint with database connectivity verification
 - User registration with server-side validation and password hashing
 - Login credential verification using stored password hashes
+- User preferred names are persisted in the database and retrieved during login
+- Edit Profile is connected to the backend, allowing users to persistently update their preferred name and email address
+- Change Password is connected to the backend with current-password verification and secure password hashing
 - Resume text submission persisted through the frontend → backend → database flow
 - Safe handling of unavailable AI resume feedback without fabricating results
 - Interview session creation persisted to the database
@@ -54,6 +57,8 @@ The Week 5 application foundation currently includes:
 - Unavailable AI job-match analysis is handled safely without storing or displaying fabricated match results
 - Environment variables and secrets excluded from version control, with `.env.example` provided
 - Git/GitHub version control with incremental implementation commits
+- My Progress retrieves persisted resume and interview activity from the database
+- Logout clears the authenticated user state from the frontend
 
 Persistent authenticated sessions or token-based authentication have not yet been implemented.
 

@@ -8,6 +8,7 @@ erDiagram
 
     USER {
         INT user_id PK
+         varchar preferred_name
         VARCHAR email UK
         VARCHAR password_hash
         DATETIME created_at
