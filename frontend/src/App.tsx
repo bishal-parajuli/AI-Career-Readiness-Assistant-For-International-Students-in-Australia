@@ -2205,11 +2205,22 @@ function DashboardScreen({ userName, activity, onResume, onInterview, onJobMatch
   userName: string; activity: ActivityState; onResume: () => void; onInterview: () => void; onJobMatch: () => void;
 }) {
   const resumeProgress = activity.resumeReviews.length > 0 ? 100 : 0;
-  const interviewProgress = activity.currentInterviewTotal > 0
-    ? Math.round((activity.currentInterviewAnswered / activity.currentInterviewTotal) * 100)
-    : activity.interviewSessions.length > 0
-      ? Math.round((activity.interviewSessions[0].questionsAnswered / activity.interviewSessions[0].total) * 100)
-      : 0;
+  const answeredInterviewQuestions = activity.interviewSessions.reduce(
+  (total, session) => total + session.questionsAnswered,
+  0
+);
+
+const totalInterviewQuestions = activity.interviewSessions.reduce(
+  (total, session) => total + session.total,
+  0
+);
+
+const interviewProgress =
+  totalInterviewQuestions > 0
+    ? Math.round(
+        (answeredInterviewQuestions / totalInterviewQuestions) * 100
+      )
+    : 0;
 
   return (
     <div className="py-8 px-8 max-w-4xl mx-auto">
@@ -2280,7 +2291,9 @@ function DashboardScreen({ userName, activity, onResume, onInterview, onJobMatch
             )}
           </div>
         </div>
-        <p className="text-xs text-[#94a3b8] mt-5">Progress reflects activity in this session. Complete more sessions to build your career readiness.</p>
+        <p className="text-xs text-[#94a3b8] mt-5">
+  Progress reflects your recorded activity within this platform. It does not measure actual job readiness or predict employment outcomes.
+</p>
       </Card>
 
       <AIDisclaimer text="AI-generated feedback should be reviewed critically and used alongside professional career advice. This platform supports career preparation and does not guarantee employment outcomes." />
@@ -3965,22 +3978,56 @@ const [questionIds, setQuestionIds] = useState<number[]>([]);
   const [activity, setActivity] = useState<ActivityState>(EMPTY_ACTIVITY);
   const [jobMatchResult, setJobMatchResult] = useState<JobMatchResult | null>(null);
  const [pendingJobMatch, setPendingJobMatch] = useState<{
+  
   jobText: string;
   jobUrl: string;
   resumeId: number;
   jobAdId?: number;
 } | null>(null); 
-
-  const resetActivity = () => {
+useEffect(() => {
+  if (!userId) {
     setActivity(EMPTY_ACTIVITY);
-    setResumeFeedback(null);
-    setJobMatchResult(null);
-    setPendingJobMatch(null);
-    setSessionQuestions([]);
-    setQIndex(0);
-    setCompletedQs(0);
-    setCurrentAnswer("");
+    return;
+  }
+
+  const loadPersistedActivity = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/user-progress.php?user_id=${userId}`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Unable to retrieve progress information."
+        );
+      }
+
+      setActivity({
+        resumeReviews: data.resumeReviews ?? [],
+        interviewSessions: data.interviewSessions ?? [],
+        currentInterviewAnswered: 0,
+        currentInterviewTotal: 0,
+      });
+    } catch (error) {
+      console.error("Unable to load dashboard activity:", error);
+    }
   };
+
+  loadPersistedActivity();
+}, [userId]);
+
+const resetActivity = () => {
+  setActivity(EMPTY_ACTIVITY);
+  setResumeFeedback(null);
+  setJobMatchResult(null);
+  setPendingJobMatch(null);
+  setSessionQuestions([]);
+  setQIndex(0);
+  setCompletedQs(0);
+  setCurrentAnswer("");
+};
 
   const go = (s: Screen) => { setScreen(s); window.scrollTo(0, 0); };
 const completeInterviewSession = async (
