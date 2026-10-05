@@ -4068,13 +4068,13 @@ const completeInterviewSession = async (
             userId={userId!}
             userName={userName}
             userEmail={userEmail}
-            onLogout={() => {
-              
-              resetActivity();
-              setUserName("Mei");
-              setUserEmail("mei.zhang@student.edu.au");
-              go("landing");
-            }}
+           onLogout={() => {
+  resetActivity();
+  setUserId(null);
+  setUserName("Mei");
+  setUserEmail("mei.zhang@student.edu.au");
+  go("landing");
+}}
             onUpdateUser={(name, email) => { setUserName(name); setUserEmail(email); }}
           />
           <main className="flex-1 overflow-auto">
