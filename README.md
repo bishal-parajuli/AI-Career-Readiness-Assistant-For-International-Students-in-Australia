@@ -48,6 +48,10 @@ The Week 5 application foundation currently includes:
 - Skipped interview questions intentionally create no response record
 - Interview sessions distinguish normal completion (`completed`) from deliberate early termination (`ended_early`)
 - Interview completion timestamps are persisted in the database
+- Saved resumes are retrieved from the database for job advertisement comparison
+- Job advertisements submitted through the frontend are persisted to the database
+- Job advertisement analysis requests validate ownership of both the selected resume and job advertisement
+- Unavailable AI job-match analysis is handled safely without storing or displaying fabricated match results
 - Environment variables and secrets excluded from version control, with `.env.example` provided
 - Git/GitHub version control with incremental implementation commits
 
@@ -106,7 +110,10 @@ See [`docs/system-architecture.md`](./docs/system-architecture.md) for the edita
 │   │   ├── interview-session.php
 │   │   ├── interview-questions.php
 │   │   ├── interview-response.php
-│   │   └── interview-complete.php
+│   │   ├── interview-complete.php
+│   │   ├── user-resumes.php
+│   │   ├── job-advertisement.php
+│   │   └── job-match-analysis.php
 │   ├── config/
 │   │   └── database.php
 │   └── .env.example
