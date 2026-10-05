@@ -2898,8 +2898,8 @@ function InterviewSetupScreen({ onStart, userName }: { onStart: (config: { role:
 /* ─────────────────────────────────────────
    SCREEN 7 — Interview question
 ───────────────────────────────────────── */
-function InterviewQuestionScreen({ qIndex, total, question, onSubmit, onSkip, onEnd }: {
-  qIndex: number; total: number; question: IQ; onSubmit: (answer: string) => void; onSkip: () => void; onEnd: () => void;
+function InterviewQuestionScreen({ qIndex, total, answeredCount, question, onSubmit, onSkip, onEnd }: {
+  qIndex: number; total: number; answeredCount: number; question: IQ; onSubmit: (answer: string) => void; onSkip: () => void; onEnd: () => void;
 }) {
   const [answer, setAnswer] = useState("");
   const [showGuidance, setShowGuidance] = useState(false);
@@ -2982,7 +2982,9 @@ function InterviewQuestionScreen({ qIndex, total, question, onSubmit, onSkip, on
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowEndModal(false)} />
           <Card className="relative p-6 max-w-sm w-full shadow-xl">
             <h3 className="text-base font-semibold text-[#0f172a] mb-2">End practice session?</h3>
-            <p className="text-sm text-[#64748b] mb-5">You have completed {qIndex} of {total} questions. A session summary will be shown.</p>
+            <p className="text-sm text-[#64748b] mb-5">
+  You have progressed through {qIndex} of {total} questions and submitted {answeredCount} {answeredCount === 1 ? "response" : "responses"}. A session summary will be shown.
+</p>
             <div className="flex gap-3">
               <Btn onClick={() => setShowEndModal(false)} variant="secondary" size="sm" full>Continue</Btn>
               <Btn onClick={onEnd} size="sm" full>End session</Btn>
@@ -3076,7 +3078,7 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
         <div className="size-16 rounded-2xl bg-[#eef2ff] flex items-center justify-center text-3xl mx-auto mb-5">🎙</div>
         <p className="text-xs font-semibold text-[#4f46e5] uppercase tracking-widest mb-2">Practice Complete</p>
         <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-2">Session complete</h1>
-        <p className="text-sm text-[#64748b]">You completed {completed} of {total} questions in this session.</p>
+        <p className="text-sm text-[#64748b]">You answered {completed} of {total} questions in this session.</p>
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-7">
@@ -3118,7 +3120,7 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
 
       {completed === 0 && (
         <Card className="p-5 mb-5 border-[#e2e8f0]">
-          <p className="text-sm text-[#64748b] leading-relaxed">No questions were attempted in this session. Complete at least one question to receive AI-generated strengths, areas for improvement and suggested next steps.</p>
+<p className="text-sm text-[#64748b] leading-relaxed">No responses were submitted in this session. Complete at least one question to receive AI-generated strengths, areas for improvement and suggested next steps.</p>
         </Card>
       )}
 
@@ -3136,7 +3138,13 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
       </Card>
       )}
 
-      <AIDisclaimer text="This session summary reflects AI-generated feedback on your practice responses. It does not predict interview success or guarantee employment outcomes. Seek professional career advice from your university career service." />
+      <AIDisclaimer
+  text={
+    completed === 0
+      ? "No personalised AI feedback was generated because no responses were submitted. Complete at least one interview question to receive feedback on your practice responses."
+      : "This session summary reflects AI-generated feedback on your practice responses. It does not predict interview success or guarantee employment outcomes. Seek professional career advice from your university career service."
+  }
+/>
 
       <div className="flex gap-3 mt-5">
         <Btn onClick={onPracticeAgain} size="md">Practice again</Btn>
@@ -4048,9 +4056,10 @@ const [userId, setUserId] = useState<number | null>(null);
             )}
             {screen === "interview-question" && sessionQuestions.length > 0 && (
               <InterviewQuestionScreen
-                qIndex={qIndex}
-                total={interviewConfig.count}
-                question={sessionQuestions[qIndex] ?? sessionQuestions[0]}
+  qIndex={qIndex}
+  answeredCount={completedQs}
+  total={interviewConfig.count}
+  question={sessionQuestions[qIndex] ?? sessionQuestions[0]}
                 onSubmit={(ans) => {
                   setCurrentAnswer(ans);
                   const newCompleted = completedQs + 1;
