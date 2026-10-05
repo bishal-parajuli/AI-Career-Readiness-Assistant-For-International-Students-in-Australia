@@ -3165,24 +3165,90 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
 /* ─────────────────────────────────────────
    SCREEN 10 — Progress
 ───────────────────────────────────────── */
-function ProgressScreen({ activity }: { activity: ActivityState }) {
+function ProgressScreen({ userId }: { userId: number }) {
   const [tab, setTab] = useState<"resume" | "interview">("resume");
+  const [activity, setActivity] = useState<ActivityState>(EMPTY_ACTIVITY);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadProgress = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          `http://localhost:8000/api/user-progress.php?user_id=${userId}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Unable to retrieve progress information."
+          );
+        }
+
+        setActivity({
+          resumeReviews: data.resumeReviews ?? [],
+          interviewSessions: data.interviewSessions ?? [],
+          currentInterviewAnswered: 0,
+          currentInterviewTotal: 0,
+        });
+      } catch (err) {
+        console.error("Unable to load progress:", err);
+        setError("Unable to load your progress. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProgress();
+  }, [userId]);
 
   const resumeProgress = activity.resumeReviews.length > 0 ? 100 : 0;
-  const interviewProgress = activity.interviewSessions.length > 0
-    ? Math.round((activity.interviewSessions[0].questionsAnswered / activity.interviewSessions[0].total) * 100)
-    : 0;
+
+  const answeredInterviewQuestions = activity.interviewSessions.reduce(
+    (total, session) => total + session.questionsAnswered,
+    0
+  );
+
+  const totalInterviewQuestions = activity.interviewSessions.reduce(
+    (total, session) => total + session.total,
+    0
+  );
+
+  const interviewProgress =
+    totalInterviewQuestions > 0
+      ? Math.round(
+          (answeredInterviewQuestions / totalInterviewQuestions) * 100
+        )
+      : 0;
 
   return (
     <div className="py-8 px-8 max-w-4xl mx-auto">
       <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">My Progress</h1>
       <p className="text-sm text-[#64748b] mb-7">A summary of your career preparation activity.</p>
+{loading && (
+  <Card className="p-4 mb-5">
+    <p className="text-sm text-[#64748b]">
+      Loading your progress...
+    </p>
+  </Card>
+)}
 
+{error && (
+  <div className="mb-5 px-4 py-3 rounded-lg bg-red-50 border border-red-200">
+    <p className="text-sm text-red-700">
+      {error}
+    </p>
+  </div>
+)}
       <div className="flex gap-2 mb-5">
         {(["resume", "interview"] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors capitalize ${tab === t ? "bg-[#4f46e5] text-white" : "bg-white border border-[#e2e8f0] text-[#64748b] hover:border-[#94a3b8]"}`}>
-            {t === "resume" ? "Resume Feedback" : "Interview Practice"}
+            {t === "resume" ? "Resume Activity" : "Interview Practice"}
           </button>
         ))}
       </div>
@@ -3192,7 +3258,7 @@ function ProgressScreen({ activity }: { activity: ActivityState }) {
           <Card className="overflow-hidden mb-4">
             <div className="px-5 py-3 border-b border-[#f8fafc] bg-[#f8fafc]">
               <div className="grid grid-cols-4 gap-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">
-                <span>Date</span><span>Target role</span><span>File</span><span>Status</span>
+                <span>Date</span><span>Target role</span><span>Input</span><span>Status</span>
               </div>
             </div>
             {activity.resumeReviews.length === 0 ? (
@@ -3205,7 +3271,7 @@ function ProgressScreen({ activity }: { activity: ActivityState }) {
                   <span className="text-[#64748b] text-xs">{r.date}</span>
                   <span className="text-[#0f172a] text-xs font-medium">{r.role}</span>
                   <span className="text-[#64748b] text-xs">{r.file}</span>
-                  <span className="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full w-fit">Complete</span>
+                  <span className="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full w-fit">Submitted</span>
                 </div>
               </div>
             ))}
@@ -3239,10 +3305,10 @@ function ProgressScreen({ activity }: { activity: ActivityState }) {
       )}
 
       <Card className="p-5">
-        <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Overall readiness</h3>
+    <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Platform activity</h3>
         <div className="space-y-3">
-          <Progress value={resumeProgress} label="Resume preparation" />
-          <Progress value={interviewProgress} label="Interview confidence" />
+          <Progress value={resumeProgress} label="Resume submission activity" />
+<Progress value={interviewProgress} label="Interview question completion" />
         </div>
         <p className="text-xs text-[#94a3b8] mt-4">Progress indicators reflect activity within this platform only. They do not measure actual job readiness or predict employment outcomes.</p>
       </Card>
@@ -3793,8 +3859,23 @@ function ResponsibleAIScreen() {
 /* ─────────────────────────────────────────
    Activity state types
 ───────────────────────────────────────── */
-interface ResumeHistoryEntry { date: string; role: string; file: string; }
-interface InterviewHistoryEntry { date: string; role: string; questionsAnswered: number; total: number; }
+interface ResumeHistoryEntry {
+  resume_id: number;
+  date: string;
+  role: string;
+  file: string;
+  input_method: string;
+}
+
+interface InterviewHistoryEntry {
+  session_id: number;
+  date: string;
+  role: string;
+  questionsAnswered: number;
+  total: number;
+  status: string;
+  completed_at: string | null;
+}
 interface ActivityState {
   resumeReviews: ResumeHistoryEntry[];
   interviewSessions: InterviewHistoryEntry[];
@@ -4464,7 +4545,9 @@ onEnd={() => completeInterviewSession("ended_early")}
                 <p className="text-sm text-[#64748b]">No job match analysis found. <button onClick={() => go("job-match-input")} className="text-[#4f46e5] underline">Start a new analysis</button>.</p>
               </div>
             )}
-            {screen === "progress" && <ProgressScreen activity={activity} />}
+        {screen === "progress" && userId && (
+  <ProgressScreen userId={userId} />
+)}
             {screen === "responsible-ai" && <ResponsibleAIScreen />}
           </main>
         </div>
