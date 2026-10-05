@@ -6,7 +6,7 @@
 
 **PROF910 IT Project Part B — MVP Development**
 
-The project has progressed from design and modelling into implementation. The current application skeleton includes a React frontend, PHP backend API, MariaDB relational database, user registration and login credential verification.
+The project has progressed from design and modelling into implementation. The current MVP foundation includes a React frontend, PHP backend API and MariaDB relational database. Working vertical slices now support user registration, login credential verification, resume submission, interview session creation, interview question persistence, interview response persistence and interview session lifecycle tracking.
 
 Generative AI functionality is planned for subsequent development and should not yet be considered a live OpenAI API integration.
 
@@ -36,17 +36,24 @@ The Week 5 application foundation currently includes:
 - PHP backend API
 - MariaDB relational database
 - Nine-entity database schema based on the revised ERD
-- Backend-to-database connection using PDO
-- Backend health-check endpoint
+- Backend-to-database connection using PDO prepared statements
+- Backend health-check endpoint with database connectivity verification
 - User registration with server-side validation and password hashing
 - Login credential verification using stored password hashes
-- Real frontend → backend → database registration flow
-- Real frontend → backend credential-verification flow
-- Environment variables excluded from version control
-- Git/GitHub version control
+- Resume text submission persisted through the frontend → backend → database flow
+- Safe handling of unavailable AI resume feedback without fabricating results
+- Interview session creation persisted to the database
+- Interview questions persisted against their corresponding interview session
+- Interview responses persisted against the correct interview question
+- Skipped interview questions intentionally create no response record
+- Interview sessions distinguish normal completion (`completed`) from deliberate early termination (`ended_early`)
+- Interview completion timestamps are persisted in the database
+- Environment variables and secrets excluded from version control, with `.env.example` provided
+- Git/GitHub version control with incremental implementation commits
 
 Persistent authenticated sessions or token-based authentication have not yet been implemented.
 
+Interview questions currently use predefined prototype question banks while the external Generative AI service is unavailable. The application does not present predefined interview feedback as live AI-generated analysis. OpenAI integration remains a planned backend service.
 ## Technology Stack
 
 ### Frontend
@@ -86,20 +93,30 @@ A future OpenAI API integration will connect through the backend rather than dir
 See [`docs/system-architecture.md`](./docs/system-architecture.md) for the editable architecture diagram and implementation notes.
 
 ## Repository Structure
-
 ```text
+
 .
 ├── backend/
 │   ├── api/
 │   │   ├── health.php
+│   │   ├── register.php
 │   │   ├── login.php
-│   │   └── register.php
+│   │   ├── resume.php
+│   │   ├── resume-feedback.php
+│   │   ├── interview-session.php
+│   │   ├── interview-questions.php
+│   │   ├── interview-response.php
+│   │   └── interview-complete.php
 │   ├── config/
 │   │   └── database.php
 │   └── .env.example
 ├── database/
 │   └── schema.sql
 ├── docs/
+│   ├── erd.md
+│   ├── schema-changes.md
+│   ├── system-architecture.md
+│   └── technology-stack-justification.md
 ├── frontend/
 ├── images/
 ├── src/
