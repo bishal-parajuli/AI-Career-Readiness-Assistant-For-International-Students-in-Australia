@@ -27,6 +27,10 @@ try {
     $userId = $data['user_id'] ?? null;
     $resumeText = trim($data['resume_text'] ?? '');
     $targetRole = trim($data['target_role'] ?? '');
+    $inputMethod = $data['input_method'] ?? 'paste';
+$fileName = isset($data['file_name']) && $data['file_name'] !== ''
+    ? basename($data['file_name'])
+    : null;
 
     if (!$userId || $resumeText === '' || $targetRole === '') {
         http_response_code(400);
@@ -71,13 +75,12 @@ try {
     );
 
     $statement->execute([
-        'user_id' => $userId,
-        'input_method' => 'paste',
-        'file_name' => null,
-        'resume_text' => $resumeText,
-        'target_role' => $targetRole
-    ]);
-
+    'user_id' => $userId,
+    'input_method' => $inputMethod,
+    'file_name' => $fileName,
+    'resume_text' => $resumeText,
+    'target_role' => $targetRole
+]);
     $resumeId = (int) $pdo->lastInsertId();
 
     http_response_code(201);

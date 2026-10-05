@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 /* ─────────────────────────────────────────
    Types
@@ -2291,196 +2291,55 @@ function DashboardScreen({ userName, activity, onResume, onInterview, onJobMatch
 /* ─────────────────────────────────────────
    SCREEN 4 — Resume upload
 ───────────────────────────────────────── */
-
-const DEMO_RESUMES = [
-  {
-    label: "IT Graduate — Software Developer",
-    fileName: "Alex_Chen_IT_Resume.pdf",
-    targetRole: "Software Developer",
-    text: `Alex Chen
-alex.chen@student.edu.au | LinkedIn: linkedin.com/in/alexchen | Melbourne, VIC
-
-EDUCATION
-Bachelor of Information Technology, Monash University, 2024
-GPA 3.6 | Major: Software Engineering
-
-SKILLS
-Programming languages: Python, Java, JavaScript, SQL
-Frameworks: React, Spring Boot
-Tools: VS Code, Eclipse, MySQL Workbench
-Other: Object-oriented programming, REST APIs, Agile methodology
-
-PROJECTS
-E-Commerce Platform (Team project, 2024)
-Built a web-based shopping application using Java Spring Boot and React. Implemented product listings, user authentication and shopping cart functionality. Responsible for backend API design and database integration using MySQL.
-
-Data Processing Script (Individual project, 2023)
-Developed a Python script to automate weekly sales data processing, reducing manual effort by approximately three hours per week. Used Pandas for data transformation and CSV export.
-
-EXPERIENCE
-Retail Sales Assistant, Officeworks, Melbourne (2022–2024)
-Assisted customers with product selections and resolved point-of-sale technical issues during peak trade periods. Maintained stock accuracy and contributed to team sales targets.
-
-INTERESTS
-Open source contribution, cloud computing, hackathons
-
-REFEREES
-Available upon request.`,
-  },
-  {
-    label: "IT Graduate — Data Analyst",
-    fileName: "Priya_Sharma_Resume.pdf",
-    targetRole: "Data Analyst",
-    text: `Priya Sharma
-priya.sharma@student.edu.au | Melbourne, VIC
-
-EDUCATION
-Bachelor of Information Technology, RMIT University, 2024
-Major: Data Analytics | Distinction average
-
-SKILLS
-Python (Pandas, NumPy), SQL, Excel, Tableau, Power BI, R (basic)
-Data visualisation, data cleaning, statistical analysis
-
-PROJECTS
-Retail Sales Analysis (University capstone, 2024)
-Analysed a dataset of approximately 50,000 sales records using Python and SQL to identify seasonal demand trends. Created Tableau dashboards to present findings to a simulated business audience.
-
-Customer Segmentation Study (Team project, 2023)
-Applied clustering techniques in Python to segment a retail dataset into customer groups. Presented recommendations for targeted marketing strategies.
-
-EXPERIENCE
-Data Entry Officer (casual), RMIT Library (2022–2024)
-Maintained database accuracy across library catalogue and patron records. Identified and resolved data inconsistencies.
-
-Volunteer, Statistical Society of Australia, Student Chapter
-Assisted with organisation of events and data literacy workshops.
-
-REFEREES
-Available upon request.`,
-  },
-  {
-    label: "Nursing Graduate — Registered Nurse",
-    fileName: "Sarah_Nguyen_Resume.pdf",
-    targetRole: "Registered Nurse",
-    text: `Sarah Nguyen
-sarah.nguyen@student.edu.au | Sydney, NSW
-
-EDUCATION
-Bachelor of Nursing, University of Sydney, 2024
-Graduated with Distinction
-
-CLINICAL PLACEMENTS
-Medical-Surgical Ward, Royal Prince Alfred Hospital (2024)
-300-bed metropolitan hospital. Provided patient care under supervision, including vital signs monitoring, wound care dressing changes and patient hygiene. Assisted with medication administration under RN supervision. Documented patient care accurately in clinical information systems.
-
-Aged Care Residential Facility, BaptistCare (2023)
-Provided personal care and assisted with activities of daily living for approximately 20 residents. Communicated with multidisciplinary team regarding patient wellbeing. Observed medication administration procedures.
-
-SKILLS
-Clinical: Vital signs monitoring, wound care, catheter care, patient hygiene, medication observation
-Communication: Patient education, family liaison, handover documentation
-IT: Electronic medical records (EMR), Microsoft Office
-
-EMPLOYMENT
-Aged Care Personal Care Worker, Estia Health (2022–2024)
-Provided personal care assistance, observed and reported changes in resident condition to nursing staff.
-
-PROFESSIONAL DEVELOPMENT
-First Aid Certificate (current)
-Manual Handling Certificate (current)
-BLS (Basic Life Support) certified`,
-  },
-  {
-    label: "Marketing Graduate — Marketing Coordinator",
-    fileName: "Lena_Park_Resume.pdf",
-    targetRole: "Marketing Coordinator",
-    text: `Lena Park
-lena.park@student.edu.au | Brisbane, QLD
-
-EDUCATION
-Bachelor of Business (Marketing), Queensland University of Technology, 2024
-Dean's List recipient
-
-SKILLS
-Social media management (Instagram, LinkedIn, Facebook, TikTok)
-Content creation: copywriting, graphic design (Canva)
-Email marketing: Mailchimp
-Google Analytics (basic), Meta Business Suite
-Microsoft Office, Trello
-
-EXPERIENCE
-Marketing Intern, Brisbane City Council (6 months, 2023)
-Assisted the communications team with social media scheduling and content creation for the council's community engagement campaigns. Created approximately 30 pieces of social content per month across Instagram and Facebook. Monitored engagement metrics using Meta Business Suite and prepared monthly reporting summaries for the team.
-
-Social Media Volunteer, QUT Student Association (2022–2023)
-Managed Instagram and LinkedIn accounts for student events. Designed promotional materials using Canva and grew Instagram following from approximately 400 to 1,100 followers over 12 months.
-
-Hospitality, various casual roles (2020–2024)
-Customer service, team communication and problem-solving in high-volume environments.
-
-PROJECTS
-Marketing Campaign Simulation (University capstone, 2024)
-Developed a comprehensive digital marketing strategy for a fictional retail brand, including target audience analysis, channel strategy, content calendar and projected ROI. Presented to industry panel.
-
-REFEREES
-Available upon request.`,
-  },
-];
-
 function ResumeUploadScreen({ onAnalyse }: { onAnalyse: (content: string, role: string, fileName: string) => void }) {
   const [dragOver, setDragOver] = useState(false);
   const [file, setFile] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [role, setRole] = useState("Software Developer");
   const [resumeText, setResumeText] = useState("");
   const [error, setError] = useState("");
   const [inputMode, setInputMode] = useState<"upload" | "paste">("upload");
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    const f = e.dataTransfer.files[0];
-    if (!f) return;
-    if (!["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(f.type)) {
-      setError("Unsupported file type. Please upload a PDF or DOCX file.");
-      return;
-    }
-    setError("");
-    setFile(f.name);
-  }, []);
+ const handleDrop = useCallback((e: React.DragEvent) => {
+  e.preventDefault();
+  setDragOver(false);
 
-  const handleFakeUpload = () => { setError(""); setFile("My_Resume.pdf"); };
+  const droppedFile = e.dataTransfer.files[0];
+  if (!droppedFile) return;
 
-  const applyDemo = (demo: typeof DEMO_RESUMES[0]) => {
-    setFile(demo.fileName);
-    setRole(demo.targetRole);
-    setResumeText(demo.text);
-    setInputMode("paste");
-    setError("");
-  };
+  if (
+    ![
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ].includes(droppedFile.type)
+  ) {
+    setError("Unsupported file type. Please upload a PDF or DOCX file.");
+    setSelectedFile(null);
+    return;
+  }
 
-  const canAnalyse =
+  setError("");
+  setFile(droppedFile.name);
+  setSelectedFile(droppedFile);
+  setResumeText("");
+}, []);
+
+const fileInputRef = useRef<HTMLInputElement>(null);
+
+const handleFileSelect = () => {
+  fileInputRef.current?.click();
+};
+
+ const canAnalyse =
   inputMode === "paste"
-    ? resumeText.trim().length > 50
-    : !!file;
+    ? resumeText.trim().length >= 50
+    : selectedFile !== null;
   return (
     <div className="py-8 px-8 max-w-2xl mx-auto">
       <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">Resume Feedback</h1>
       <p className="text-sm text-[#64748b] mb-6">Upload your resume or use a demo resume to receive personalised feedback for the Australian employment context.</p>
 
-      {/* Demo presets */}
-      <div className="mb-6">
-        <p className="text-xs font-semibold text-[#0f172a] mb-2">Try a demo resume</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {DEMO_RESUMES.map((d) => (
-            <button key={d.label} onClick={() => applyDemo(d)}
-              className={`text-left px-3 py-2.5 rounded-lg border text-xs transition-colors ${file === d.fileName ? "bg-[#eef2ff] border-[#a5b4fc] text-[#4f46e5]" : "border-[#e2e8f0] text-[#64748b] hover:border-[#94a3b8] hover:text-[#0f172a]"}`}>
-              <span className="font-medium block">{d.label.split("—")[0].trim()}</span>
-              <span className="text-[#94a3b8]">→ {d.label.split("—")[1]?.trim()}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      
 
       {/* Input mode toggle */}
       <div className="flex gap-1 mb-4 bg-[#f8fafc] p-1 rounded-lg w-fit">
@@ -2499,21 +2358,63 @@ function ResumeUploadScreen({ onAnalyse }: { onAnalyse: (content: string, role: 
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             className={`m-4 border-2 border-dashed rounded-xl p-10 text-center transition-colors cursor-pointer ${dragOver ? "border-[#4f46e5] bg-[#eef2ff]" : file ? "border-emerald-400 bg-emerald-50" : "border-[#e2e8f0] hover:border-[#a5b4fc] hover:bg-[#eef2ff]/30"}`}
-            onClick={handleFakeUpload}
-          >
-            {file ? (
+            onClick={handleFileSelect}
+>
+  <input
+    ref={fileInputRef}
+    type="file"
+    accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    className="hidden"
+    onClick={(e) => e.stopPropagation()}
+    onChange={(e) => {
+  const chosenFile = e.target.files?.[0];
+  if (!chosenFile) return;
+
+  if (
+    ![
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ].includes(chosenFile.type)
+  ) {
+    setError("Unsupported file type. Please upload a PDF or DOCX file.");
+    setSelectedFile(null);
+    e.target.value = "";
+    return;
+  }
+
+  setError("");
+  setFile(chosenFile.name);
+  setSelectedFile(chosenFile);
+  setResumeText("");
+}}
+  />
+
+  {file ? (
               <>
                 <span className="text-4xl block mb-3">📄</span>
                 <p className="text-sm font-medium text-emerald-700 mb-1">{file}</p>
-                <p className="text-xs text-[#64748b]">File ready for analysis</p>
-                <button onClick={(e) => { e.stopPropagation(); setFile(null); setResumeText(""); }} className="text-xs text-red-500 hover:underline mt-2">Remove</button>
+<p className="text-xs text-[#64748b]">File selected</p>
+                <button
+  onClick={(e) => {
+    e.stopPropagation();
+    setFile(null);
+    setSelectedFile(null);
+    setResumeText("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }}
+  className="text-xs text-red-500 hover:underline mt-2"
+>
+  Remove
+</button>
               </>
             ) : (
               <>
                 <span className="text-4xl block mb-3">⬆</span>
                 <p className="text-sm font-medium text-[#0f172a] mb-1">Drag and drop your resume here</p>
                 <p className="text-xs text-[#64748b] mb-3">or click to select a file</p>
-                <span className="text-xs bg-[#f1f5f9] px-3 py-1 rounded-full text-[#64748b]">PDF · DOCX</span>
+<span className="text-xs bg-[#f1f5f9] px-3 py-1 rounded-full text-[#64748b]">DOCX supported · PDF coming soon</span>
               </>
             )}
           </div>
@@ -2524,7 +2425,7 @@ function ResumeUploadScreen({ onAnalyse }: { onAnalyse: (content: string, role: 
             </div>
           )}
           <div className="px-4 pb-4">
-            <p className="text-xs text-[#94a3b8]">For the most accurate feedback, also paste your resume text in the "Paste resume text" tab.</p>
+<p className="text-xs text-[#94a3b8]">DOCX files are processed automatically. For PDF resumes, please use the "Paste resume text" option in the current MVP.</p>
           </div>
         </Card>
       ) : (
@@ -2538,9 +2439,13 @@ function ResumeUploadScreen({ onAnalyse }: { onAnalyse: (content: string, role: 
   rows={10}
   value={resumeText}
   onChange={(e) => {
-    setResumeText(e.target.value);
-    setFile(null);
-  }}
+  setResumeText(e.target.value);
+  setFile(null);
+  setSelectedFile(null);
+  if (fileInputRef.current) {
+    fileInputRef.current.value = "";
+  }
+}}
            placeholder="Paste the full text of your resume here. Include your name, education, work experience, skills and any other sections…"
             className="w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-xs text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent resize-none leading-relaxed font-mono" />
           <p className="text-xs text-[#94a3b8] mt-2">{resumeText.length > 0 ? `${resumeText.trim().split(/\s+/).length} words detected` : "Minimum 50 words required for analysis"}</p>
@@ -2558,13 +2463,68 @@ function ResumeUploadScreen({ onAnalyse }: { onAnalyse: (content: string, role: 
       <PrivacyNotice text="Your resume may contain personal information. Only upload information you are comfortable using for this assessment." />
       <div className="mt-4">
 
-<Btn onClick={() => onAnalyse(
-  resumeText || file || "",
-  role || "the target role",
-  inputMode === "paste" ? "Pasted resume text" : file || "Resume"
-)} size="lg" full disabled={!canAnalyse}>
-          {canAnalyse ? "Analyse Resume →" : "Upload or paste your resume to continue"}
-        </Btn>
+<Btn
+  onClick={async () => {
+    setError("");
+
+    if (inputMode === "paste") {
+      onAnalyse(
+        resumeText,
+        role || "the target role",
+        "Pasted resume text"
+      );
+      return;
+    }
+
+    if (!selectedFile) {
+      setError("Please select a resume file.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("resume", selectedFile);
+
+      const response = await fetch(
+        "http://localhost:8000/api/resume-upload.php",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Unable to read the resume file.");
+        return;
+      }
+
+      if (!data.resume_text?.trim()) {
+        setError("No readable resume text was found in the uploaded file.");
+        return;
+      }
+
+      setResumeText(data.resume_text);
+
+      onAnalyse(
+        data.resume_text,
+        role || "the target role",
+        data.file_name || selectedFile.name
+      );
+    } catch (error) {
+      console.error("Resume file upload failed:", error);
+      setError("Unable to process the resume file. Please try again.");
+    }
+  }}
+  size="lg"
+  full
+  disabled={!canAnalyse}
+>
+  {canAnalyse
+    ? "Analyse Resume →"
+    : "Upload or paste your resume to continue"}
+</Btn>
       </div>
     </div>
   );
@@ -4151,11 +4111,13 @@ const completeInterviewSession = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        user_id: userId,
-        resume_text: content,
-        target_role: role,
-      }),
+     body: JSON.stringify({
+  user_id: userId,
+  resume_text: content,
+  target_role: role,
+  input_method: fileName === "Pasted resume text" ? "paste" : "upload",
+  file_name: fileName === "Pasted resume text" ? null : fileName,
+}),
     });
 
     const data = await response.json();
