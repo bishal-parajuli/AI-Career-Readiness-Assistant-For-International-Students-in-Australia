@@ -3263,156 +3263,84 @@ interface JobMatchResult {
   improvements: string[];
 }
 
-function detectJobRole(text: string): string {
-  const t = text.toLowerCase();
-  if (t.includes("software developer") || t.includes("software engineer")) return "Software Developer";
-  if (t.includes("data analyst") || t.includes("data analysis")) return "Data Analyst";
-  if (t.includes("registered nurse") || t.includes("nursing")) return "Registered Nurse";
-  if (t.includes("marketing coordinator") || t.includes("marketing assistant")) return "Marketing Coordinator";
-  if (t.includes("it support") || t.includes("helpdesk") || t.includes("help desk")) return "IT Support Officer";
-  if (t.includes("project manager")) return "Project Manager";
-  if (t.includes("business analyst")) return "Business Analyst";
-  if (t.includes("ux") || t.includes("ui designer") || t.includes("product designer")) return "UX Designer";
-  const match = text.match(/(?:role|position|title)[:\s]+([A-Za-z\s/]+)/i);
-  if (match) return match[1].trim().split("\n")[0].trim();
-  return "Graduate Professional";
-}
-
-function detectCompany(text: string): string {
-  const match = text.match(/(?:company|employer|organisation|organization|about us)[:\s\n]+([A-Za-z\s&.,Pty]+Ltd[.,]?)/i);
-  if (match) return match[1].trim();
-  const ptyMatch = text.match(/([A-Z][a-zA-Z\s]+(?:Pty Ltd|Pty\. Ltd\.|Pty|Limited))/);
-  if (ptyMatch) return ptyMatch[1].trim();
-  return "Example Technology Pty Ltd";
-}
-
-function generateJobMatchResult(jobText: string, resumeText: string, resumeFile: string): JobMatchResult {
-  const role = detectJobRole(jobText || "software developer");
-  const company = detectCompany(jobText || "");
-  const roleLower = role.toLowerCase();
-  const jobLower = (jobText || "").toLowerCase();
-  const resLower = (resumeText || "").toLowerCase();
-
-  // Count keyword matches
-  const itKeywords = ["python", "java", "javascript", "sql", "git", "react", "agile", "aws", "docker", "api"];
-  const nurseKeywords = ["patient care", "clinical", "medication", "wound care", "handover", "emr", "nursing"];
-  const mktKeywords = ["social media", "campaign", "seo", "content", "analytics", "canva", "copywriting"];
-
-  let keywords: string[];
-  let strengths: string[];
-  let missing: string[];
-  let improvements: string[];
-  let matchPercent: number;
-
-  if (roleLower.includes("nurs")) {
-    keywords = ["Clinical Skills", "Patient Care", "Medication Administration", "EMR", "AHPRA Registration", "Teamwork", "BLS"];
-    const matched = nurseKeywords.filter((k) => resLower.includes(k)).length;
-    matchPercent = Math.min(85, 45 + matched * 6);
-    strengths = [
-      "Clinical placement experience relevant to the role requirements",
-      "Evidence of patient care documentation and handover practices",
-      "Demonstrated teamwork within multidisciplinary healthcare settings",
-    ];
-    missing = [
-      "AHPRA registration status not clearly stated in the resume",
-      "Specific ward environment experience may need further detail",
-      "Limited evidence of medication administration competency",
-    ];
-    improvements = [
-      "Clearly state AHPRA registration status or pending registration in your contact section.",
-      "Describe specific patient ratios or ward environments for each placement.",
-      "Explicitly mention medication administration competency if demonstrated during placement.",
-    ];
-  } else if (roleLower.includes("marketing")) {
-    keywords = ["Digital Marketing", "Social Media", "Content Creation", "SEO", "Analytics", "CRM", "Campaign Management"];
-    const matched = mktKeywords.filter((k) => resLower.includes(k)).length;
-    matchPercent = Math.min(85, 48 + matched * 5);
-    strengths = [
-      "Relevant marketing qualification aligns with role requirements",
-      "Demonstrated social media management and content creation experience",
-      "Evidence of campaign work and engagement measurement",
-    ];
-    missing = [
-      "CRM software experience is not clearly demonstrated",
-      "SEO or paid digital advertising experience not evidenced",
-      "More measurable campaign outcomes would strengthen the application",
-    ];
-    improvements = [
-      "Add specific campaign results — for example, follower growth percentages or engagement rates.",
-      "If you have experience with any CRM tools, include them in your skills section.",
-      "Highlight any exposure to Google Ads, Meta Ads or SEO in your project or experience descriptions.",
-    ];
-  } else if (roleLower.includes("data analyst")) {
-    keywords = ["SQL", "Python", "Tableau", "Power BI", "Excel", "Data Visualisation", "Statistical Analysis"];
-    const matched = ["sql", "python", "tableau", "power bi", "excel", "pandas"].filter((k) => resLower.includes(k)).length;
-    matchPercent = Math.min(85, 50 + matched * 5);
-    strengths = [
-      "Python and SQL skills align directly with data analyst requirements",
-      "Data visualisation experience using Tableau or Power BI is relevant",
-      "University capstone demonstrates end-to-end data analysis exposure",
-    ];
-    missing = [
-      "Experience with large real-world datasets is not evidenced",
-      "Stakeholder reporting or business communication examples are limited",
-      "Familiarity with cloud data platforms (e.g. BigQuery, Redshift) is not mentioned",
-    ];
-    improvements = [
-      "Quantify dataset sizes and outcomes in your project descriptions.",
-      "Add examples of presenting data findings to a non-technical audience.",
-      "Include any exposure to cloud or enterprise data tools, even if introductory.",
-    ];
-  } else {
-    // Software Developer / general IT / default
-    keywords = ["Agile", "SQL", "JavaScript", "Git", "Communication", "Teamwork", "REST APIs", "Cloud"];
-    const matched = itKeywords.filter((k) => resLower.includes(k)).length;
-    matchPercent = Math.min(85, 48 + matched * 5);
-    strengths = [
-      "Relevant information technology qualification",
-      "Technical skills align with several role requirements",
-      "Project experience demonstrates software development exposure",
-    ];
-    missing = [
-      "Limited evidence of stakeholder communication or business requirements gathering",
-      "SQL experience is not clearly demonstrated in a project context",
-      "More evidence of Australian workplace context may strengthen the application",
-    ];
-    improvements = [
-      "Add evidence demonstrating SQL or database experience within a project or work context.",
-      "Strengthen examples of teamwork and stakeholder communication using the STAR method.",
-      "Include measurable outcomes from relevant projects where possible.",
-    ];
-  }
-
-  // Adjust percent slightly if a URL-only job was provided (less info)
-  if (!resumeText && resumeFile) matchPercent = Math.max(55, matchPercent - 8);
-
-  return { targetRole: role, company, matchPercent, strengths, missing, keywords, improvements };
-}
-
 /* ─────────────────────────────────────────
    SCREEN 11a — Job Match Input
 ───────────────────────────────────────── */
-function JobMatchInputScreen({ onAnalyse }: { onAnalyse: (jobText: string, jobUrl: string, resumeText: string, resumeFile: string) => void }) {
+interface StoredResume {
+  resume_id: number;
+  input_method: string;
+  file_name: string | null;
+  target_role: string;
+  uploaded_at: string;
+}
+
+function JobMatchInputScreen({
+  userId,
+  onAnalyse,
+}: {
+  userId: number;
+  onAnalyse: (jobText: string, jobUrl: string, resumeId: number) => void;
+}) {
   const [inputMode, setInputMode] = useState<"paste" | "url">("paste");
   const [jobText, setJobText] = useState("");
   const [jobUrl, setJobUrl] = useState("");
-  const [resumeMode, setResumeMode] = useState<"demo" | "upload">("demo");
-  const [selectedDemo, setSelectedDemo] = useState<typeof DEMO_RESUMES[0] | null>(null);
-  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [resumes, setResumes] = useState<StoredResume[]>([]);
+  const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
+  const [loadingResumes, setLoadingResumes] = useState(true);
   const [error, setError] = useState("");
 
-  const hasJob = inputMode === "paste" ? jobText.trim().length > 20 : jobUrl.trim().length > 8;
-  const hasResume = resumeMode === "demo" ? selectedDemo !== null : uploadedFile !== null;
-  const canAnalyse = hasJob && hasResume;
+  useEffect(() => {
+    const loadResumes = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/user-resumes.php?user_id=${userId}`
+        );
 
-  const handleAnalyse = () => {
-    setError("");
-    if (!hasJob) { setError("Please paste a job advertisement or enter a job advertisement link."); return; }
-    if (!hasResume) { setError("Please select or upload a resume to compare."); return; }
-    const resumeText = selectedDemo?.text ?? "";
-    const resumeFile = selectedDemo?.fileName ?? uploadedFile ?? "My_Resume.pdf";
-    onAnalyse(jobText, jobUrl, resumeText, resumeFile);
-  };
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Unable to retrieve resumes.");
+        }
+
+        setResumes(data.resumes ?? []);
+      } catch (err) {
+        console.error("Unable to load resumes:", err);
+        setError("Unable to load your saved resumes. Please try again.");
+      } finally {
+        setLoadingResumes(false);
+      }
+    };
+
+    loadResumes();
+  }, [userId]);
+
+ const hasJobText = jobText.trim().length > 20;
+const hasResume = selectedResumeId !== null;
+const canAnalyse = hasJobText && hasResume;
+
+const handleAnalyse = () => {
+  setError("");
+
+  if (!hasJobText) {
+    setError(
+      "Please paste the full job advertisement text before starting the analysis."
+    );
+    return;
+  }
+
+  if (!selectedResumeId) {
+    setError("Please select one of your saved resumes to compare.");
+    return;
+  }
+
+  onAnalyse(
+    jobText.trim(),
+    jobUrl.trim(),
+    selectedResumeId
+  );
+};
+
+  
 
   return (
     <div className="py-8 px-8 max-w-2xl mx-auto">
@@ -3485,64 +3413,69 @@ function JobMatchInputScreen({ onAnalyse }: { onAnalyse: (jobText: string, jobUr
       </div>
 
       {/* Step 2 — Resume selection */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="size-5 rounded-full bg-[#4f46e5] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
-          <p className="text-sm font-semibold text-[#0f172a]">Select Your Resume</p>
-        </div>
+<div className="mb-6">
+  <div className="flex items-center gap-2 mb-3">
+    <span className="size-5 rounded-full bg-[#4f46e5] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
+      2
+    </span>
+    <p className="text-sm font-semibold text-[#0f172a]">
+      Select Your Resume
+    </p>
+  </div>
 
-        <div className="flex gap-1 mb-4 bg-[#f8fafc] p-1 rounded-lg w-fit">
-          {(["demo", "upload"] as const).map((m) => (
-            <button key={m} onClick={() => setResumeMode(m)}
-              className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${resumeMode === m ? "bg-white text-[#0f172a] shadow-sm" : "text-[#64748b] hover:text-[#0f172a]"}`}>
-              {m === "demo" ? "Use a demo resume" : "Upload resume"}
-            </button>
-          ))}
-        </div>
+  {loadingResumes ? (
+    <Card className="p-4">
+      <p className="text-sm text-[#64748b]">
+        Loading your saved resumes...
+      </p>
+    </Card>
+  ) : resumes.length === 0 ? (
+    <Card className="p-4">
+      <p className="text-sm font-medium text-[#0f172a] mb-1">
+        No saved resumes found
+      </p>
+      <p className="text-xs text-[#64748b]">
+        Submit a resume through Resume Feedback before using Job Advertisement Matching.
+      </p>
+    </Card>
+  ) : (
+    <div className="space-y-2">
+      {resumes.map((resume) => (
+        <button
+          key={resume.resume_id}
+          type="button"
+          onClick={() => setSelectedResumeId(resume.resume_id)}
+          className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+            selectedResumeId === resume.resume_id
+              ? "bg-[#eef2ff] border-[#a5b4fc]"
+              : "bg-white border-[#e2e8f0] hover:border-[#94a3b8]"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium text-[#0f172a]">
+                {resume.target_role}
+              </p>
+              <p className="text-xs text-[#64748b] mt-1">
+                {resume.file_name ?? "Pasted resume"}
+              </p>
+            </div>
 
-        {resumeMode === "demo" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {DEMO_RESUMES.map((d) => (
-              <button key={d.label} onClick={() => setSelectedDemo(d)}
-                className={`text-left px-3 py-2.5 rounded-lg border text-xs transition-colors ${selectedDemo?.fileName === d.fileName ? "bg-[#eef2ff] border-[#a5b4fc] text-[#4f46e5]" : "border-[#e2e8f0] text-[#64748b] hover:border-[#94a3b8] hover:text-[#0f172a]"}`}>
-                <span className="font-medium block">{d.label.split("—")[0].trim()}</span>
-                <span className="text-[#94a3b8]">→ {d.label.split("—")[1]?.trim()}</span>
-              </button>
-            ))}
-          </div>
-        ) : (
-          <div
-            className="p-5 rounded-xl border border-dashed border-[#e2e8f0] bg-white cursor-pointer hover:border-[#a5b4fc] hover:bg-[#eef2ff]/20 transition-colors text-center"
-            onClick={() => setUploadedFile("My_Resume.pdf")}
-          >
-            {uploadedFile ? (
-              <div>
-                <span className="text-2xl block mb-2">📄</span>
-                <p className="text-sm font-medium text-emerald-700 mb-1">{uploadedFile}</p>
-                <p className="text-xs text-[#64748b]">Resume ready</p>
-                <button onClick={(e) => { e.stopPropagation(); setUploadedFile(null); }} className="text-xs text-red-500 hover:underline mt-1">Remove</button>
-              </div>
-            ) : (
-              <div>
-                <span className="text-2xl block mb-2">⬆</span>
-                <p className="text-sm font-medium text-[#0f172a] mb-1">Click to upload your resume</p>
-                <p className="text-xs text-[#94a3b8]">PDF · DOCX</p>
-              </div>
+            {selectedResumeId === resume.resume_id && (
+              <span className="text-xs font-semibold text-[#4f46e5]">
+                ✓ Selected
+              </span>
             )}
           </div>
-        )}
 
-        {(selectedDemo || uploadedFile) && (
-          <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <span className="text-emerald-600 text-xs">✓</span>
-            <p className="text-xs text-emerald-800 font-medium">
-              {selectedDemo ? `${selectedDemo.fileName} selected` : uploadedFile}
-            </p>
-          </div>
-        )}
-      </div>
-
-      <PrivacyNotice text="Job advertisement content and resume information are used only to generate this match analysis. Do not include sensitive personal information in the job advertisement field." />
+          <p className="text-xs text-[#94a3b8] mt-2">
+            Added {new Date(resume.uploaded_at.replace(" ", "T")).toLocaleDateString("en-AU")}
+          </p>
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
       {error && (
         <div className="mt-4 flex items-start gap-2 px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg">
@@ -3563,22 +3496,34 @@ function JobMatchInputScreen({ onAnalyse }: { onAnalyse: (jobText: string, jobUr
 /* ─────────────────────────────────────────
    SCREEN 11b — Job Match Analysing
 ───────────────────────────────────────── */
-function JobMatchAnalysingScreen({ onDone, onError }: { onDone: () => void; onError: () => void }) {
+function JobMatchAnalysingScreen({ onDone }: { onDone: () => void }) {
   const [progress, setProgress] = useState(0);
   const STEPS = ["Reading job advertisement…", "Identifying role requirements…", "Comparing with your resume…", "Calculating skill alignment…", "Generating recommendations…", "Analysis complete"];
   const [step, setStep] = useState(0);
   useEffect(() => {
-    const willFail = Math.random() < 0.25;
-    const failAt = 30 + Math.random() * 45;
-    const iv = setInterval(() => setProgress((p) => {
-      const n = p + 1.8;
-      if (willFail && n >= failAt) { clearInterval(iv); setTimeout(onError, 300); return p; }
-      if (n >= 100) { clearInterval(iv); setTimeout(onDone, 500); return 100; }
-      return n;
-    }), 60);
-    const sv = setInterval(() => setStep((s) => Math.min(s + 1, STEPS.length - 1)), 650);
-    return () => { clearInterval(iv); clearInterval(sv); };
-  }, [onDone, onError]);
+  const iv = setInterval(() => {
+    setProgress((p) => {
+      const next = p + 2;
+
+      if (next >= 100) {
+        clearInterval(iv);
+        setTimeout(onDone, 300);
+        return 100;
+      }
+
+      return next;
+    });
+  }, 60);
+
+  const sv = setInterval(() => {
+    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  }, 650);
+
+  return () => {
+    clearInterval(iv);
+    clearInterval(sv);
+  };
+}, [onDone]);
 
   return (
     <div className="py-8 px-8 max-w-md mx-auto text-center flex flex-col items-center justify-center min-h-[calc(100vh-56px)]">
@@ -3590,7 +3535,7 @@ function JobMatchAnalysingScreen({ onDone, onError }: { onDone: () => void; onEr
       </div>
       <p className="text-xs text-[#64748b] h-4">{STEPS[step]}</p>
       <p className="text-xs text-[#94a3b8] mt-1">{Math.round(progress)}%</p>
-      <AIDisclaimer text="AI analysis is in progress. Job match results are indicative and should be reviewed critically." />
+      <AIDisclaimer text="Preparing the job match request. AI-generated results will only be displayed when the external AI service successfully completes the analysis." />
     </div>
   );
 }
@@ -3882,7 +3827,12 @@ const [questionIds, setQuestionIds] = useState<number[]>([]);
   const [resumeFeedback, setResumeFeedback] = useState<ResumeFeedback | null>(null);
   const [activity, setActivity] = useState<ActivityState>(EMPTY_ACTIVITY);
   const [jobMatchResult, setJobMatchResult] = useState<JobMatchResult | null>(null);
-  const [pendingJobMatch, setPendingJobMatch] = useState<{ jobText: string; jobUrl: string; resumeText: string; resumeFile: string } | null>(null);
+ const [pendingJobMatch, setPendingJobMatch] = useState<{
+  jobText: string;
+  jobUrl: string;
+  resumeId: number;
+  jobAdId?: number;
+} | null>(null); 
 
   const resetActivity = () => {
     setActivity(EMPTY_ACTIVITY);
@@ -4374,25 +4324,119 @@ onEnd={() => completeInterviewSession("ended_early")}
                 }}
               />
             )}
-            {screen === "job-match-input" && (
-              <JobMatchInputScreen
-                onAnalyse={(jobText, jobUrl, resumeText, resumeFile) => {
-                  setPendingJobMatch({ jobText, jobUrl, resumeText, resumeFile });
-                  go("job-match-analysing");
-                }}
-              />
-            )}
-            {screen === "job-match-analysing" && (
-              <JobMatchAnalysingScreen
-                onDone={() => {
-                  if (pendingJobMatch) {
-                    setJobMatchResult(generateJobMatchResult(pendingJobMatch.jobText, pendingJobMatch.resumeText, pendingJobMatch.resumeFile));
-                  }
-                  go("job-match-results");
-                }}
-                onError={() => go("job-match-error")}
-              />
-            )}
+            {screen === "job-match-input" && userId && (
+  <JobMatchInputScreen
+    userId={userId}
+    onAnalyse={async (jobText, jobUrl, resumeId) => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/api/job-advertisement.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user_id: userId,
+              job_ad_text: jobText,
+              job_url: jobUrl,
+            }),
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error(
+            "Unable to save job advertisement:",
+            data.message
+          );
+          go("job-match-error");
+          return;
+        }
+
+        setPendingJobMatch({
+          jobText,
+          jobUrl,
+          resumeId,
+          jobAdId: data.job_ad_id,
+        });
+
+        setJobMatchResult(null);
+        go("job-match-analysing");
+      } catch (error) {
+        console.error(
+          "Unable to connect to job advertisement API:",
+          error
+        );
+        go("job-match-error");
+      }
+    }}
+  />
+)}
+        {screen === "job-match-analysing" && (
+  <JobMatchAnalysingScreen
+    onDone={async () => {
+      if (
+        !userId ||
+        !pendingJobMatch?.jobAdId ||
+        !pendingJobMatch.resumeId
+      ) {
+        console.error("Missing job match analysis data.");
+        go("job-match-error");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:8000/api/job-match-analysis.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user_id: userId,
+              job_ad_id: pendingJobMatch.jobAdId,
+              resume_id: pendingJobMatch.resumeId,
+            }),
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error(
+            "Job match analysis unavailable:",
+            data.code,
+            data.message
+          );
+
+          setJobMatchResult(null);
+          go("job-match-error");
+          return;
+        }
+
+        /*
+         * A real JobMatchResult will be assigned here after the
+         * live AI analysis service is implemented.
+         */
+        setJobMatchResult(data.result);
+        go("job-match-results");
+      } catch (error) {
+        console.error(
+          "Unable to connect to job match analysis API:",
+          error
+        );
+
+        setJobMatchResult(null);
+        go("job-match-error");
+      }
+    }}
+    onError={() => go("job-match-error")}
+  />
+)}    
+              
             {screen === "job-match-error" && (
               <AIErrorScreen
                 context="AI-generated job match analysis"
