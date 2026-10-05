@@ -793,75 +793,76 @@ const ROLE_SPECIFIC_BANKS: Record<string, IQ[]> = {
 
 const BEHAVIOURAL_FEEDBACK = [
   {
-    strength: "You provided clear context and your role within the situation was well established.",
-    improvement: "The outcome of your actions was not described clearly.",
-    suggestion: "Add one or two sentences explaining the result — what was achieved and what you specifically contributed.",
-    structure: "Situation and Task were well covered. The Action and Result sections would benefit from more development.",
-    clarity: "Your response was easy to follow. Consider tightening longer sentences for greater impact.",
+    strength: "A strong behavioural answer usually gives clear context and explains your individual role in the situation.",
+    improvement: "Make sure the outcome of your actions is clearly explained rather than focusing only on what happened.",
+    suggestion: "Use one or two sentences to explain the result, what was achieved, and what you specifically contributed.",
+    structure: "Use the STAR structure: Situation, Task, Action and Result. Give particular attention to your Action and Result.",
+    clarity: "Keep your example specific and concise, and focus on details that are relevant to the question.",
   },
   {
-    strength: "Your individual actions were clearly described and you used 'I' effectively to highlight your contribution.",
-    improvement: "The response could be more specific about the outcome or what you learned from the experience.",
-    suggestion: "Include a concrete result where possible — even an approximate figure or a qualitative outcome strengthens the answer.",
-    structure: "Good use of the STAR structure. The Result section is the weakest element — develop this further.",
-    clarity: "Professional tone throughout. A more specific example would strengthen the response considerably.",
+    strength: "Effective behavioural answers clearly distinguish your own actions from the work of the wider team.",
+    improvement: "Include a specific outcome or lesson learned so the example demonstrates the impact of your actions.",
+    suggestion: "Where appropriate, include a concrete result, such as an improvement, completed task, positive outcome or lesson learned.",
+    structure: "Check that your response contains all four STAR elements, especially a clear Result.",
+    clarity: "Use a professional tone and specific examples rather than broad or general statements.",
   },
   {
-    strength: "You demonstrated self-awareness and showed genuine learning from the experience.",
-    improvement: "The specific Task you were responsible for was not clearly separated from the broader Situation.",
-    suggestion: "After describing the situation, add a sentence clarifying what your specific responsibility or goal was before moving to your actions.",
-    structure: "Situation and Action were strong. Explicitly stating the Task would improve the overall STAR structure.",
-    clarity: "Good use of specific language throughout. The closing sentence could be made more concise.",
+    strength: "A strong answer can demonstrate self-awareness by explaining both what happened and what you learned from the experience.",
+    improvement: "Clearly separate the situation from the specific task or responsibility you personally had.",
+    suggestion: "After introducing the situation, briefly state your responsibility before explaining the actions you took.",
+    structure: "Keep the Situation concise, identify the Task clearly, then focus most of the response on your Action and Result.",
+    clarity: "Use clear, direct language and finish with a concise explanation of the outcome or learning.",
   },
 ];
 
 const GRADUATE_FEEDBACK = [
   {
-    strength: "Your enthusiasm for the role came through genuinely and your response had a professional tone.",
-    improvement: "The connection between your specific skills and the role requirements could be made more explicit.",
-    suggestion: "Name one or two capabilities with a brief example, then link them directly to what the role involves.",
-    structure: "This type of question suits a conversational structure. You covered motivation well — the strengths element needs more depth.",
-    clarity: "Clear and well-paced. Avoid beginning too many sentences with 'I think' or 'I believe'.",
+    strength: "A strong graduate interview answer usually communicates genuine motivation for the role while maintaining a professional tone.",
+    improvement: "Make an explicit connection between your relevant skills and the requirements of the role.",
+    suggestion: "Identify one or two capabilities, support them with a brief example, and explain how they relate to the role.",
+    structure: "For motivation questions, consider explaining why the role interests you, what relevant strengths you bring, and how you could contribute.",
+    clarity: "Use clear and confident language. Avoid repeatedly beginning statements with phrases such as 'I think' or 'I believe'.",
   },
   {
-    strength: "You demonstrated a thoughtful understanding of your own development and career direction.",
-    improvement: "The answer could be more grounded in specific evidence from your studies or experience.",
-    suggestion: "For each strength or goal you mention, add a brief concrete example to make it credible.",
-    structure: "Good structure overall. The transition between your current capabilities and future goals could be smoother.",
-    clarity: "Confident and professional tone. Avoid overly broad statements — specificity is more persuasive.",
+    strength: "Effective graduate answers demonstrate awareness of your current capabilities, development and career direction.",
+    improvement: "Support statements about your strengths or goals with specific evidence from your studies, projects, work or other relevant experience.",
+    suggestion: "For each important strength or career goal, include a brief concrete example that demonstrates why it is credible.",
+    structure: "Organise the answer so that your current capabilities connect logically with your future goals and the opportunity you are discussing.",
+    clarity: "Keep statements specific and relevant. Concrete examples are generally more persuasive than broad claims.",
   },
   {
-    strength: "Your response showed genuine professional curiosity and awareness of the workplace environment.",
-    improvement: "The relevance of your experience to the specific role was not fully drawn out.",
-    suggestion: "After describing your experience, add a sentence explicitly connecting it to what the employer would need from you in this role.",
-    structure: "Motivation and skills were both present. Consider framing them in order: why this role, what you bring, how you'll contribute.",
-    clarity: "Good use of plain language. Check that you are not using filler phrases such as 'basically' or 'kind of'.",
+    strength: "A strong graduate answer can demonstrate professional curiosity and awareness of the workplace or industry.",
+    improvement: "Clearly explain how your studies, projects or experience are relevant to the specific role.",
+    suggestion: "After describing an experience, explicitly connect it to a skill, responsibility or capability that would be useful in the role.",
+    structure: "A useful structure is: why the role interests you, what relevant capabilities you bring, and how you could contribute.",
+    clarity: "Use direct professional language and minimise filler expressions such as 'basically' or 'kind of'.",
   },
 ];
 
 const ROLE_SPECIFIC_FEEDBACK = [
   {
-    strength: "Your technical approach was sound and you demonstrated structured thinking.",
-    improvement: "The response described a general approach without connecting it to a real example from your experience.",
-    suggestion: "Where possible, anchor your answer in a specific project or situation you have actually encountered.",
-    structure: "The response covered the approach clearly. Adding a practical example would give it more credibility.",
-    clarity: "Clear and appropriately technical. Make sure your explanation would be accessible to a mixed audience including non-technical interviewers.",
+    strength: "A strong role-specific answer demonstrates structured thinking and explains a clear approach to the problem or task.",
+    improvement: "Where possible, connect your approach to a real example from your studies, projects, work or other relevant experience.",
+    suggestion: "Use a specific project or situation to demonstrate how you applied the approach in practice.",
+    structure: "Explain your approach clearly, then support it with a practical example and the outcome where relevant.",
+    clarity: "Use appropriate technical language, but make sure your explanation can also be understood by non-technical interviewers.",
   },
   {
-    strength: "You showed methodical thinking and awareness of tradeoffs, which is valued in this type of role.",
-    improvement: "The response focused on process but did not demonstrate the outcome or impact of applying this approach.",
-    suggestion: "Add a sentence describing a situation where you used this approach and what the result was.",
-    structure: "Strong on method. Outcome-oriented language would round the response out.",
-    clarity: "Professional and well-structured. Some technical terms could be briefly defined for a non-specialist interviewer.",
+    strength: "Effective role-specific answers demonstrate methodical thinking and awareness of relevant options or trade-offs.",
+    improvement: "Include the outcome or impact of applying your approach rather than describing only the process.",
+    suggestion: "Describe a situation where you used the approach, the actions you took, and what resulted from those actions.",
+    structure: "Explain the method first, then connect it to an outcome to demonstrate its practical value.",
+    clarity: "Keep the explanation professional and structured, and briefly explain specialised technical terms when appropriate.",
   },
   {
-    strength: "Your problem-solving approach was logical and you clearly communicated your reasoning.",
-    improvement: "The depth of your technical knowledge could be demonstrated more clearly.",
-    suggestion: "If possible, reference a specific tool, technique or decision from a real project to support your answer.",
-    structure: "Good overall flow. Consider leading with the key principle before walking through the steps.",
-    clarity: "Confident tone. Ensure you are not making the answer overly abstract — ground it in something concrete.",
+    strength: "A strong technical or role-specific answer communicates your reasoning clearly and demonstrates a logical problem-solving process.",
+    improvement: "Demonstrate technical knowledge with specific evidence rather than relying only on an abstract explanation.",
+    suggestion: "Where relevant, mention a specific tool, technique, technology or decision from a real project or experience.",
+    structure: "Consider stating the key principle or approach first, then explain the steps and provide supporting evidence.",
+    clarity: "Keep the answer concrete and relevant. Practical examples can make technical reasoning easier for an interviewer to understand.",
   },
 ];
+
 
 function detectRoleForInterview(role: string, industry: string): string {
   const r = (role + " " + industry).toLowerCase();
@@ -2821,12 +2822,12 @@ function ResumeResultsScreen({ onBack, onUploadNew, feedback }: { onBack: () => 
 ───────────────────────────────────────── */
 function InterviewGeneratingScreen({ onDone, onError }: { onDone: () => void; onError: () => void }) {
   useEffect(() => {
-    const willFail = Math.random() < 0.25;
-    const delay = 900 + Math.random() * 600;
-    const t = setTimeout(() => { willFail ? onError() : onDone(); }, delay);
-    return () => clearTimeout(t);
-  }, [onDone, onError]);
+  const t = setTimeout(() => {
+    onDone();
+  }, 900);
 
+  return () => clearTimeout(t);
+}, [onDone]);
   return (
     <div className="py-8 px-8 max-w-md mx-auto text-center flex flex-col items-center justify-center min-h-[calc(100vh-56px)]">
       <div className="size-20 rounded-2xl bg-[#eef2ff] flex items-center justify-center mb-8">
@@ -2834,14 +2835,14 @@ function InterviewGeneratingScreen({ onDone, onError }: { onDone: () => void; on
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
         </svg>
       </div>
-      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">Generating your interview questions…</h1>
-      <p className="text-sm text-[#64748b] mb-8 leading-relaxed max-w-xs">Preparing personalised interview questions for your target role.</p>
+      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">Preparing your interview questions…</h1>
+      <p className="text-sm text-[#64748b] mb-8 leading-relaxed max-w-xs">Preparing interview questions based on your selected role, interview type and difficulty.</p>
       <div className="flex gap-1.5 justify-center">
         {[0, 1, 2].map((i) => (
           <div key={i} className="size-2 rounded-full bg-[#4f46e5] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
         ))}
       </div>
-      <AIDisclaimer text="AI is generating your questions. This may take a moment." />
+     <AIDisclaimer text="Questions in the current MVP are selected from predefined interview question sets. Live AI-generated questions will be enabled when the external AI service is configured." />
     </div>
   );
 }
@@ -3079,7 +3080,10 @@ function InterviewFeedbackScreen({ qIndex, total, question, answer, onNext, onRe
     <div className="py-8 px-8 max-w-3xl mx-auto">
       <div className="mb-6">
         <p className="text-xs text-[#64748b] mb-1">Question {qIndex + 1} of {total} — Feedback</p>
-        <h1 className="text-xl font-semibold text-[#0f172a] tracking-tight">Response feedback</h1>
+<h1 className="text-xl font-semibold text-[#0f172a] tracking-tight">Answer guidance</h1>
+<p className="text-xs text-[#64748b] mt-2">
+  General practice guidance is shown in the current MVP. Your response has not been analysed by AI.
+</p>
       </div>
 
       {/* Question recap */}
@@ -3101,7 +3105,7 @@ function InterviewFeedbackScreen({ qIndex, total, question, answer, onNext, onRe
         <p className="text-sm text-[#475569] leading-relaxed">{answer || "No response provided."}</p>
       </Card>
 
-      {/* AI Feedback */}
+     {/* General practice guidance */}
       <div className="space-y-4 mb-6">
         {[
           { icon: "✓", label: "What worked well", color: "emerald", text: fb.strength },
@@ -3122,7 +3126,7 @@ function InterviewFeedbackScreen({ qIndex, total, question, answer, onNext, onRe
         })}
       </div>
 
-      <AIDisclaimer text="AI-generated feedback focuses on the content and structure of your response. It does not assess personality, accent, ethnicity or predicted interview success. Review feedback before applying it." />
+<AIDisclaimer text="This is general practice guidance from predefined examples and does not analyse your submitted response. It does not assess personality, accent, ethnicity or predict interview success." />
 
       <div className="flex items-center gap-3 mt-5">
         {isLast
@@ -3161,7 +3165,7 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
 
       {completed > 0 && (
       <Card className="p-5 mb-4">
-        <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Key strengths identified</h3>
+<h3 className="text-sm font-semibold text-[#0f172a] mb-3">Practice strengths to develop</h3>
         <ul className="space-y-2">
           {["Providing context and background for your examples", "Professional and clear communication style", "Demonstrating genuine understanding of the role"].map((s) => (
             <li key={s} className="flex items-start gap-2 text-xs text-[#475569]">
@@ -3175,7 +3179,7 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
 
       {completed > 0 && (
       <Card className="p-5 mb-4">
-        <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Areas for improvement</h3>
+<h3 className="text-sm font-semibold text-[#0f172a] mb-3">Areas to focus on</h3>
         <ul className="space-y-2">
           {["Describing outcomes and results more explicitly", "Using 'I' to highlight your individual contribution", "Keeping responses concise and well-structured"].map((a) => (
             <li key={a} className="flex items-start gap-2 text-xs text-[#475569]">
@@ -3189,7 +3193,9 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
 
       {completed === 0 && (
         <Card className="p-5 mb-5 border-[#e2e8f0]">
-<p className="text-sm text-[#64748b] leading-relaxed">No responses were submitted in this session. Complete at least one question to receive AI-generated strengths, areas for improvement and suggested next steps.</p>
+<p className="text-sm text-[#64748b] leading-relaxed">
+  No responses were submitted in this session. Complete at least one question to receive personalised feedback when the AI feedback service is available.
+</p>
         </Card>
       )}
 
@@ -3197,7 +3203,7 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
       <Card className="p-5 mb-5">
         <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Suggested next steps</h3>
         <ul className="space-y-2">
-          {["Review your feedback responses and identify patterns", "Practise your STAR technique with different examples", "Upload your resume to align feedback with your application materials", "Consult your university career service for personalised support"].map((s) => (
+          {["Review the practice guidance and identify areas you want to improve", "Practise your STAR technique with different examples", "Upload your resume to align feedback with your application materials", "Consult your university career service for personalised support"].map((s) => (
             <li key={s} className="flex items-start gap-2 text-xs text-[#475569]">
               <span className="text-[#a5b4fc] flex-shrink-0 mt-0.5">→</span>
               {s}
@@ -3206,14 +3212,14 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
         </ul>
       </Card>
       )}
-
-      <AIDisclaimer
+<AIDisclaimer
   text={
     completed === 0
-      ? "No personalised AI feedback was generated because no responses were submitted. Complete at least one interview question to receive feedback on your practice responses."
-      : "This session summary reflects AI-generated feedback on your practice responses. It does not predict interview success or guarantee employment outcomes. Seek professional career advice from your university career service."
+      ? "No personalised AI feedback was generated because no responses were submitted. Complete at least one interview question to receive feedback when the AI service is available."
+      : "The current MVP displays general interview practice guidance. Personalised AI analysis of your responses will be provided when the external AI service is configured. This platform does not predict interview success or guarantee employment outcomes."
   }
 />
+   
 
       <div className="flex gap-3 mt-5">
         <Btn onClick={onPracticeAgain} size="md">Practice again</Btn>
