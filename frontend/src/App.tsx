@@ -4181,13 +4181,71 @@ go("resume-analysing");
   answeredCount={completedQs}
   total={interviewConfig.count}
   question={sessionQuestions[qIndex] ?? sessionQuestions[0]}
-                onSubmit={(ans) => {
-                  setCurrentAnswer(ans);
-                  const newCompleted = completedQs + 1;
-                  setCompletedQs(newCompleted);
-                  setActivity((prev) => ({ ...prev, currentInterviewAnswered: newCompleted }));
-                  go("interview-feedback-generating");
-                }}
+               onSubmit={async (ans) => {
+  try {
+    const questionId = questionIds[qIndex];
+
+    if (!questionId) {
+      console.error("No database question ID found for the current question.");
+      go("interview-error");
+      return;
+    }
+
+    const response = await fetch(
+      "http://localhost:8000/api/interview-response.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question_id: questionId,
+          response_text: ans,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(
+        data.message || "Unable to store interview response."
+      );
+      go("interview-error");
+      return;
+    }
+
+    setCurrentAnswer(ans);
+
+    const newCompleted = completedQs + 1;
+    setCompletedQs(newCompleted);
+
+    setActivity((prev) => ({
+      ...prev,
+      currentInterviewAnswered: newCompleted,
+    }));
+
+    console.log(
+      "Interview response stored:",
+      data.response_id,
+      "for question:",
+      questionId
+    );
+
+    const next = qIndex + 1;
+
+if (next >= interviewConfig.count) {
+  go("interview-summary");
+} else {
+  setQIndex(next);
+  setCurrentAnswer("");
+  go("interview-question");
+}
+  } catch (error) {
+    console.error("Interview response request failed:", error);
+    go("interview-error");
+  }
+}}
                 onSkip={() => {
                   if (qIndex + 1 >= interviewConfig.count) go("interview-summary");
                   else { setQIndex((i) => i + 1); }
@@ -4196,18 +4254,29 @@ go("resume-analysing");
               />
             )}
             {screen === "interview-feedback-generating" && (
-              <InterviewFeedbackGeneratingScreen
-                onDone={() => go("interview-feedback")}
-                onError={() => go("interview-feedback-error")}
-              />
-            )}
-            {screen === "interview-feedback-error" && (
-              <AIErrorScreen
-                context="AI-generated interview feedback"
-                onRetry={() => go("interview-feedback-generating")}
-                onBack={() => go("interview-question")}
-              />
-            )}
+  <InterviewFeedbackGeneratingScreen
+    onDone={() => go("interview-feedback-error")}
+    onError={() => go("interview-feedback-error")}
+  />
+)}
+{screen === "interview-feedback-error" && (
+  <AIErrorScreen
+    context="AI-generated interview feedback"
+    onRetry={() => go("interview-feedback-generating")}
+    onBack={() => {
+      const next = qIndex + 1;
+
+      if (next >= interviewConfig.count) {
+        go("interview-summary");
+      } else {
+        setQIndex(next);
+        setCurrentAnswer("");
+        go("interview-question");
+      }
+    }}
+  />
+)}
+            
             {screen === "interview-feedback" && sessionQuestions.length > 0 && (
               <InterviewFeedbackScreen
                 qIndex={qIndex}
