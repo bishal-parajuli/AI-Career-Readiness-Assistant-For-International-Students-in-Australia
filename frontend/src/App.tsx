@@ -2818,7 +2818,7 @@ function InterviewFeedbackGeneratingScreen({ onDone, onError }: { onDone: () => 
 /* ─────────────────────────────────────────
    SCREEN 6 — Interview setup
 ───────────────────────────────────────── */
-function InterviewSetupScreen({ onStart, userName }: { onStart: (config: { role: string; industry: string; type: string; difficulty: string; count: number }) => void; userName: string }) {
+ function InterviewSetupScreen({ onStart, userName }: { onStart: (config: { role: string; industry: string; type: string; difficulty: string; count: number; useProfile: boolean }) => void; userName: string }) {
   const [role, setRole] = useState("Software Developer");
   const [industry, setIndustry] = useState("Technology");
   const [type, setType] = useState("Behavioural");
@@ -2890,7 +2890,15 @@ function InterviewSetupScreen({ onStart, userName }: { onStart: (config: { role:
 
       <p className="text-xs text-[#94a3b8] mb-5">This session does not include video, audio, facial or emotion analysis.</p>
 
-      <Btn onClick={() => onStart({ role, industry, type, difficulty, count })} size="lg" full>Start Practice →</Btn>
+      <Btn
+  onClick={() =>
+    onStart({ role, industry, type, difficulty, count, useProfile })
+  }
+  size="lg"
+  full
+>
+  Start Practice →
+</Btn>
     </div>
   );
 }
@@ -4052,14 +4060,69 @@ go("resume-analysing");
             {screen === "interview-setup" && (
               <InterviewSetupScreen
                 userName={userName}
-                onStart={(cfg) => {
-                  setInterviewConfig(cfg);
-                  setSessionQuestions(buildSessionQuestions(cfg.type, cfg.role, cfg.industry, cfg.difficulty, cfg.count));
-                  setQIndex(0);
-                  setCompletedQs(0);
-                  setActivity((prev) => ({ ...prev, currentInterviewAnswered: 0, currentInterviewTotal: cfg.count }));
-                  go("interview-generating");
-                }}
+             onStart={async (cfg) => {
+  try {
+    const response = await fetch(
+      "http://localhost:8000/api/interview-session.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          target_role: cfg.role,
+          industry: cfg.industry,
+          interview_type: cfg.type,
+          difficulty_level: cfg.difficulty,
+          question_count: cfg.count,
+          use_career_profile: cfg.useProfile,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(
+        data.message || "Unable to create interview session."
+      );
+      go("interview-error");
+      return;
+    }
+
+    console.log("Interview session created:", data.session_id);
+
+    setInterviewConfig(cfg);
+
+    // Temporary prototype questions until the OpenAI service is enabled.
+    setSessionQuestions(
+      buildSessionQuestions(
+        cfg.type,
+        cfg.role,
+        cfg.industry,
+        cfg.difficulty,
+        cfg.count
+      )
+    );
+
+    setQIndex(0);
+    setCompletedQs(0);
+
+    setActivity((prev) => ({
+      ...prev,
+      currentInterviewAnswered: 0,
+      currentInterviewTotal: cfg.count,
+    }));
+
+    go("interview-generating");
+  } catch (error) {
+    console.error("Interview session request failed:", error);
+    go("interview-error");
+  }
+}}
+                  
+               
               />
             )}
             {screen === "interview-generating" && (
