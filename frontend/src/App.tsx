@@ -1615,10 +1615,6 @@ function Sidebar({ active, onNav, userId, userName, userEmail, onLogout, onUpdat
 /* ─────────────────────────────────────────
    SCREEN AUTH — Sign in / Sign up
 ───────────────────────────────────────── */
-const DEMO_ACCOUNTS = [
-  { email: "mei.zhang@student.edu.au", password: "CareerReady1", name: "Mei" },
-  { email: "arjun.sharma@uni.edu.au",  password: "CareerReady1", name: "Arjun" },
-];
 
 function AuthScreen({ onSuccess }: { onSuccess: (userId: number, name: string, email: string, isNew: boolean) => void }) {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -1805,7 +1801,17 @@ onSuccess(
                 <label className="block">
                   <div className="flex justify-between mb-1.5">
                     <span className="text-xs font-medium text-[#0f172a]">Password</span>
-                    <button className="text-xs text-[#4f46e5] hover:underline">Forgot password?</button>
+                    <button
+  type="button"
+  onClick={() =>
+    alert(
+      "Password recovery is not available in this MVP. Please contact the system administrator if you need assistance accessing your account."
+    )
+  }
+  className="text-xs text-[#4f46e5] hover:underline"
+>
+  Forgot password?
+</button>
                   </div>
                   <div className="relative">
                     <input
@@ -1848,24 +1854,6 @@ onSuccess(
                   </>
                 ) : "Sign in"}
               </button>
-
-              {/* Demo credentials */}
-              <div className="mt-5 p-3 bg-[#f8fafc] border border-[#e2e8f0] rounded-lg">
-                <p className="text-xs font-medium text-[#64748b] mb-2">Demo credentials</p>
-                <div className="space-y-1">
-                  {DEMO_ACCOUNTS.map((a) => (
-                    <button
-                      key={a.email}
-                      onClick={() => { setSiEmail(a.email); setSiPassword(a.password); setSiError(""); }}
-                      className="w-full text-left text-xs text-[#4f46e5] hover:underline"
-                    >
-                      {a.name} — {a.email}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-[10px] text-[#94a3b8] mt-1.5">Password: CareerReady1</p>
-              </div>
-
               <p className="text-xs text-center text-[#64748b] mt-4">
                 Don't have an account?{" "}
                 <button onClick={() => setMode("signup")} className="text-[#4f46e5] font-medium hover:underline">Create one</button>
