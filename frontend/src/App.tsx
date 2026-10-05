@@ -3983,9 +3983,30 @@ const [userId, setUserId] = useState<number | null>(null);
 
     console.log("Resume stored successfully:", data.resume_id);
 
-    // Temporary mock feedback until OpenAI integration is implemented.
-    setResumeFeedback(generateFeedback(content, role, fileName));
-    go("resume-analysing");
+    const feedbackResponse = await fetch("http://localhost:8000/api/resume-feedback.php", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    resume_id: data.resume_id,
+  }),
+});
+
+const feedbackData = await feedbackResponse.json();
+
+if (!feedbackResponse.ok) {
+  console.error(
+    feedbackData.code || "AI_FEEDBACK_ERROR",
+    feedbackData.message || "Unable to generate resume feedback."
+  );
+  go("resume-error");
+  return;
+}
+
+// Real AI feedback will be assigned here once the OpenAI service is enabled.
+console.log("Resume feedback service response:", feedbackData);
+go("resume-analysing");
 
   } catch (error) {
     console.error("Resume submission failed:", error);
