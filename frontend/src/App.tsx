@@ -3874,6 +3874,8 @@ const [userId, setUserId] = useState<number | null>(null);
   const [userEmail, setUserEmail] = useState("mei.zhang@student.edu.au");
   const [interviewConfig, setInterviewConfig] = useState({ role: "Software Developer", industry: "Technology", type: "Behavioural", difficulty: "Intermediate", count: 5 });
   const [sessionQuestions, setSessionQuestions] = useState<IQ[]>([]);
+  const [interviewSessionId, setInterviewSessionId] = useState<number | null>(null);
+const [questionIds, setQuestionIds] = useState<number[]>([]);
   const [qIndex, setQIndex] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [completedQs, setCompletedQs] = useState(0);
@@ -4062,7 +4064,8 @@ go("resume-analysing");
                 userName={userName}
              onStart={async (cfg) => {
   try {
-    const response = await fetch(
+    // 1. Create the interview session in the database.
+    const sessionResponse = await fetch(
       "http://localhost:8000/api/interview-session.php",
       {
         method: "POST",
@@ -4081,33 +4084,65 @@ go("resume-analysing");
       }
     );
 
-    const data = await response.json();
+    const sessionData = await sessionResponse.json();
 
-    if (!response.ok) {
+    if (!sessionResponse.ok) {
       console.error(
-        data.message || "Unable to create interview session."
+        sessionData.message || "Unable to create interview session."
       );
       go("interview-error");
       return;
     }
 
-    console.log("Interview session created:", data.session_id);
+    const newSessionId = Number(sessionData.session_id);
+    setInterviewSessionId(newSessionId);
 
-    setInterviewConfig(cfg);
-
-    // Temporary prototype questions until the OpenAI service is enabled.
-    setSessionQuestions(
-      buildSessionQuestions(
-        cfg.type,
-        cfg.role,
-        cfg.industry,
-        cfg.difficulty,
-        cfg.count
-      )
+    // 2. Generate temporary prototype questions locally.
+    // These are not OpenAI-generated questions.
+    const generatedQuestions = buildSessionQuestions(
+      cfg.type,
+      cfg.role,
+      cfg.industry,
+      cfg.difficulty,
+      cfg.count
     );
+
+    // 3. Store those questions against the real database session.
+    const questionsResponse = await fetch(
+      "http://localhost:8000/api/interview-questions.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          session_id: newSessionId,
+          questions: generatedQuestions,
+        }),
+      }
+    );
+
+    const questionsData = await questionsResponse.json();
+
+    if (!questionsResponse.ok) {
+      console.error(
+        questionsData.message || "Unable to store interview questions."
+      );
+      go("interview-error");
+      return;
+    }
+
+    const savedQuestionIds = questionsData.questions.map(
+      (question: { question_id: number }) => question.question_id
+    );
+
+    setQuestionIds(savedQuestionIds);
+    setInterviewConfig(cfg);
+    setSessionQuestions(generatedQuestions);
 
     setQIndex(0);
     setCompletedQs(0);
+    setCurrentAnswer("");
 
     setActivity((prev) => ({
       ...prev,
@@ -4115,14 +4150,16 @@ go("resume-analysing");
       currentInterviewTotal: cfg.count,
     }));
 
+    console.log("Interview session created:", newSessionId);
+    console.log("Interview question IDs:", savedQuestionIds);
+
     go("interview-generating");
   } catch (error) {
-    console.error("Interview session request failed:", error);
+    console.error("Interview setup request failed:", error);
     go("interview-error");
   }
 }}
-                  
-               
+             
               />
             )}
             {screen === "interview-generating" && (
