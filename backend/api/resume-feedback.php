@@ -11,7 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../config/database.php';
+$openAiApiKey = trim($_ENV['OPENAI_API_KEY'] ?? '');
 
+$openAiConfigured =
+    $openAiApiKey !== '' &&
+    $openAiApiKey !== 'your_openai_api_key_here';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
 
@@ -65,6 +69,16 @@ try {
         ]);
         exit;
     }
+    if (!$openAiConfigured) {
+    http_response_code(503);
+
+    echo json_encode([
+        'status' => 'error',
+        'code' => 'AI_SERVICE_NOT_CONFIGURED',
+        'message' => 'AI feedback is temporarily unavailable because the AI service is not configured.'
+    ]);
+    exit;
+}
 
     echo json_encode([
         'status' => 'success',
