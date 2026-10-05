@@ -161,7 +161,7 @@ ai_career_readiness
 Import the checked-in schema:
 
 ```bash
-mysql -u YOUR_DATABASE_USER -p ai_career_readiness < database/schema.sql
+mysql -h 127.0.0.1 -P 3307 -u YOUR_DATABASE_USER -p ai_career_readiness < database/schema.sql
 ```
 
 The local XAMPP development environment currently uses MariaDB on port `3307`. Adjust the command for your own environment where necessary.
