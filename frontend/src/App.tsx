@@ -1086,9 +1086,9 @@ const NAV_ITEMS: { id: NavItem; label: string; Icon: React.ComponentType<{ class
   { id: "progress",       label: "My Progress",              Icon: IconProgress },
   { id: "responsible-ai", label: "Responsible AI & Privacy", Icon: IconShield },
 ];
-
-function SidebarContents({ active, onNav, userName, userEmail, onLogout, onUpdateUser, onClose }: {
+function SidebarContents({ active, onNav, userId, userName, userEmail, onLogout, onUpdateUser, onClose }: {
   active: NavItem;
+  userId: number;
   onNav: (n: NavItem) => void;
   userName: string;
   userEmail: string;
@@ -1139,13 +1139,57 @@ function SidebarContents({ active, onNav, userName, userEmail, onLogout, onUpdat
     setShowCurrent(false); setShowNew(false);
     closeMenu(); setShowPassword(true);
   };
-  const savePassword = () => {
-    setPwError("");
-    if (!currentPw) { setPwError("Please enter your current password."); return; }
-    if (newPw.length < 8) { setPwError("New password must be at least 8 characters."); return; }
-    if (newPw !== confirmPw) { setPwError("New passwords do not match."); return; }
+  const savePassword = async () => {
+  setPwError("");
+  setPwSaved(false);
+
+  if (!currentPw) {
+    setPwError("Please enter your current password.");
+    return;
+  }
+
+  if (newPw.length < 8) {
+    setPwError("New password must be at least 8 characters.");
+    return;
+  }
+
+  if (newPw !== confirmPw) {
+    setPwError("New passwords do not match.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "http://localhost:8000/api/change-password.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          current_password: currentPw,
+          new_password: newPw,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setPwError(data.message || "Unable to change password.");
+      return;
+    }
+
+    setCurrentPw("");
+    setNewPw("");
+    setConfirmPw("");
     setPwSaved(true);
-  };
+  } catch (error) {
+    console.error("Password change failed:", error);
+    setPwError("Unable to change password. Please try again.");
+  }
+};
 
   const handleNav = (id: NavItem) => {
     onNav(id);
@@ -1452,8 +1496,9 @@ function SidebarContents({ active, onNav, userName, userEmail, onLogout, onUpdat
   );
 }
 
-function Sidebar({ active, onNav, userName, userEmail, onLogout, onUpdateUser }: {
+function Sidebar({ active, onNav, userId, userName, userEmail, onLogout, onUpdateUser }: {
   active: NavItem;
+  userId: number;
   onNav: (n: NavItem) => void;
   userName: string;
   userEmail: string;
@@ -1466,7 +1511,7 @@ function Sidebar({ active, onNav, userName, userEmail, onLogout, onUpdateUser }:
     <>
       {/* ── Desktop sidebar — fixed left, full height ── */}
       <aside className="hidden md:flex w-[248px] flex-shrink-0 flex-col fixed inset-y-0 left-0 border-r border-[#e2e8f0] bg-white z-30">
-        <SidebarContents active={active} onNav={onNav} userName={userName} userEmail={userEmail} onLogout={onLogout} onUpdateUser={onUpdateUser} />
+<SidebarContents active={active} onNav={onNav} userId={userId} userName={userName} userEmail={userEmail} onLogout={onLogout} onUpdateUser={onUpdateUser} />
       </aside>
 
       {/* ── Desktop spacer so main content doesn't sit under the fixed sidebar ── */}
@@ -1509,6 +1554,7 @@ function Sidebar({ active, onNav, userName, userEmail, onLogout, onUpdateUser }:
             <SidebarContents
               active={active}
               onNav={onNav}
+              userId={userId!}
               userName={userName}
               userEmail={userEmail}
               onLogout={onLogout}
@@ -4019,9 +4065,11 @@ const completeInterviewSession = async (
           <Sidebar
             active={activeNav}
             onNav={handleNav}
+            userId={userId!}
             userName={userName}
             userEmail={userEmail}
             onLogout={() => {
+              
               resetActivity();
               setUserName("Mei");
               setUserEmail("mei.zhang@student.edu.au");
