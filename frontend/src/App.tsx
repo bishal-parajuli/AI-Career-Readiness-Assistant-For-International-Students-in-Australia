@@ -43,6 +43,90 @@ interface ResumeFeedback {
   strengths: string[];
   sections: FeedbackSection[];
 }
+function mapAIResumeFeedback(
+  apiData: any,
+  fileName: string
+): ResumeFeedback {
+  const items = Array.isArray(apiData.feedback)
+    ? apiData.feedback
+    : [];
+
+  const strengths = items
+    .filter((item: any) => item.type === "strength")
+    .map((item: any) => item.text);
+
+  const improvements = items.filter(
+    (item: any) =>
+      item.type === "improvement" ||
+      item.type === "recommendation"
+  );
+
+  const grouped = new Map<string, any[]>();
+
+  items.forEach((item: any) => {
+    const category = item.category || "General feedback";
+
+    if (!grouped.has(category)) {
+      grouped.set(category, []);
+    }
+
+    grouped.get(category)!.push(item);
+  });
+
+  const sections: FeedbackSection[] = Array.from(
+    grouped.entries()
+  ).map(([category, categoryItems]) => ({
+    title: category,
+    icon: "✦",
+    summary: `AI feedback for ${category.toLowerCase()}.`,
+    items: categoryItems.map((item: any) => ({
+      observation: item.text,
+      why:
+        item.type === "strength"
+          ? "This is a positive feature identified in your resume."
+          : "This area may affect how clearly your experience and suitability are communicated.",
+      suggestion: item.text,
+      priority:
+        item.priority === "high"
+          ? "High"
+          : item.priority === "low"
+          ? "Low"
+          : "Medium",
+    })),
+  }));
+
+  return {
+    overview:
+      strengths.length > 0
+        ? `Your resume shows relevant strengths for the ${
+            apiData.target_role || "selected"
+          } role. The AI analysis also identified ${
+            improvements.length
+          } area${improvements.length === 1 ? "" : "s"} where your resume could be strengthened.`
+        : `The AI analysis identified ${
+            improvements.length
+          } area${improvements.length === 1 ? "" : "s"} where your resume could be strengthened.`,
+
+    targetRole: apiData.target_role || "Not specified",
+
+    resumeLabel: fileName || "Resume",
+
+    roleRelevance: {
+      strong: strengths,
+      partial: improvements
+        .filter((item: any) => item.priority !== "high")
+        .map((item: any) => item.text),
+      missing: improvements
+        .filter((item: any) => item.priority === "high")
+        .map((item: any) => item.text),
+    },
+
+    strengths,
+
+    sections,
+  };
+}
+
 
 type ResumeType = "it-grad" | "nurse" | "marketing" | "generic";
 
@@ -2590,37 +2674,75 @@ function AIErrorScreen({
 /* ─────────────────────────────────────────
    SCREEN 4b — Resume analysing
 ───────────────────────────────────────── */
-function ResumeAnalysingScreen({ onDone, onError }: { onDone: () => void; onError: () => void }) {
-  const [progress, setProgress] = useState(0);
-  const STEPS = ["Reading resume…", "Identifying skills and experience…", "Comparing resume with target role…", "Generating personalised recommendations…", "Analysis complete"];
+function ResumeAnalysingScreen() {
+  const [progress, setProgress] = useState(12);
+
+  const STEPS = [
+    "Reading resume…",
+    "Identifying skills and experience…",
+    "Comparing resume with target role…",
+    "Generating personalised recommendations…",
+  ];
+
   const [step, setStep] = useState(0);
+
   useEffect(() => {
-    const willFail = Math.random() < 0.25;
-    const failAt = 35 + Math.random() * 40;
-    const iv = setInterval(() => setProgress((p) => {
-      const n = p + 1.6;
-      if (willFail && n >= failAt) { clearInterval(iv); setTimeout(onError, 300); return p; }
-      if (n >= 100) { clearInterval(iv); setTimeout(onDone, 500); return 100; }
-      return n;
-    }), 60);
-    const sv = setInterval(() => setStep((s) => Math.min(s + 1, STEPS.length - 1)), 700);
-    return () => { clearInterval(iv); clearInterval(sv); };
-  }, [onDone, onError]);
+    const progressTimer = setInterval(() => {
+      setProgress((current) => {
+        if (current >= 90) {
+          return current;
+        }
+
+        return Math.min(current + 4, 90);
+      });
+    }, 700);
+
+    const stepTimer = setInterval(() => {
+      setStep((current) =>
+        Math.min(current + 1, STEPS.length - 1)
+      );
+    }, 1800);
+
+    return () => {
+      clearInterval(progressTimer);
+      clearInterval(stepTimer);
+    };
+  }, []);
 
   return (
     <div className="py-8 px-8 max-w-md mx-auto text-center flex flex-col items-center justify-center min-h-[calc(100vh-56px)]">
-      <div className="size-20 rounded-2xl bg-[#eef2ff] flex items-center justify-center text-4xl mb-8">📄</div>
-      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">Analysing your resume…</h1>
-      <p className="text-sm text-[#64748b] mb-10 leading-relaxed max-w-xs">Please wait while we analyse your resume in the context of Australian graduate employment.</p>
-      <div className="w-full bg-[#f1f5f9] rounded-full h-2 mb-4 overflow-hidden">
-        <div className="h-2 rounded-full bg-[#4f46e5] transition-all duration-100" style={{ width: `${progress}%` }} />
+      <div className="size-20 rounded-2xl bg-[#eef2ff] flex items-center justify-center text-4xl mb-8">
+        📄
       </div>
-      <p className="text-xs text-[#64748b] h-4">{STEPS[step]}</p>
-      <p className="text-xs text-[#94a3b8] mt-1">{Math.round(progress)}%</p>
+
+      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">
+        Analysing your resume…
+      </h1>
+
+      <p className="text-sm text-[#64748b] mb-10 leading-relaxed max-w-xs">
+        Please wait while AI analyses your resume in the context of Australian graduate employment.
+      </p>
+
+      <div className="w-full bg-[#f1f5f9] rounded-full h-2 mb-4 overflow-hidden">
+        <div
+          className="h-2 rounded-full bg-[#4f46e5] transition-all duration-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <p className="text-xs text-[#64748b] h-4">
+        {STEPS[step]}
+      </p>
+
+      <p className="text-xs text-[#94a3b8] mt-1">
+        {progress}%
+      </p>
+
       <AIDisclaimer text="AI analysis is in progress. Generated feedback should be reviewed critically before making changes to your resume." />
     </div>
   );
 }
+      
 
 /* ─────────────────────────────────────────
    SCREEN 5 — Resume feedback results
@@ -4153,12 +4275,16 @@ const completeInterviewSession = async (
             {screen === "resume-upload" && (
               <ResumeUploadScreen onAnalyse={async (content, role, fileName) => {
   if (!userId) {
-    console.error("No logged-in user ID is available.");
-    go("resume-error");
-    return;
-  }
+  console.error("No logged-in user ID is available.");
+  go("resume-error");
+  return;
+}
 
-  try {
+// Show the real analysing state immediately while the API request runs.
+setResumeFeedback(null);
+go("resume-analysing");
+
+try {
     const response = await fetch("http://localhost:8000/api/resume.php", {
       method: "POST",
       headers: {
@@ -4204,56 +4330,88 @@ if (!feedbackResponse.ok) {
   return;
 }
 
-// Real AI feedback will be assigned here once the OpenAI service is enabled.
-console.log("Resume feedback service response:", feedbackData);
-go("resume-analysing");
+const realFeedback = mapAIResumeFeedback(
+  feedbackData,
+  fileName
+);
 
-  } catch (error) {
-    console.error("Resume submission failed:", error);
-    go("resume-error");
-  }
+setResumeFeedback(realFeedback);
+
+console.log("Real AI resume feedback received:", feedbackData);
+
+const today = new Date().toLocaleDateString("en-AU", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
+setActivity((prev) => ({
+  ...prev,
+  resumeReviews: [
+    {
+      resume_id: Number(data.resume_id),
+      date: today,
+      role: realFeedback.targetRole,
+      file: realFeedback.resumeLabel,
+      input_method: fileName ? "upload" : "paste",
+    },
+    ...prev.resumeReviews,
+  ],
+}));
+
+go("resume-results");
+
+} catch (error) {
+  console.error("Resume submission failed:", error);
+  go("resume-error");
+}
 }} />
-            )}
-            {screen === "resume-analysing" && (
-              <ResumeAnalysingScreen
-                onDone={() => {
-                  const today = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
-                  setActivity((prev) => ({
-                    ...prev,
-                    resumeReviews: [
-                      { date: today, role: resumeFeedback?.targetRole ?? "Unknown role", file: resumeFeedback?.resumeLabel ?? "Resume" },
-                      ...prev.resumeReviews,
-                    ],
-                  }));
-                  go("resume-results");
-                }}
-                onError={() => go("resume-error")}
-              />
-            )}
-            {screen === "resume-error" && (
-              <AIErrorScreen
-                context="AI-generated resume feedback"
-                onRetry={() => go("resume-analysing")}
-                onBack={() => go("resume-upload")}
-              />
-            )}
-            {screen === "resume-results" && resumeFeedback && (
-              <ResumeResultsScreen
-                onBack={() => go("dashboard")}
-                onUploadNew={() => go("resume-upload")}
-                feedback={resumeFeedback}
-              />
-            )}
-            {screen === "resume-results" && !resumeFeedback && (
-              <div className="py-8 px-8 max-w-2xl mx-auto">
-                <p className="text-sm text-[#64748b]">No resume analysis found. <button onClick={() => go("resume-upload")} className="text-[#4f46e5] underline">Upload a resume</button> to get started.</p>
-              </div>
-            )}
-            {screen === "interview-setup" && (
-              <InterviewSetupScreen
-                userName={userName}
-             onStart={async (cfg) => {
-  try {
+)}
+
+{screen === "resume-analysing" && (
+  <ResumeAnalysingScreen />
+)}
+
+{screen === "resume-error" && (
+  <AIErrorScreen
+    context="AI-generated resume feedback"
+    onRetry={() => go("resume-upload")}
+    onBack={() => go("resume-upload")}
+  />
+)}
+
+{screen === "resume-results" && resumeFeedback && (
+  <ResumeResultsScreen
+    onBack={() => go("dashboard")}
+    onUploadNew={() => go("resume-upload")}
+    feedback={resumeFeedback}
+  />
+)}
+
+{screen === "resume-results" && !resumeFeedback && (
+  <div className="py-8 px-8 max-w-2xl mx-auto">
+    <p className="text-sm text-[#64748b]">
+      No resume analysis found.{" "}
+      <button
+        onClick={() => go("resume-upload")}
+        className="text-[#4f46e5] underline"
+      >
+        Upload a resume
+      </button>{" "}
+      to get started.
+    </p>
+  </div>
+)}
+{screen === "interview-setup" && (
+  <InterviewSetupScreen
+    userName={userName}
+    onStart={async (cfg) => {
+      try {
+        if (!userId) {
+          console.error("No logged-in user ID is available.");
+          go("interview-error");
+          return;
+        }
     // 1. Create the interview session in the database.
     const sessionResponse = await fetch(
       "http://localhost:8000/api/interview-session.php",
