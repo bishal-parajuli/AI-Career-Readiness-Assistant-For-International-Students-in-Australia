@@ -6,9 +6,9 @@
 
 **PROF910 IT Project Part B — MVP Development**
 
-The project has progressed from design and modelling into implementation. The current MVP foundation includes a React frontend, PHP backend API and MariaDB relational database. Working vertical slices now support user registration, login credential verification, resume submission, interview session creation, interview question persistence, interview response persistence and interview session lifecycle tracking.
+The project has progressed from design and modelling into active MVP implementation. The current system includes a React frontend, PHP backend API, MariaDB relational database and backend OpenAI API integration. Working vertical slices support user registration, login credential verification, resume submission, AI-generated resume feedback, interview session creation, AI-generated interview questions, interview response persistence, interview session lifecycle tracking and personalised AI-generated interview feedback.
 
-Generative AI functionality is planned for subsequent development and should not yet be considered a live OpenAI API integration.
+The OpenAI integration is implemented through the PHP backend rather than directly from the browser. AI-generated results are validated before being displayed or persisted, and the application displays an error rather than fabricating feedback when the AI service is unavailable.
 
 ## The Problem
 
@@ -44,13 +44,20 @@ The Week 5 application foundation currently includes:
 - Edit Profile is connected to the backend, allowing users to persistently update their preferred name and email address
 - Change Password is connected to the backend with current-password verification and secure password hashing
 - Resume text submission persisted through the frontend → backend → database flow
-- Safe handling of unavailable AI resume feedback without fabricating results
+- Live AI-generated resume feedback through the backend OpenAI API integration
+- AI resume feedback is validated before persistence and display
+- Unavailable or invalid AI responses are handled safely without fabricating resume feedback
 - Interview session creation persisted to the database
 - Interview questions persisted against their corresponding interview session
+- Live AI-generated interview questions based on the selected target role, industry, interview type and difficulty
 - Interview responses persisted against the correct interview question
 - Skipped interview questions intentionally create no response record
 - Interview sessions distinguish normal completion (`completed`) from deliberate early termination (`ended_early`)
 - Interview completion timestamps are persisted in the database
+- Personalised AI-generated interview feedback analyses submitted responses after session completion or deliberate early termination
+- Interview feedback is validated and persisted to the database before being displayed to the user
+- Sessions with no submitted responses do not generate personalised AI feedback
+- AI interview failures display an error rather than fabricated feedback
 - Saved resumes are retrieved from the database for job advertisement comparison
 - Job advertisements submitted through the frontend are persisted to the database
 - Job advertisement analysis requests validate ownership of both the selected resume and job advertisement
@@ -62,7 +69,7 @@ The Week 5 application foundation currently includes:
 
 Persistent authenticated sessions or token-based authentication have not yet been implemented.
 
-Interview questions currently use predefined prototype question banks while the external Generative AI service is unavailable. The application does not present predefined interview feedback as live AI-generated analysis. OpenAI integration remains a planned backend service.
+Interview questions are generated through the backend OpenAI API integration using the user's selected target role, industry, interview type and difficulty. Submitted interview responses can be analysed to generate personalised feedback after the session ends. AI-generated results are clearly identified, and the application does not fabricate results when the external AI service is unavailable.
 ## Technology Stack
 
 ### Frontend
@@ -78,7 +85,7 @@ Interview questions currently use predefined prototype question banks while the 
 - MariaDB 10.4 (MySQL-compatible)
 - PDO with `pdo_mysql`
 
-### Planned Generative AI Service
+### Generative AI Service
 - OpenAI API
 
 ### Development Tools
@@ -97,7 +104,9 @@ The current architecture follows a client-server structure:
 
 **International Student → React Frontend → PHP Backend/API → MariaDB**
 
-A future OpenAI API integration will connect through the backend rather than directly from the browser.
+**PHP Backend/API → OpenAI API** for AI-powered resume feedback, interview question generation and personalised interview feedback.
+
+The OpenAI API integration connects through the PHP backend rather than directly from the browser. Resume content and interview-practice data required for AI-powered features are sent through the backend for processing, while the API key remains server-side and is excluded from version control.
 
 See [`docs/system-architecture.md`](./docs/system-architecture.md) for the editable architecture diagram and implementation notes.
 
@@ -116,6 +125,7 @@ See [`docs/system-architecture.md`](./docs/system-architecture.md) for the edita
 │   │   ├── interview-questions.php
 │   │   ├── interview-response.php
 │   │   ├── interview-complete.php
+│   │   ├── interview-feedback.php
 │   │   ├── user-resumes.php
 │   │   ├── job-advertisement.php
 │   │   └── job-match-analysis.php
