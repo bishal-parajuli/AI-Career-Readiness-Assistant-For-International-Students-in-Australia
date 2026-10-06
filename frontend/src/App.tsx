@@ -3303,12 +3303,14 @@ function InterviewSummaryScreen({
   total,
   completed,
   feedback,
+  sessionStatus,
   onPracticeAgain,
   onDashboard,
 }: {
   total: number;
   completed: number;
   feedback: InterviewAIFeedback | null;
+  sessionStatus: "completed" | "ended_early";
   onPracticeAgain: () => void;
   onDashboard: () => void;
 }) {
@@ -3322,7 +3324,11 @@ function InterviewSummaryScreen({
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-7">
-        {[["Questions", completed.toString()], ["Session", "Complete"], ["Progress", `${Math.round((completed/total)*100)}%`]].map(([l, v]) => (
+        {[
+  ["Questions", completed.toString()],
+  ["Session", sessionStatus === "ended_early" ? "Ended early" : "Complete"],
+  ["Progress", `${Math.round((completed / total) * 100)}%`],
+].map(([l, v]) => (
           <Card key={l} className="p-4 text-center">
             <p className="text-xl font-bold text-[#4f46e5] mb-0.5">{v}</p>
             <p className="text-xs text-[#64748b]">{l}</p>
@@ -4181,7 +4187,8 @@ const [userId, setUserId] = useState<number | null>(null);
 
 const [interviewAIFeedback, setInterviewAIFeedback] =
   useState<InterviewAIFeedback | null>(null);
-
+const [interviewEndStatus, setInterviewEndStatus] =
+  useState<"completed" | "ended_early">("completed");
 const [questionIds, setQuestionIds] = useState<number[]>([]);
   const [qIndex, setQIndex] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
@@ -4245,7 +4252,8 @@ const resetActivity = () => {
 const completeInterviewSession = async (
   sessionStatus: "completed" | "ended_early" = "completed"
 ) => {
-  
+  setInterviewEndStatus(sessionStatus);
+
   if (!interviewSessionId) {
     console.error("No active interview session ID found.");
     go("interview-summary");
@@ -4785,12 +4793,18 @@ onEnd={() => completeInterviewSession("ended_early")}
                 question={sessionQuestions[qIndex] ?? sessionQuestions[0]}
                 answer={currentAnswer}
                 onNext={() => {
-                  const next = qIndex + 1;
-                  if (next >= interviewConfig.count) go("interview-summary");
-                  else { setQIndex(next); go("interview-question"); }
-                }}
+  const next = qIndex + 1;
+
+  if (next >= interviewConfig.count) {
+    completeInterviewSession("completed");
+  } else {
+    setQIndex(next);
+    setCurrentAnswer("");
+    go("interview-question");
+  }
+}}
                 onRetry={() => go("interview-question")}
-                onEnd={() => go("interview-summary")}
+               onEnd={() => completeInterviewSession("ended_early")}
               />
             )}
             {screen === "interview-summary" && (
@@ -4798,6 +4812,7 @@ onEnd={() => completeInterviewSession("ended_early")}
   total={interviewConfig.count}
   completed={completedQs}
   feedback={interviewAIFeedback}
+    sessionStatus={interviewEndStatus}
                 onPracticeAgain={() => {
                   const today = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
                   setActivity((prev) => ({
