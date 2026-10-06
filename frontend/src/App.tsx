@@ -4035,14 +4035,14 @@ function ResponsibleAIScreen() {
   const PRINCIPLES = [
     { icon: "⚖️", title: "Fairness", desc: "Feedback is designed to focus on the content and structure of career preparation materials — not personal characteristics such as name, background, ethnicity, accent or nationality. The platform does not assess personality or predicted employability." },
     { icon: "🔍", title: "Transparency", desc: "AI-generated recommendations are clearly identified throughout the platform. Users are informed when content is AI-generated, and are encouraged to review it critically before acting on it." },
-    { icon: "🔒", title: "Privacy", desc: "The platform minimises unnecessary collection of personal information. Only information needed to personalise career preparation support is requested. Sensitive attributes such as visa status, ethnicity, religion and health information are not collected." },
+   { icon: "🔒", title: "Privacy", desc: "The platform minimises unnecessary collection of personal information. Information required for AI-powered features, such as resume content and submitted interview responses, may be sent to the configured external AI provider for processing. Users should avoid including unnecessary sensitive personal information." },
     { icon: "👤", title: "Human Oversight", desc: "AI feedback is a support tool, not a replacement for professional career advice. Users are encouraged to consult their university career service and professional advisers for important decisions." },
   ];
 
   const FAQS = [
-    { q: "How is AI used on this platform?", a: "The MVP is designed to use generative AI for resume feedback, interview preparation and job advertisement comparison. AI-dependent results are only displayed when the AI service successfully returns a result. If the service is unavailable, the platform displays an error rather than fabricating feedback." },
+    { q: "How is AI used on this platform?", a: "The MVP uses generative AI to provide personalised resume feedback, generate role-relevant interview questions, and analyse submitted interview responses to provide personalised practice feedback. Job advertisement comparison is also included as an MVP feature. AI-dependent results are only displayed when the AI service successfully returns a valid result. If the service is unavailable, the platform displays an error rather than fabricating feedback." },
     { q: "What are the limitations of AI-generated feedback?", a: "AI can produce inaccurate, incomplete or inappropriate recommendations. Users should verify important career information independently. The platform does not guarantee employment outcomes." },
-    { q: "What information is collected?", a: "The MVP stores account information such as your email address, together with career preparation data you submit, including resume content, target roles, interview session details and responses, and job advertisement text used for comparison. Users should avoid entering unnecessary sensitive personal information." },
+    { q: "What information is collected?", a: "The MVP stores account information such as your email address, together with career preparation data you submit, including resume content, target roles, interview session details and responses, and job advertisement text used for comparison. Content required for AI-powered features, such as resume content and interview responses, may also be sent to the configured external AI provider for processing. Users should avoid entering unnecessary sensitive personal information." },
     { q: "What frameworks guide this platform?", a: "The platform is informed by the NIST AI Risk Management Framework, the Australian Privacy Principles, and the Australian AI Ethics Principles. These frameworks support trustworthy, fair and accountable AI design." },
   ];
 
@@ -4068,7 +4068,7 @@ function ResponsibleAIScreen() {
       <Card className="p-5 mb-5">
         <h3 className="text-sm font-semibold text-[#0f172a] mb-3">How AI is used</h3>
         <p className="text-xs text-[#64748b] leading-relaxed mb-3">
-  The MVP is designed to use generative AI to support the following career preparation functions:
+  The MVP uses generative AI to support the following career preparation functions:
 </p>
         <ul className="space-y-2">
 {[
