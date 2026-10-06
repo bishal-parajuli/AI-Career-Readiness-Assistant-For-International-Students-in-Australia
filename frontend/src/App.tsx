@@ -477,7 +477,12 @@ interface IQ {
   difficulty: "Beginner" | "Intermediate" | "Advanced";
   sampleAnswer: string;
 }
-
+interface InterviewAIFeedback {
+  overall_feedback: string;
+  strengths: string[];
+  areas_for_improvement: string[];
+  next_steps: string[];
+}
 const BEHAVIOURAL: IQ[] = [
   {
     q: "Tell me about a time you worked effectively as part of a team.",
@@ -2942,59 +2947,89 @@ function ResumeResultsScreen({ onBack, onUploadNew, feedback }: { onBack: () => 
 /* ─────────────────────────────────────────
    SCREEN 5b — Interview generating (questions)
 ───────────────────────────────────────── */
-function InterviewGeneratingScreen({ onDone, onError }: { onDone: () => void; onError: () => void }) {
-  useEffect(() => {
-  const t = setTimeout(() => {
-    onDone();
-  }, 900);
-
-  return () => clearTimeout(t);
-}, [onDone]);
+function InterviewGeneratingScreen() {
   return (
     <div className="py-8 px-8 max-w-md mx-auto text-center flex flex-col items-center justify-center min-h-[calc(100vh-56px)]">
       <div className="size-20 rounded-2xl bg-[#eef2ff] flex items-center justify-center mb-8">
-        <svg className="w-8 h-8 text-[#4f46e5] animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+        <svg
+          className="w-8 h-8 text-[#4f46e5] animate-pulse"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+          />
         </svg>
       </div>
-      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">Preparing your interview questions…</h1>
-      <p className="text-sm text-[#64748b] mb-8 leading-relaxed max-w-xs">Preparing interview questions based on your selected role, interview type and difficulty.</p>
+
+      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">
+        Preparing your interview questions…
+      </h1>
+
+      <p className="text-sm text-[#64748b] mb-8 leading-relaxed max-w-xs">
+        AI is generating interview questions based on your selected role,
+        industry, interview type and difficulty.
+      </p>
+
       <div className="flex gap-1.5 justify-center">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="size-2 rounded-full bg-[#4f46e5] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+          <div
+            key={i}
+            className="size-2 rounded-full bg-[#4f46e5] animate-bounce"
+            style={{ animationDelay: `${i * 0.15}s` }}
+          />
         ))}
       </div>
-     <AIDisclaimer text="Questions in the current MVP are selected from predefined interview question sets. Live AI-generated questions will be enabled when the external AI service is configured." />
+
+      <AIDisclaimer text="AI-generated interview questions may be incomplete or inaccurate. Review them critically and use them for career-readiness practice only." />
     </div>
   );
 }
-
 /* ─────────────────────────────────────────
    SCREEN 7b — Interview feedback generating
 ───────────────────────────────────────── */
-function InterviewFeedbackGeneratingScreen({ onDone, onError }: { onDone: () => void; onError: () => void }) {
-  useEffect(() => {
-    const willFail = Math.random() < 0.25;
-    const delay = 800 + Math.random() * 700;
-    const t = setTimeout(() => { willFail ? onError() : onDone(); }, delay);
-    return () => clearTimeout(t);
-  }, [onDone, onError]);
-
+function InterviewFeedbackGeneratingScreen() {
   return (
     <div className="py-8 px-8 max-w-md mx-auto text-center flex flex-col items-center justify-center min-h-[calc(100vh-56px)]">
       <div className="size-20 rounded-2xl bg-[#eef2ff] flex items-center justify-center mb-8">
-        <svg className="w-8 h-8 text-[#4f46e5] animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+        <svg
+          className="w-8 h-8 text-[#4f46e5] animate-pulse"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+          />
         </svg>
       </div>
-      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">Generating your feedback…</h1>
-      <p className="text-sm text-[#64748b] mb-8 leading-relaxed max-w-xs">Analysing your response and preparing constructive feedback.</p>
+
+      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">
+        Generating your feedback…
+      </h1>
+
+      <p className="text-sm text-[#64748b] mb-8 leading-relaxed max-w-xs">
+        AI is analysing your submitted interview responses and preparing personalised feedback.
+      </p>
+
       <div className="flex gap-1.5 justify-center">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="size-2 rounded-full bg-[#4f46e5] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+          <div
+            key={i}
+            className="size-2 rounded-full bg-[#4f46e5] animate-bounce"
+            style={{ animationDelay: `${i * 0.15}s` }}
+          />
         ))}
       </div>
-      <AIDisclaimer text="AI is generating feedback on your response. This may take a moment." />
+
+      <AIDisclaimer text="AI-generated feedback may be incomplete or inaccurate. Review the recommendations critically and use them as career-readiness guidance rather than a prediction of employment outcomes." />
     </div>
   );
 }
@@ -3264,8 +3299,18 @@ function InterviewFeedbackScreen({ qIndex, total, question, answer, onNext, onRe
 /* ─────────────────────────────────────────
    SCREEN 9 — Interview summary
 ───────────────────────────────────────── */
-function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard }: {
-  total: number; completed: number; onPracticeAgain: () => void; onDashboard: () => void;
+function InterviewSummaryScreen({
+  total,
+  completed,
+  feedback,
+  onPracticeAgain,
+  onDashboard,
+}: {
+  total: number;
+  completed: number;
+  feedback: InterviewAIFeedback | null;
+  onPracticeAgain: () => void;
+  onDashboard: () => void;
 }) {
   return (
     <div className="py-8 px-8 max-w-2xl mx-auto">
@@ -3285,33 +3330,60 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
         ))}
       </div>
 
-      {completed > 0 && (
-      <Card className="p-5 mb-4">
-<h3 className="text-sm font-semibold text-[#0f172a] mb-3">Practice strengths to develop</h3>
-        <ul className="space-y-2">
-          {["Providing context and background for your examples", "Professional and clear communication style", "Demonstrating genuine understanding of the role"].map((s) => (
-            <li key={s} className="flex items-start gap-2 text-xs text-[#475569]">
-              <span className="text-emerald-500 flex-shrink-0 mt-0.5">✓</span>
-              {s}
-            </li>
-          ))}
-        </ul>
-      </Card>
-      )}
+      {completed > 0 && feedback && (
+  <>
+    <Card className="p-5 mb-4">
+      <h3 className="text-sm font-semibold text-[#0f172a] mb-3">
+        Overall feedback
+      </h3>
+      <p className="text-xs text-[#475569] leading-relaxed">
+        {feedback.overall_feedback}
+      </p>
+    </Card>
 
-      {completed > 0 && (
-      <Card className="p-5 mb-4">
-<h3 className="text-sm font-semibold text-[#0f172a] mb-3">Areas to focus on</h3>
-        <ul className="space-y-2">
-          {["Describing outcomes and results more explicitly", "Using 'I' to highlight your individual contribution", "Keeping responses concise and well-structured"].map((a) => (
-            <li key={a} className="flex items-start gap-2 text-xs text-[#475569]">
-              <span className="text-amber-400 flex-shrink-0 mt-0.5">△</span>
-              {a}
-            </li>
-          ))}
-        </ul>
-      </Card>
-      )}
+    <Card className="p-5 mb-4">
+      <h3 className="text-sm font-semibold text-[#0f172a] mb-3">
+        Strengths
+      </h3>
+
+      <ul className="space-y-2">
+        {feedback.strengths.map((strength) => (
+          <li
+            key={strength}
+            className="flex items-start gap-2 text-xs text-[#475569]"
+          >
+            <span className="text-emerald-500 flex-shrink-0 mt-0.5">
+              ✓
+            </span>
+            {strength}
+          </li>
+        ))}
+      </ul>
+    </Card>
+  </>
+)}
+
+      {completed > 0 && feedback && (
+  <Card className="p-5 mb-4">
+    <h3 className="text-sm font-semibold text-[#0f172a] mb-3">
+      Areas to focus on
+    </h3>
+
+    <ul className="space-y-2">
+      {feedback.areas_for_improvement.map((area) => (
+        <li
+          key={area}
+          className="flex items-start gap-2 text-xs text-[#475569]"
+        >
+          <span className="text-amber-400 flex-shrink-0 mt-0.5">
+            △
+          </span>
+          {area}
+        </li>
+      ))}
+    </ul>
+  </Card>
+)}
 
       {completed === 0 && (
         <Card className="p-5 mb-5 border-[#e2e8f0]">
@@ -3321,24 +3393,32 @@ function InterviewSummaryScreen({ total, completed, onPracticeAgain, onDashboard
         </Card>
       )}
 
-      {completed > 0 && (
-      <Card className="p-5 mb-5">
-        <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Suggested next steps</h3>
-        <ul className="space-y-2">
-          {["Review the practice guidance and identify areas you want to improve", "Practise your STAR technique with different examples", "Upload your resume to align feedback with your application materials", "Consult your university career service for personalised support"].map((s) => (
-            <li key={s} className="flex items-start gap-2 text-xs text-[#475569]">
-              <span className="text-[#a5b4fc] flex-shrink-0 mt-0.5">→</span>
-              {s}
-            </li>
-          ))}
-        </ul>
-      </Card>
-      )}
+      {completed > 0 && feedback && (
+  <Card className="p-5 mb-5">
+    <h3 className="text-sm font-semibold text-[#0f172a] mb-3">
+      Suggested next steps
+    </h3>
+
+    <ul className="space-y-2">
+      {feedback.next_steps.map((step) => (
+        <li
+          key={step}
+          className="flex items-start gap-2 text-xs text-[#475569]"
+        >
+          <span className="text-[#a5b4fc] flex-shrink-0 mt-0.5">
+            →
+          </span>
+          {step}
+        </li>
+      ))}
+    </ul>
+  </Card>
+)}
 <AIDisclaimer
   text={
     completed === 0
-      ? "No personalised AI feedback was generated because no responses were submitted. Complete at least one interview question to receive feedback when the AI service is available."
-      : "The current MVP displays general interview practice guidance. Personalised AI analysis of your responses will be provided when the external AI service is configured. This platform does not predict interview success or guarantee employment outcomes."
+      ? "No personalised AI feedback was generated because no interview responses were submitted."
+      : "This feedback was generated by AI from your submitted interview responses. AI-generated feedback may be incomplete or inaccurate, so review the recommendations critically. This platform does not predict interview success or guarantee employment outcomes."
   }
 />
    
@@ -4098,6 +4178,10 @@ const [userId, setUserId] = useState<number | null>(null);
   const [interviewConfig, setInterviewConfig] = useState({ role: "Software Developer", industry: "Technology", type: "Behavioural", difficulty: "Intermediate", count: 5 });
   const [sessionQuestions, setSessionQuestions] = useState<IQ[]>([]);
   const [interviewSessionId, setInterviewSessionId] = useState<number | null>(null);
+
+const [interviewAIFeedback, setInterviewAIFeedback] =
+  useState<InterviewAIFeedback | null>(null);
+
 const [questionIds, setQuestionIds] = useState<number[]>([]);
   const [qIndex, setQIndex] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
@@ -4195,9 +4279,53 @@ const completeInterviewSession = async (
       return;
     }
 
-    console.log("Interview session completed:", data.session_id);
+   console.log("Interview session completed:", data.session_id);
 
-    go("interview-summary");
+// If no responses were submitted, do not request personalised AI feedback.
+if (completedQs === 0) {
+  setInterviewAIFeedback(null);
+  go("interview-summary");
+  return;
+}
+
+// Show a loading screen while personalised feedback is generated.
+setInterviewAIFeedback(null);
+go("interview-feedback-generating");
+
+// Allow the loading screen to render before starting the AI request.
+await new Promise<void>((resolve) => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => resolve());
+  });
+});
+
+const feedbackResponse = await fetch(
+  "http://localhost:8000/api/interview-feedback.php",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      session_id: interviewSessionId,
+    }),
+  }
+);
+
+const feedbackData = await feedbackResponse.json();
+
+if (!feedbackResponse.ok) {
+  console.error(
+    feedbackData.code || "AI_FEEDBACK_UNAVAILABLE",
+    feedbackData.message || "Unable to generate interview feedback."
+  );
+
+  go("interview-feedback-error");
+  return;
+}
+
+setInterviewAIFeedback(feedbackData.feedback);
+go("interview-summary");
   } catch (error) {
     console.error("Interview completion request failed:", error);
 
@@ -4538,11 +4666,8 @@ const generatedQuestions: IQ[] = aiQuestionsData.questions;
               />
             )}
             {screen === "interview-generating" && (
-              <InterviewGeneratingScreen
-                onDone={() => go("interview-question")}
-                onError={() => go("interview-error")}
-              />
-            )}
+  <InterviewGeneratingScreen />
+)}
             {screen === "interview-error" && (
               <AIErrorScreen
                 context="AI-generated interview questions"
@@ -4632,16 +4757,13 @@ onEnd={() => completeInterviewSession("ended_early")}
                 
               />
             )}
-            {screen === "interview-feedback-generating" && (
-  <InterviewFeedbackGeneratingScreen
-    onDone={() => go("interview-feedback-error")}
-    onError={() => go("interview-feedback-error")}
-  />
+      {screen === "interview-feedback-generating" && (
+  <InterviewFeedbackGeneratingScreen />
 )}
 {screen === "interview-feedback-error" && (
   <AIErrorScreen
     context="AI-generated interview feedback"
-    onRetry={() => go("interview-feedback-generating")}
+   onRetry={() => completeInterviewSession("completed")}
     onBack={() => {
       const next = qIndex + 1;
 
@@ -4673,8 +4795,9 @@ onEnd={() => completeInterviewSession("ended_early")}
             )}
             {screen === "interview-summary" && (
               <InterviewSummaryScreen
-                total={interviewConfig.count}
-                completed={completedQs}
+  total={interviewConfig.count}
+  completed={completedQs}
+  feedback={interviewAIFeedback}
                 onPracticeAgain={() => {
                   const today = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
                   setActivity((prev) => ({
