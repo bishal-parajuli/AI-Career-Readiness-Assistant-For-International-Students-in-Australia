@@ -4444,18 +4444,45 @@ go("resume-results");
 
     const newSessionId = Number(sessionData.session_id);
     setInterviewSessionId(newSessionId);
+// 2. Show the generating screen before starting the real AI request.
+go("interview-generating");
 
-    // 2. Generate temporary prototype questions locally.
-    // These are not OpenAI-generated questions.
-    const generatedQuestions = buildSessionQuestions(
-      cfg.type,
-      cfg.role,
-      cfg.industry,
-      cfg.difficulty,
-      cfg.count
-    );
+// Allow React/browser to paint the generating screen first.
+await new Promise<void>((resolve) => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => resolve());
+  });
+});
 
-    // 3. Store those questions against the real database session.
+// 3. Generate interview questions using the backend OpenAI service.
+const aiQuestionsResponse = await fetch(
+   
+  "http://localhost:8000/api/interview-generate.php",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      session_id: newSessionId,
+    }),
+  }
+);
+
+const aiQuestionsData = await aiQuestionsResponse.json();
+
+if (!aiQuestionsResponse.ok) {
+  console.error(
+    aiQuestionsData.code || "AI_GENERATION_FAILED",
+    aiQuestionsData.message || "Unable to generate interview questions."
+  );
+  go("interview-error");
+  return;
+}
+
+const generatedQuestions: IQ[] = aiQuestionsData.questions;
+
+// 4. Store the validated AI-generated questions against the real database session.
     const questionsResponse = await fetch(
       "http://localhost:8000/api/interview-questions.php",
       {
@@ -4501,7 +4528,7 @@ go("resume-results");
     console.log("Interview session created:", newSessionId);
     console.log("Interview question IDs:", savedQuestionIds);
 
-    go("interview-generating");
+    go("interview-question");
   } catch (error) {
     console.error("Interview setup request failed:", error);
     go("interview-error");
