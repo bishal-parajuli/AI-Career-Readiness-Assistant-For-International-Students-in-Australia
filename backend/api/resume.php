@@ -2,6 +2,7 @@
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost:8443');
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../config/database.php';
-
+require_once __DIR__ . '/../config/auth.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
@@ -20,11 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ]);
     exit;
 }
-
+// Only authenticated students can submit resumes.
+$authenticatedUserId = requireAuth();
 try {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    $userId = $data['user_id'] ?? null;
+    $userId = $authenticatedUserId;
     $resumeText = trim($data['resume_text'] ?? '');
     $targetRole = trim($data['target_role'] ?? '');
     $inputMethod = $data['input_method'] ?? 'paste';
@@ -32,11 +34,11 @@ $fileName = isset($data['file_name']) && $data['file_name'] !== ''
     ? basename($data['file_name'])
     : null;
 
-    if (!$userId || $resumeText === '' || $targetRole === '') {
+    if ($resumeText === '' || $targetRole === '') {
         http_response_code(400);
         echo json_encode([
             'status' => 'error',
-            'message' => 'User, resume text and target role are required'
+            'message' => 'Resume text and target role are required'
         ]);
         exit;
     }

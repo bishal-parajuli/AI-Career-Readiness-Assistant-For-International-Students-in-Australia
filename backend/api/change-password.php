@@ -20,10 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 require_once __DIR__ . "/../config/database.php";
-
+require_once __DIR__ . "/../config/auth.php";
+// Only authenticated students can change passwords.
+$authenticatedUserId = requireAuth();
 $input = json_decode(file_get_contents("php://input"), true);
 
-$userId = isset($input["user_id"]) ? (int) $input["user_id"] : 0;
+$userId = $authenticatedUserId;
 $currentPassword = $input["current_password"] ?? "";
 $newPassword = $input["new_password"] ?? "";
 

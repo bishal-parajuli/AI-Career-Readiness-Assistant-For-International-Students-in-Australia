@@ -2,6 +2,7 @@
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost:8443');
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -12,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/openai.php';
-
+require_once __DIR__ . '/../config/auth.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
 
@@ -22,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ]);
     exit;
 }
-
+// Only authenticated students can generate resume feedback.
+$authenticatedUserId = requireAuth();
 try {
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -51,12 +53,14 @@ try {
             file_name
          FROM resume
          WHERE resume_id = :resume_id
-         LIMIT 1'
+AND user_id = :user_id
+LIMIT 1'
     );
 
     $statement->execute([
-        'resume_id' => $resumeId
-    ]);
+    'resume_id' => $resumeId,
+    'user_id' => $authenticatedUserId
+]);
 
     $resume = $statement->fetch();
 

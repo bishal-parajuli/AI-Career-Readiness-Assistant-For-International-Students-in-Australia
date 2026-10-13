@@ -1742,6 +1742,7 @@ function AuthScreen({ onSuccess }: { onSuccess: (userId: number, name: string, e
     try {
       const response = await fetch("http://localhost:8000/api/login.php", {
         method: "POST",
+credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -4423,6 +4424,7 @@ go("resume-analysing");
 try {
     const response = await fetch("http://localhost:8000/api/resume.php", {
       method: "POST",
+credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -4447,6 +4449,7 @@ try {
 
     const feedbackResponse = await fetch("http://localhost:8000/api/resume-feedback.php", {
   method: "POST",
+credentials: "include",
   headers: {
     "Content-Type": "application/json",
   },

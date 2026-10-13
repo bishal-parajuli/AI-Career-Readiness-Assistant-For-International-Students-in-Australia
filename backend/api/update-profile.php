@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../config/database.php';
-
+require_once __DIR__ . '/../config/auth.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
@@ -20,10 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ]);
     exit;
 }
-
+// Require an authenticated student.
+$authenticatedUserId = requireAuth();
 $input = json_decode(file_get_contents('php://input'), true);
 
-$userId = (int) ($input['user_id'] ?? 0);
+$userId = $authenticatedUserId;
 $preferredName = trim($input['preferred_name'] ?? '');
 $email = trim($input['email'] ?? '');
 
