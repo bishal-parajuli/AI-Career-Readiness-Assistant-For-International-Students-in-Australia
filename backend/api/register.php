@@ -1,7 +1,8 @@
 <?php
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost:8443');
+header('Access-Control-Allow-Origin: ' . 'http:' . chr(47) . chr(47) . 'localhost:8443');
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -11,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/session.php';
 
 // Registration must use POST.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -96,6 +98,11 @@ $stmt->execute([
     'email' => $email,
     'password_hash' => $passwordHash
 ]);
+
+    $newUserId = (int) $pdo->lastInsertId();
+    session_regenerate_id(true);
+    $_SESSION["user_id"] = $newUserId;
+    $_SESSION["authenticated_at"] = time();
 
     http_response_code(201);
 

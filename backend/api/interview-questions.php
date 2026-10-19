@@ -2,6 +2,7 @@
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost:8443');
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -20,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 require_once __DIR__ . '/../config/database.php';
-
+require_once __DIR__ . '/../config/auth.php';
+$authenticatedUserId = requireAuth();
 try {
     $input = json_decode(file_get_contents('php://input'), true);
 
@@ -39,9 +41,10 @@ try {
     $sessionStatement = $pdo->prepare(
         'SELECT session_id, question_count
          FROM interview_session
-         WHERE session_id = ?'
+         WHERE session_id = ?
+AND user_id = ?'
     );
-    $sessionStatement->execute([$sessionId]);
+    $sessionStatement->execute([$sessionId, $authenticatedUserId]);
 
     $session = $sessionStatement->fetch();
 

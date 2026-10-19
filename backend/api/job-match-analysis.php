@@ -2,6 +2,7 @@
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost:8443');
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -21,7 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/openai.php';
+require_once __DIR__ . '/../config/auth.php';
 
+$authenticatedUserId = requireAuth();
 try {
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -34,7 +37,7 @@ try {
         exit;
     }
 
-    $userId = isset($data['user_id']) ? (int) $data['user_id'] : 0;
+    $userId = $authenticatedUserId;
     $jobAdId = isset($data['job_ad_id']) ? (int) $data['job_ad_id'] : 0;
     $resumeId = isset($data['resume_id']) ? (int) $data['resume_id'] : 0;
 

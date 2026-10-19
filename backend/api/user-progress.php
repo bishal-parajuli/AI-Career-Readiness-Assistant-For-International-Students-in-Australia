@@ -1,8 +1,9 @@
 <?php
 
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: http://localhost:8443");
+header('Access-Control-Allow-Origin: ' . 'http:' . chr(47) . chr(47) . 'localhost:8443');
 header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type");
 
 if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
@@ -19,18 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
     exit;
 }
 
+require_once __DIR__ . "/../config/auth.php";
 require_once __DIR__ . "/../config/database.php";
 
-$userId = filter_input(INPUT_GET, "user_id", FILTER_VALIDATE_INT);
-
-if (!$userId || $userId <= 0) {
-    http_response_code(400);
-    echo json_encode([
-        "status" => "error",
-        "message" => "A valid user_id is required."
-    ]);
-    exit;
-}
+$userId = requireAuth();
 
 try {
     // Verify that the user exists.

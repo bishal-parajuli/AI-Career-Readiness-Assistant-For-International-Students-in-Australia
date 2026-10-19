@@ -2,6 +2,7 @@
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: http://localhost:8443");
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
@@ -20,7 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 require_once __DIR__ . "/../config/database.php";
-
+require_once __DIR__ . "/../config/auth.php";
+$authenticatedUserId = requireAuth();
 $data = json_decode(file_get_contents("php://input"), true);
 
 $sessionId = isset($data["session_id"])
@@ -53,10 +55,11 @@ try {
         "SELECT session_id, session_status
          FROM interview_session
          WHERE session_id = ?
+AND user_id = ?
          LIMIT 1"
     );
 
-    $checkStatement->execute([$sessionId]);
+$checkStatement->execute([$sessionId, $authenticatedUserId]);
     $session = $checkStatement->fetch();
 
     if (!$session) {
@@ -71,14 +74,15 @@ $updateStatement = $pdo->prepare(
     "UPDATE interview_session
      SET session_status = ?,
          completed_at = CURRENT_TIMESTAMP
-     WHERE session_id = ?"
+     WHERE session_id = ?
+       AND user_id = ?"
 );
 
 $updateStatement->execute([
     $sessionStatus,
-    $sessionId
+    $sessionId,
+    $authenticatedUserId
 ]);
-    
 echo json_encode([
     "status" => "success",
     "message" => $sessionStatus === "ended_early"

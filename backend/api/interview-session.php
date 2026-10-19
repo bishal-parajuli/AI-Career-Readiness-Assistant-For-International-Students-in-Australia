@@ -2,6 +2,7 @@
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost:8443');
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -20,11 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 require_once __DIR__ . '/../config/database.php';
-
+require_once __DIR__ . '/../config/auth.php';
+$authenticatedUserId = requireAuth();
 try {
     $input = json_decode(file_get_contents('php://input'), true);
 
-    $userId = $input['user_id'] ?? null;
+    $userId = $authenticatedUserId;
     $targetRole = trim($input['target_role'] ?? '');
     $industry = trim($input['industry'] ?? '');
     $interviewType = trim($input['interview_type'] ?? '');

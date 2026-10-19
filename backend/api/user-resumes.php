@@ -2,6 +2,7 @@
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost:8443');
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 
@@ -11,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/auth.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
@@ -21,34 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
+$userId = requireAuth();
+
 try {
-    $userId = $_GET['user_id'] ?? null;
-
-    if (!$userId || !filter_var($userId, FILTER_VALIDATE_INT)) {
-        http_response_code(400);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'A valid user ID is required.'
-        ]);
-        exit;
-    }
-
-    $userId = (int) $userId;
-
-    $userCheck = $pdo->prepare(
-        'SELECT user_id FROM user WHERE user_id = ?'
-    );
-    $userCheck->execute([$userId]);
-
-    if (!$userCheck->fetch()) {
-        http_response_code(404);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'User not found.'
-        ]);
-        exit;
-    }
-
     $statement = $pdo->prepare(
         'SELECT
             resume_id,

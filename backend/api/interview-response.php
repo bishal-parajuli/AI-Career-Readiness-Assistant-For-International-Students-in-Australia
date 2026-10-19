@@ -2,6 +2,7 @@
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: http://localhost:8443");
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
@@ -20,7 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 require_once __DIR__ . "/../config/database.php";
+require_once __DIR__ . "/../config/auth.php";
 
+$authenticatedUserId = requireAuth();
 $data = json_decode(file_get_contents("php://input"), true);
 
 $questionId = isset($data["question_id"])
@@ -40,15 +43,20 @@ if ($questionId <= 0 || $responseText === "") {
 
 try {
     // Confirm that the interview question exists.
-    $questionStatement = $pdo->prepare(
-        "SELECT question_id
-         FROM interview_question
-         WHERE question_id = ?
-         LIMIT 1"
-    );
+$questionStatement = $pdo->prepare(
+    "SELECT q.question_id
+     FROM interview_question q
+     INNER JOIN interview_session s
+         ON q.session_id = s.session_id
+     WHERE q.question_id = ?
+       AND s.user_id = ?
+     LIMIT 1"
+);
 
-    $questionStatement->execute([$questionId]);
-
+$questionStatement->execute([
+    $questionId,
+    $authenticatedUserId
+]);
     if (!$questionStatement->fetch()) {
         http_response_code(404);
         echo json_encode([

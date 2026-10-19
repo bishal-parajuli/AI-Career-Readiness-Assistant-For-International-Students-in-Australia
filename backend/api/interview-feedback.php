@@ -2,6 +2,7 @@
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: http://localhost:8443");
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
@@ -20,8 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 require_once __DIR__ . "/../config/database.php";
+require_once __DIR__ . "/../config/auth.php";
 require_once __DIR__ . "/../config/openai.php";
 
+$authenticatedUserId = requireAuth();
 $data = json_decode(file_get_contents("php://input"), true);
 
 $sessionId = isset($data["session_id"])
@@ -54,10 +57,10 @@ try {
             session_status
          FROM interview_session
          WHERE session_id = ?
+AND user_id = ?
          LIMIT 1"
     );
 
-    $sessionStatement->execute([$sessionId]);
     $session = $sessionStatement->fetch();
 
     if (!$session) {
