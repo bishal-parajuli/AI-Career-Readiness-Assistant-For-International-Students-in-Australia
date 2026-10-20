@@ -27,6 +27,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Read JSON sent by the frontend.
 $input = json_decode(file_get_contents('php://input'), true);
+// Reject malformed JSON and non-object input.
+if (
+    json_last_error() !== JSON_ERROR_NONE ||
+    !is_array($input) ||
+    ($input !== [] && array_is_list($input))
+) {
+    http_response_code(400);
+
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Invalid request data. Please submit a valid JSON object.'
+    ]);
+    exit;
+}
+
+// Reject fields with unexpected data types.
+foreach (['preferred_name', 'email', 'password'] as $field) {
+    if (isset($input[$field]) && !is_string($input[$field])) {
+        http_response_code(400);
+
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Preferred name, email and password must be text values.'
+        ]);
+        exit;
+    }
+}
 $preferredName = trim($input['preferred_name'] ?? '');
 
 $email = trim($input['email'] ?? '');
@@ -42,7 +69,26 @@ if ($preferredName === '' || $email === '' || $password === '') {
     ]);
     exit;
 }
+// Preferred name must not exceed the database limit.
+if (mb_strlen($preferredName, 'UTF-8') > 100) {
+    http_response_code(400);
 
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Preferred name must not exceed 100 characters.'
+    ]);
+    exit;
+}
+// Reject email addresses exceeding the database limit.
+if (strlen($email) > 255) {
+    http_response_code(400);
+
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Email address must not exceed 255 characters.'
+    ]);
+    exit;
+}
 // Validate email format.
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(400);
@@ -53,7 +99,16 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     ]);
     exit;
 }
+// Reject passwords containing only whitespace.
+if (trim($password) === '') {
+    http_response_code(400);
 
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Please enter a password. Spaces alone are not allowed.'
+    ]);
+    exit;
+}
 // Basic password requirement.
 if (strlen($password) < 8) {
     http_response_code(400);

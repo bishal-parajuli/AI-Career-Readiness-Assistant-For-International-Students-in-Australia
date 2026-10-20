@@ -36,7 +36,14 @@ if ($file['error'] !== UPLOAD_ERR_OK) {
     ]);
     exit;
 }
-
+if ($file['size'] === 0) {
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'The resume file is empty. Please upload a file containing your resume.'
+    ]);
+    exit;
+}
 $maxFileSize = 5 * 1024 * 1024;
 
 if ($file['size'] > $maxFileSize) {

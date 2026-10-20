@@ -27,10 +27,29 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $authenticatedUserId = requireAuth();
 try {
     $data = json_decode(file_get_contents('php://input'), true);
+// Reject malformed JSON and non-object input.
+if (
+    json_last_error() !== JSON_ERROR_NONE ||
+    !is_array($data) ||
+    ($data !== [] && array_is_list($data))
+) {
+    http_response_code(400);
 
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Invalid request data. Please submit a valid JSON object.'
+    ]);
+    exit;
+}
     $resumeId = $data['resume_id'] ?? null;
 
-    if (!$resumeId || !filter_var($resumeId, FILTER_VALIDATE_INT)) {
+    if (
+    filter_var(
+        $resumeId,
+        FILTER_VALIDATE_INT,
+        ['options' => ['min_range' => 1]]
+    ) === false
+) {
         http_response_code(400);
 
         echo json_encode([

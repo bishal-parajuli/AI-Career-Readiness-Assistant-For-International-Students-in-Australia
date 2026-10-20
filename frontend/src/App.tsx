@@ -1121,8 +1121,17 @@ function AuthScreen({ onSuccess }: { onSuccess: (userId: number, name: string, e
   const [suConfirm, setSuConfirm]     = useState("");
   const [suUni, setSuUni]             = useState("");
   const [suAgree, setSuAgree]         = useState(false);
-  const [suError, setSuError]         = useState("");
-  const [suLoading, setSuLoading]     = useState(false);
+  const [suError, setSuError] = useState("");
+
+const [suFieldErrors, setSuFieldErrors] = useState<{
+  name?: string;
+  email?: string;
+  password?: string;
+  confirm?: string;
+  privacy?: string;
+}>({});
+
+const [suLoading, setSuLoading] = useState(false);
   const [showSuPass, setShowSuPass]   = useState(false);
 
   const UNIS = ["University of Sydney", "University of Melbourne", "UNSW Sydney", "Monash University", "University of Queensland", "University of Adelaide", "Macquarie University", "Other"];
@@ -1176,33 +1185,54 @@ onSuccess(
 
   const handleSignUp = async () => {
     setSuError("");
+setSuFieldErrors({});
 
-    if (!suName.trim()) {
-      setSuError("Please enter your preferred name.");
-      return;
-    }
+   const errors: Record<string, string> = {};
+const email = suEmail.trim();
 
-    if (!suEmail.includes("@")) {
-      setSuError("Please enter a valid email address.");
-      return;
-    }
+// 1. Preferred name validation
+if (!suName.trim()) {
+  errors.name = "Please enter your preferred name.";
+} else if (suName.trim().length > 100) {
+  errors.name = "Preferred name must not exceed 100 characters.";
+}
 
-    if (suPassword.length < 8) {
-      setSuError("Password must be at least 8 characters.");
-      return;
-    }
+// 2. Email validation
+if (!email) {
+  errors.email = "Please enter your email address.";
+} else if (email.length > 255) {
+  errors.email = "Email address must not exceed 255 characters.";
+} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  errors.email = "Please enter a valid email address.";
+}
 
-    if (suPassword !== suConfirm) {
-      setSuError("Passwords do not match.");
-      return;
-    }
+// 3. Password validation
+if (!suPassword.trim()) {
+  errors.password = "Please enter a password. Spaces alone are not allowed.";
+} else if (suPassword.length < 8) {
+  errors.password = "Password must be at least 8 characters.";
+}
 
-    if (!suAgree) {
-      setSuError("Please accept the privacy notice to continue.");
-      return;
-    }
+// 4. Confirm password validation
+if (!suConfirm) {
+  errors.confirm = "Please confirm your password.";
+} else if (suPassword !== suConfirm) {
+  errors.confirm = "Passwords do not match.";
+}
 
-    setSuLoading(true);
+// 5. Privacy notice validation
+if (!suAgree) {
+  errors.privacy = "Please accept the privacy notice to continue.";
+}
+
+// Display all validation errors together
+if (Object.keys(errors).length > 0) {
+  setSuFieldErrors(errors);
+  return;
+}
+
+// Continue only when all fields are valid
+setSuLoading(true);
 
     try {
       const response = await fetch("http://localhost:8000/api/register.php", {
@@ -1310,7 +1340,8 @@ onSuccess(
                       value={siPassword}
                       onChange={(e) => setSiPassword(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && handleSignIn()}
-                      className={`${inputCls} pr-10`}
+                  className={`${inputCls} pr-10`}
+aria-invalid={!!suFieldErrors.password}
                     />
                     <button
                       onClick={() => setShowSiPass((v) => !v)}
@@ -1361,23 +1392,42 @@ onSuccess(
                 <label className="block">
                   <span className="text-xs font-medium text-[#0f172a] block mb-1.5">Preferred name</span>
                   <input
-                    type="text"
-                    placeholder="e.g. Mei"
-                    value={suName}
-                    onChange={(e) => setSuName(e.target.value)}
-                    className={inputCls}
-                  />
+  type="text"
+  placeholder="e.g. Mei"
+  value={suName}
+  onChange={(e) => {
+    setSuName(e.target.value);
+    setSuFieldErrors((prev) => ({ ...prev, name: undefined }));
+  }}
+  maxLength={101}
+  className={inputCls}
+  aria-invalid={!!suFieldErrors.name}
+/>
+                  {suFieldErrors.name && (
+  <p className="text-xs text-red-600 mt-1" role="alert">
+    {suFieldErrors.name}
+  </p>
+)}
                 </label>
 
                 <label className="block">
                   <span className="text-xs font-medium text-[#0f172a] block mb-1.5">University email address</span>
-                  <input
-                    type="email"
-                    placeholder="you@university.edu.au"
-                    value={suEmail}
-                    onChange={(e) => setSuEmail(e.target.value)}
-                    className={inputCls}
-                  />
+                 <input
+  type="email"
+  placeholder="you@university.edu.au"
+  value={suEmail}
+  onChange={(e) => {
+    setSuEmail(e.target.value);
+    setSuFieldErrors((prev) => ({ ...prev, email: undefined }));
+  }}
+  aria-invalid={!!suFieldErrors.email}
+  className={inputCls}
+/>
+{suFieldErrors.email && (
+  <p className="text-xs text-red-600 mt-1" role="alert">
+    {suFieldErrors.email}
+  </p>
+)}
                 </label>
 
                 <label className="block">
@@ -1387,7 +1437,7 @@ onSuccess(
                     onChange={(e) => setSuUni(e.target.value)}
                     className={`${inputCls} text-[${suUni ? "#0f172a" : "#94a3b8"}]`}
                   >
-                    <option value="" disabled>Select your university</option>
+                    <option value="" disabled>Select your university (optional)</option>
                     {UNIS.map((u) => <option key={u}>{u}</option>)}
                   </select>
                 </label>
@@ -1399,13 +1449,21 @@ onSuccess(
                       type={showSuPass ? "text" : "password"}
                       placeholder="Minimum 8 characters"
                       value={suPassword}
-                      onChange={(e) => setSuPassword(e.target.value)}
+                      onChange={(e) => {
+  setSuPassword(e.target.value);
+  setSuFieldErrors((prev) => ({ ...prev, password: undefined }));
+}}
                       className={`${inputCls} pr-10`}
                     />
                     <button onClick={() => setShowSuPass((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94a3b8] hover:text-[#64748b] text-xs">
                       {showSuPass ? "Hide" : "Show"}
                     </button>
                   </div>
+                  {suFieldErrors.password && (
+  <p className="text-xs text-red-600 mt-1" role="alert">
+    {suFieldErrors.password}
+  </p>
+)}
                   {suPassword.length > 0 && (
                     <div className="flex gap-1 mt-1.5">
                       {[4, 6, 8, 10].map((n) => (
@@ -1417,21 +1475,53 @@ onSuccess(
                 </label>
 
                 <label className="block">
-                  <span className="text-xs font-medium text-[#0f172a] block mb-1.5">Confirm password</span>
-                  <input
-                    type="password"
-                    placeholder="Re-enter your password"
-                    value={suConfirm}
-                    onChange={(e) => setSuConfirm(e.target.value)}
-                    className={`${inputCls} ${suConfirm && suConfirm !== suPassword ? "border-red-300 focus:ring-red-400" : suConfirm && suConfirm === suPassword ? "border-emerald-400" : ""}`}
-                  />
-                  {suConfirm && suConfirm !== suPassword && <p className="text-[10px] text-red-500 mt-1">Passwords do not match</p>}
-                  {suConfirm && suConfirm === suPassword && <p className="text-[10px] text-emerald-600 mt-1">✓ Passwords match</p>}
-                </label>
+  <span className="text-xs font-medium text-[#0f172a] block mb-1.5">
+    Confirm password
+  </span>
+
+  <input
+    type="password"
+    placeholder="Re-enter your password"
+    value={suConfirm}
+    onChange={(e) => {
+      setSuConfirm(e.target.value);
+      setSuFieldErrors((prev) => ({ ...prev, confirm: undefined }));
+    }}
+    className={`${inputCls} ${
+      suConfirm && suConfirm !== suPassword
+        ? "border-red-300 focus:ring-red-400"
+        : suConfirm && suConfirm === suPassword
+        ? "border-emerald-400"
+        : ""
+    }`}
+    aria-invalid={!!suFieldErrors.confirm}
+  />
+
+  {suFieldErrors.confirm && (
+    <p className="text-xs text-red-600 mt-1" role="alert">
+      {suFieldErrors.confirm}
+    </p>
+  )}
+
+  {suConfirm && suConfirm !== suPassword && !suFieldErrors.confirm && (
+    <p className="text-[10px] text-red-500 mt-1">
+      Passwords do not match
+    </p>
+  )}
+
+  {suConfirm && suConfirm === suPassword && (
+    <p className="text-[10px] text-emerald-600 mt-1">
+      ✓ Passwords match
+    </p>
+  )}
+</label>
 
                 <label className="flex items-start gap-2.5 cursor-pointer">
                   <div
-                    onClick={() => setSuAgree(!suAgree)}
+                    onClick={() => {
+  setSuAgree(!suAgree);
+  setSuFieldErrors((prev) => ({ ...prev, privacy: undefined }));
+}}
                     className={`mt-0.5 size-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${suAgree ? "bg-[#4f46e5] border-[#4f46e5]" : "border-[#cbd5e1] hover:border-[#4f46e5]"}`}
                   >
                     {suAgree && <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
@@ -1441,6 +1531,11 @@ onSuccess(
                     <button className="text-[#4f46e5] hover:underline">Privacy notice →</button>
                   </span>
                 </label>
+                {suFieldErrors.privacy && (
+  <p className="text-xs text-red-600 mt-1" role="alert">
+    {suFieldErrors.privacy}
+  </p>
+)}
               </div>
 
               {suError && (
@@ -4442,7 +4537,7 @@ credentials: "include",
             {screen === "interview-error" && (
               <AIErrorScreen
                 context="AI-generated interview questions"
-                onRetry={() => go("interview-generating")}
+                onRetry={() => go("interview-setup")}
                 onBack={() => go("interview-setup")}
               />
             )}
@@ -4577,31 +4672,25 @@ onEnd={() => completeInterviewSession("ended_early")}
   feedback={interviewAIFeedback}
     sessionStatus={interviewEndStatus}
                 onPracticeAgain={() => {
-                  const today = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
-                  setActivity((prev) => ({
-                    ...prev,
-                    interviewSessions: [
-                      { date: today, role: interviewConfig.role, questionsAnswered: completedQs, total: interviewConfig.count },
-                      ...prev.interviewSessions,
-                    ],
-                    currentInterviewAnswered: 0,
-                    currentInterviewTotal: 0,
-                  }));
-                  setQIndex(0); setCompletedQs(0); go("interview-setup");
-                }}
+  setActivity((prev) => ({
+    ...prev,
+    currentInterviewAnswered: 0,
+    currentInterviewTotal: 0,
+  }));
+
+  setQIndex(0);
+  setCompletedQs(0);
+  go("interview-setup");
+}}
                 onDashboard={() => {
-                  const today = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
-                  setActivity((prev) => ({
-                    ...prev,
-                    interviewSessions: [
-                      { date: today, role: interviewConfig.role, questionsAnswered: completedQs, total: interviewConfig.count },
-                      ...prev.interviewSessions,
-                    ],
-                    currentInterviewAnswered: 0,
-                    currentInterviewTotal: 0,
-                  }));
-                  go("dashboard");
-                }}
+  setActivity((prev) => ({
+    ...prev,
+    currentInterviewAnswered: 0,
+    currentInterviewTotal: 0,
+  }));
+
+  go("dashboard");
+}}
               />
             )}
             {screen === "job-match-input" && userId && (
@@ -4715,7 +4804,6 @@ credentials: "include",
         go("job-match-error");
       }
     }}
-    onError={() => go("job-match-error")}
   />
 )}    
               

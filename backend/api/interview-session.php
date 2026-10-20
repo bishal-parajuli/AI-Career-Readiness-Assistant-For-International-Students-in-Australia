@@ -25,7 +25,42 @@ require_once __DIR__ . '/../config/auth.php';
 $authenticatedUserId = requireAuth();
 try {
     $input = json_decode(file_get_contents('php://input'), true);
+if (
+    json_last_error() !== JSON_ERROR_NONE ||
+    !is_array($input) ||
+    ($input !== [] && array_is_list($input))
+) {
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Please submit valid interview session details.'
+    ]);
+    exit;
+}
 
+foreach (['target_role', 'industry', 'interview_type', 'difficulty_level'] as $field) {
+    if (isset($input[$field]) && !is_string($input[$field])) {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Please enter valid text for ' . str_replace('_', ' ', $field) . '.'
+        ]);
+        exit;
+    }
+}
+
+if (
+    !isset($input['question_count']) ||
+    !is_int($input['question_count']) ||
+    !in_array($input['question_count'], [3, 5, 10], true)
+) {
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Please select 3, 5 or 10 interview questions.'
+    ]);
+    exit;
+}
     $userId = $authenticatedUserId;
     $targetRole = trim($input['target_role'] ?? '');
     $industry = trim($input['industry'] ?? '');

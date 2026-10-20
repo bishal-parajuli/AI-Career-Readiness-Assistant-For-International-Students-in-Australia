@@ -26,7 +26,29 @@ require_once __DIR__ . '/../config/auth.php';
 $authenticatedUserId = requireAuth();
 try {
     $data = json_decode(file_get_contents('php://input'), true);
+if (
+    json_last_error() !== JSON_ERROR_NONE ||
+    !is_array($data) ||
+    ($data !== [] && array_is_list($data))
+) {
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Please submit a valid JSON object.'
+    ]);
+    exit;
+}
 
+foreach (['job_ad_text', 'job_url', 'job_title', 'company_name'] as $field) {
+    if (isset($data[$field]) && !is_string($data[$field])) {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Please enter valid text for ' . str_replace('_', ' ', $field) . '.'
+        ]);
+        exit;
+    }
+}
     $userId = $authenticatedUserId;
     $jobAdText = trim($data['job_ad_text'] ?? '');
     $jobUrl = trim($data['job_url'] ?? '');
