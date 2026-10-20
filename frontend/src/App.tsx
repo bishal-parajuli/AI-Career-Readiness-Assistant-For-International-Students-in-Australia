@@ -1904,8 +1904,10 @@ const interviewProgress =
               {activityLoading || activityError ? "—" : item.value}
             </p>
             <p className="text-xs text-[#6366f1] mt-2">
-              View activity →
-            </p>
+  {item.label === "Resumes Reviewed"
+    ? "View activity →"
+    : "Start interview practice →"}
+</p>
           </button>
         ))}
       </div>
@@ -4114,6 +4116,7 @@ const feedbackResponse = await fetch(
   "http://localhost:8000/api/interview-feedback.php",
   {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -4561,6 +4564,7 @@ credentials: "include",
       "http://localhost:8000/api/interview-response.php",
       {
         method: "POST",
+        credentials: "include", 
         headers: {
           "Content-Type": "application/json",
         },
