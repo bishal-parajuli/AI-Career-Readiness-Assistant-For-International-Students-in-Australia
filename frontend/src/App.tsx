@@ -2311,10 +2311,12 @@ const handleFileSelect = () => {
 ───────────────────────────────────────── */
 function AIErrorScreen({
   context = "AI-generated",
+  message,
   onRetry,
   onBack,
 }: {
   context?: string;
+  message?: string;
   onRetry: () => void;
   onBack: () => void;
 }) {
@@ -2331,8 +2333,9 @@ function AIErrorScreen({
         We couldn't generate your results
       </h1>
       <p className="text-sm text-[#64748b] leading-relaxed mb-2 max-w-sm">
-        The AI service is temporarily unavailable or the request could not be completed. Your results have not been generated. Please try again.
-      </p>
+  {message ??
+    "The AI service is temporarily unavailable or the request could not be completed. Your results have not been generated. Please try again."}
+</p>
       <p className="text-xs text-[#94a3b8] mb-8 max-w-xs leading-relaxed">
         {context} features may occasionally be unavailable due to technical or service issues.
       </p>
@@ -3333,32 +3336,47 @@ const response = await fetch(
   }, [userId]);
 
  const hasJobText = jobText.trim().length > 20;
+
+const hasJobUrl = (() => {
+  try {
+    const url = new URL(jobUrl.trim());
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+})();
+
 const hasResume = selectedResumeId !== null;
-const canAnalyse = hasJobText && hasResume;
+
+const hasJobInput =
+  inputMode === "paste" ? hasJobText : hasJobUrl;
+
+const canAnalyse = hasJobInput && hasResume;
 
 const handleAnalyse = () => {
   setError("");
 
-  if (!hasJobText) {
+  if (!hasJobInput) {
     setError(
-      "Please paste the full job advertisement text before starting the analysis."
+      inputMode === "url"
+        ? "Please enter a valid job advertisement URL."
+        : "Please paste the job advertisement text."
     );
     return;
   }
 
-  if (!selectedResumeId) {
-    setError("Please select one of your saved resumes to compare.");
+  if (selectedResumeId === null) {
+    setError("Please select one of your saved resumes.");
     return;
   }
 
   onAnalyse(
-    jobText.trim(),
-    jobUrl.trim(),
+    inputMode === "paste" ? jobText.trim() : "",
+    inputMode === "url" ? jobUrl.trim() : "",
     selectedResumeId
   );
 };
 
-  
 
   return (
     <div className="py-8 px-8 max-w-2xl mx-auto">
@@ -3410,8 +3428,12 @@ const handleAnalyse = () => {
             <div className="flex items-start gap-2 px-3 py-2.5 bg-[#f8fafc] border border-[#e2e8f0] rounded-lg">
               <span className="text-[#94a3b8] text-xs mt-0.5 flex-shrink-0">ℹ</span>
               <p className="text-xs text-[#64748b] leading-relaxed">
-                This platform does not automatically retrieve job advertisement content. Paste the URL for your reference, then switch to "Paste Job Advertisement" to add the full advertisement text for the most accurate analysis.
-              </p>
+  Paste a public job advertisement URL to automatically retrieve
+  the job description and compare it with your selected resume.
+  Some websites may restrict automated access. If the job
+  advertisement cannot be retrieved, use the "Paste Job
+  Advertisement" option instead.
+</p>
             </div>
           </Card>
         )}
@@ -3515,6 +3537,7 @@ const handleAnalyse = () => {
    SCREEN 11b — Job Match Analysing
 ───────────────────────────────────────── */
 function JobMatchAnalysingScreen({ onDone }: { onDone: () => void }) {
+  const analysisStartedRef = useRef(false);
   const [progress, setProgress] = useState(0);
   const STEPS = ["Reading job advertisement…", "Identifying role requirements…", "Comparing with your resume…", "Calculating skill alignment…", "Generating recommendations…", "Analysis complete"];
   const [step, setStep] = useState(0);
@@ -3525,7 +3548,10 @@ function JobMatchAnalysingScreen({ onDone }: { onDone: () => void }) {
 
       if (next >= 100) {
         clearInterval(iv);
-        setTimeout(onDone, 300);
+       if (!analysisStartedRef.current) {
+  analysisStartedRef.current = true;
+  setTimeout(onDone, 300);
+}
         return 100;
       }
 
@@ -3935,6 +3961,7 @@ const [questionIds, setQuestionIds] = useState<number[]>([]);
 const [activityLoading, setActivityLoading] = useState(false);
 const [activityError, setActivityError] = useState<string | null>(null);
   const [jobMatchResult, setJobMatchResult] = useState<JobMatchResult | null>(null);
+  const [jobMatchError, setJobMatchError] = useState<string | null>(null);
  const [pendingJobMatch, setPendingJobMatch] = useState<{
   
   jobText: string;
@@ -4721,13 +4748,21 @@ credentials: "include",
         const data = await response.json();
 
         if (!response.ok) {
-          console.error(
-            "Unable to save job advertisement:",
-            data.message
-          );
-          go("job-match-error");
-          return;
-        }
+  console.error(
+    "Unable to save job advertisement:",
+    data.message
+  );
+
+  setJobMatchError(
+    response.status === 422
+      ? "We couldn't retrieve the job advertisement from this URL. The website may restrict automated access. Please use the Paste Job Advertisement option instead."
+      : "Unable to process the job advertisement. Please check your input and try again."
+  );
+
+  setJobMatchResult(null);
+  go("job-match-error");
+  return;
+}
 
         setPendingJobMatch({
           jobText,
@@ -4812,12 +4847,19 @@ credentials: "include",
 )}    
               
             {screen === "job-match-error" && (
-              <AIErrorScreen
-                context="AI-generated job match analysis"
-                onRetry={() => go("job-match-analysing")}
-                onBack={() => go("job-match-input")}
-              />
-            )}
+  <AIErrorScreen
+    context="AI-generated job match analysis"
+    message={jobMatchError ?? undefined}
+    onRetry={() => {
+      setJobMatchError(null);
+      go("job-match-input");
+    }}
+    onBack={() => {
+      setJobMatchError(null);
+      go("job-match-input");
+    }}
+  />
+)}
             {screen === "job-match-results" && jobMatchResult && (
               <JobMatchResultsScreen
                 result={jobMatchResult}

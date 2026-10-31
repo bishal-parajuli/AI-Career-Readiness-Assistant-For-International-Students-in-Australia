@@ -216,3 +216,21 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# React / Vite
+node_modules/
+frontend/dist/
+frontend/node_modules/
+
+# Local configuration and secrets
+.env.*
+!.env.example
+*.local
+
+# Project backup files
+backups/
+frontend/src/App.backup.tsx
+*.backup.php
+
+# macOS
+.DS_Store

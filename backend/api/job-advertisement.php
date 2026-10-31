@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../helpers/job-url-extractor.php';
 
 $authenticatedUserId = requireAuth();
 try {
@@ -64,14 +65,28 @@ foreach (['job_ad_text', 'job_url', 'job_title', 'company_name'] as $field) {
         exit;
     }
 
-    if ($jobAdText === '') {
-        http_response_code(400);
+if ($jobAdText === '' && $jobUrl === '') {
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Please paste a job advertisement or provide a job URL.'
+    ]);
+    exit;
+}
+
+if ($jobAdText === '' && $jobUrl !== '') {
+    try {
+        $jobAdText = extractJobTextFromUrl($jobUrl);
+    } catch (RuntimeException $e) {
+        http_response_code(422);
         echo json_encode([
             'status' => 'error',
-            'message' => 'Job advertisement text is required for analysis.'
+            'message' => $e->getMessage()
         ]);
         exit;
     }
+}
+
 
     if ($jobUrl !== '' && filter_var($jobUrl, FILTER_VALIDATE_URL) === false) {
         http_response_code(400);
@@ -96,8 +111,9 @@ foreach (['job_ad_text', 'job_url', 'job_title', 'company_name'] as $field) {
         exit;
     }
 
-    $inputMethod = $jobUrl !== '' ? 'paste_with_url' : 'paste';
-
+ $inputMethod = $jobUrl !== '' && trim($data['job_ad_text'] ?? '') === ''
+    ? 'url'
+    : ($jobUrl !== '' ? 'paste_with_url' : 'paste');
     $statement = $pdo->prepare(
         'INSERT INTO job_advertisement
             (user_id, input_method, job_url, job_ad_text, job_title, company_name)
