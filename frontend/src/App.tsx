@@ -3,7 +3,7 @@ import Card from "./components/ui/Card";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ResetPasswordScreen from "./components/auth/ResetPasswordScreen"; 
-
+import AppLogo from "./components/branding/AppLogo";
 /* ─────────────────────────────────────────
    Types
 ───────────────────────────────────────── */
@@ -1715,10 +1715,7 @@ function LandingScreen({ onStart, onLearn }: { onStart: () => void; onLearn: () 
       {/* Top nav */}
       <header className="border-b border-[#e2e8f0] sticky top-0 bg-white/95 backdrop-blur z-40">
         <div className="max-w-6xl mx-auto px-8 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="size-7 rounded-md bg-[#4f46e5] flex items-center justify-center text-white text-xs font-bold">AI</div>
-            <span className="font-semibold text-[#0f172a] text-sm">Career Readiness Assistant</span>
-          </div>
+          <AppLogo size="md" />
           <nav className="flex items-center gap-5 text-sm">
             <button onClick={() => scrollTo("how")} className="text-[#64748b] hover:text-[#0f172a] transition-colors">How it works</button>
             <button onClick={() => scrollTo("responsible")} className="text-[#64748b] hover:text-[#0f172a] transition-colors">Responsible AI</button>
@@ -1728,47 +1725,198 @@ function LandingScreen({ onStart, onLearn }: { onStart: () => void; onLearn: () 
       </header>
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-8 pt-20 pb-16">
-        <div className="max-w-2xl">
-          <span className="inline-block text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-3 py-1 rounded-full mb-5">For international students in Australia</span>
-          <h1 className="text-5xl font-semibold text-[#0f172a] leading-tight tracking-tight mb-5">
-            AI Career<br />Readiness Assistant
-          </h1>
-          <p className="text-lg text-[#64748b] leading-relaxed mb-8 max-w-lg">
-            Personalised AI-powered resume feedback and interview preparation for international students seeking graduate employment in Australia.
-          </p>
-          <div className="flex items-center gap-3">
-            <Btn onClick={onStart} size="lg">Get Started</Btn>
-            <Btn onClick={() => scrollTo("how")} variant="secondary" size="lg">Learn How It Works</Btn>
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#25216b] to-[#5b21b6] text-white">
+        <div className="pointer-events-none absolute -top-32 -right-24 h-96 w-96 rounded-full bg-violet-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-40 left-10 h-96 w-96 rounded-full bg-indigo-400/20 blur-3xl" />
+
+        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-20 sm:px-8 lg:grid-cols-2 lg:py-28">
+          <div>
+            <span className="mb-6 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-medium text-indigo-100">
+              ✨ AI-powered career support for international students
+            </span>
+
+            <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+              Your career journey
+              <span className="block bg-gradient-to-r from-cyan-300 to-violet-300 bg-clip-text text-transparent">
+                starts here.
+              </span>
+            </h1>
+
+            <p className="mb-8 max-w-xl text-base leading-relaxed text-indigo-100 sm:text-lg">
+              Build confidence for the Australian job market with personalised
+              AI-assisted resume feedback, interview preparation and job matching
+              — all in one place.
+            </p>
+
+            <div className="flex flex-wrap gap-4">
+              <button
+                onClick={onStart}
+                className="rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-indigo-800 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-indigo-50"
+              >
+                Get Started →
+              </button>
+              <button
+                onClick={() => scrollTo("how")}
+                className="rounded-xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/20"
+              >
+                Explore Features
+              </button>
+            </div>
+
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-xs text-indigo-100">
+              <span>✓ Personalised feedback</span>
+              <span>✓ Australian career context</span>
+              <span>✓ Responsible AI</span>
+            </div>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-md">
+            <div className="absolute -inset-5 rounded-3xl bg-violet-400/20 blur-2xl" />
+
+            <div className="relative rounded-2xl border border-white/20 bg-white p-6 text-slate-900 shadow-2xl sm:p-8">
+              <div className="mb-6 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <AppLogo showText={false} size="md" />
+                  <div>
+                    <p className="text-sm font-bold text-slate-900">Your Career Toolkit</p>
+                    <p className="text-xs text-slate-500">Prepare for your next opportunity</p>
+                  </div>
+                </div>
+                <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                  AI Assisted
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  {
+                    icon: "📄",
+                    title: "Resume Feedback",
+                    desc: "Improve your resume with tailored insights",
+                  },
+                  {
+                    icon: "🎤",
+                    title: "Interview Preparation",
+                    desc: "Practise questions and build confidence",
+                  },
+                  {
+                    icon: "🎯",
+                    title: "Job Matching",
+                    desc: "Explore how your skills match job requirements",
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.title}
+                    className="flex items-start gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4"
+                  >
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-xl">
+                      {item.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900">{item.title}</h3>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 p-4">
+                <p className="text-xs font-medium text-indigo-800">
+                  ✨ Personalised career preparation, powered by AI
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Feature cards */}
-      <section className="bg-[#f8fafc] border-y border-[#e2e8f0] py-16" id="how">
-        <div className="max-w-6xl mx-auto px-8">
-          <p className="text-xs font-semibold text-[#64748b] uppercase tracking-widest mb-10 text-center">Core capabilities</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section id="how" className="bg-gradient-to-b from-slate-50 to-white py-20 sm:py-24">
+        <div className="mx-auto max-w-6xl px-6 sm:px-8">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <span className="inline-flex rounded-full bg-indigo-50 px-4 py-2 text-xs font-semibold text-indigo-700">
+              OUR CORE CAPABILITIES
+            </span>
+
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Everything you need to prepare for your career
+            </h2>
+
+            <p className="mt-4 text-base leading-relaxed text-slate-600">
+              Explore three AI-assisted tools designed to support international
+              students preparing for employment in Australia.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {[
               {
-                icon: "📄", title: "Resume Feedback",
-                desc: "Receive personalised feedback to improve your resume for the Australian employment context. Understand what employers look for and how to present your experience clearly.",
-                cta: "Review My Resume", action: onStart,
+                icon: "📄",
+                number: "01",
+                title: "Resume Feedback",
+                desc: "Upload your resume and receive personalised AI-assisted feedback on its structure, content and relevance to the Australian employment context.",
+                cta: "Review My Resume",
+                colour: "from-indigo-500 to-blue-600",
+                background: "bg-indigo-50",
               },
               {
-                icon: "🎙", title: "Interview Preparation",
-                desc: "Practise interview questions and receive constructive AI-assisted feedback. Build confidence with behavioural, general graduate, and role-specific question practice.",
-                cta: "Start Interview Practice", action: onStart,
+                icon: "🎤",
+                number: "02",
+                title: "Interview Preparation",
+                desc: "Practise graduate and role-specific interview questions, receive constructive feedback and build confidence before real interviews.",
+                cta: "Practise Interviews",
+                colour: "from-violet-500 to-purple-600",
+                background: "bg-purple-50",
               },
-            ].map((f) => (
-              <Card key={f.title} className="p-8 hover:shadow-sm transition-shadow">
-                <span className="text-3xl block mb-4">{f.icon}</span>
-                <h3 className="text-base font-semibold text-[#0f172a] mb-2">{f.title}</h3>
-                <p className="text-sm text-[#64748b] leading-relaxed mb-5">{f.desc}</p>
-                <Btn onClick={f.action} variant="secondary" size="sm">{f.cta}</Btn>
-              </Card>
+              {
+                icon: "🎯",
+                number: "03",
+                title: "Job Matching",
+                desc: "Compare your resume with job requirements to identify relevant skills, potential gaps and areas for improvement.",
+                cta: "Explore Job Matching",
+                colour: "from-cyan-500 to-teal-600",
+                background: "bg-cyan-50",
+              },
+            ].map((feature) => (
+              <div
+                key={feature.title}
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className={`h-1.5 bg-gradient-to-r ${feature.colour}`} />
+
+                <div className="flex flex-1 flex-col p-7">
+                  <div className="mb-7 flex items-center justify-between">
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${feature.background} text-3xl`}>
+                      {feature.icon}
+                    </div>
+                    <span className="text-sm font-bold text-slate-300">
+                      {feature.number}
+                    </span>
+                  </div>
+
+                  <h3 className="mb-3 text-xl font-bold text-slate-900">
+                    {feature.title}
+                  </h3>
+
+                  <p className="mb-8 flex-1 text-sm leading-7 text-slate-600">
+                    {feature.desc}
+                  </p>
+
+                  <button
+                    onClick={onStart}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition-colors hover:border-indigo-600 hover:bg-indigo-600 hover:text-white"
+                  >
+                    {feature.cta}
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
+
+          <p className="mt-10 text-center text-xs text-slate-500">
+            AI-assisted guidance supports career preparation and does not guarantee employment.
+          </p>
         </div>
       </section>
 
