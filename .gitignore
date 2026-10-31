@@ -234,3 +234,6 @@ frontend/src/App.backup.tsx
 
 # macOS
 .DS_Store
+
+# Private development password reset logs
+dev-logs/

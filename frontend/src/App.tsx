@@ -2,6 +2,7 @@ import { Sidebar, type NavItem } from "./components/layout/Sidebar";
 import Card from "./components/ui/Card";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import ResetPasswordScreen from "./components/auth/ResetPasswordScreen"; 
 
 /* ─────────────────────────────────────────
    Types
@@ -9,6 +10,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 type Screen =
   | "landing"
   | "auth"
+  | "reset-password"
   | "onboarding"
   | "dashboard"
   | "resume-upload"
@@ -35,6 +37,7 @@ type Screen =
 const SCREEN_PATHS: Partial<Record<Screen, string>> = {
   landing: "/",
   auth: "/login",
+  "reset-password": "/reset-password",
   onboarding: "/onboarding",
   dashboard: "/dashboard",
   "resume-upload": "/resume-feedback",
@@ -1105,8 +1108,12 @@ function StepDot({ n, active, done }: { n: number; active: boolean; done: boolea
 ───────────────────────────────────────── */
 
 function AuthScreen({ onSuccess }: { onSuccess: (userId: number, name: string, email: string, isNew: boolean) => void }) {
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-
+ const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
+/* Forgot password state */
+const [forgotEmail, setForgotEmail] = useState("");
+const [forgotError, setForgotError] = useState("");
+const [forgotSuccess, setForgotSuccess] = useState("");
+const [forgotLoading, setForgotLoading] = useState(false);
   /* Sign-in state */
   const [siEmail, setSiEmail]       = useState("");
   const [siPassword, setSiPassword] = useState("");
@@ -1135,6 +1142,57 @@ const [suLoading, setSuLoading] = useState(false);
   const [showSuPass, setShowSuPass]   = useState(false);
 
   const UNIS = ["University of Sydney", "University of Melbourne", "UNSW Sydney", "Monash University", "University of Queensland", "University of Adelaide", "Macquarie University", "Other"];
+
+const handleForgotPassword = async () => {
+  setForgotError("");
+  setForgotSuccess("");
+
+  const email = forgotEmail.trim();
+
+  if (!email) {
+    setForgotError("Please enter your email address.");
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    setForgotError("Please enter a valid email address.");
+    return;
+  }
+
+  setForgotLoading(true);
+
+  try {
+    const response = await fetch(
+      "http://localhost:8000/api/forgot-password.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setForgotError(
+        data.message || "Unable to process password reset request."
+      );
+      return;
+    }
+
+    setForgotSuccess(
+      "If this email is registered, password reset instructions have been generated. In this development version, the reset link is available to the developer."
+    );
+  } catch {
+    setForgotError(
+      "Unable to connect to the server. Please try again."
+    );
+  } finally {
+    setForgotLoading(false);
+  }
+};
 
   const handleSignIn = async () => {
     setSiError("");
@@ -1321,13 +1379,14 @@ setSuLoading(true);
                 <label className="block">
                   <div className="flex justify-between mb-1.5">
                     <span className="text-xs font-medium text-[#0f172a]">Password</span>
-                    <button
+                  <button
   type="button"
-  onClick={() =>
-    alert(
-      "Password recovery is not available in this MVP. Please contact the system administrator if you need assistance accessing your account."
-    )
-  }
+  onClick={() => {
+    setForgotEmail(siEmail);
+    setForgotError("");
+    setForgotSuccess("");
+    setMode("forgot");
+  }}
   className="text-xs text-[#4f46e5] hover:underline"
 >
   Forgot password?
@@ -1381,6 +1440,75 @@ aria-invalid={!!suFieldErrors.password}
               </p>
             </div>
           )}
+
+{/* ── FORGOT PASSWORD ── */}
+{mode === "forgot" && (
+  <div className="p-7">
+    <h2 className="text-lg font-semibold text-[#0f172a] mb-1">
+      Forgot your password?
+    </h2>
+
+    <p className="text-xs text-[#64748b] mb-6">
+      Enter your registered email address to request a password reset.
+    </p>
+
+    <label className="block">
+      <span className="text-xs font-medium text-[#0f172a] block mb-1.5">
+        Email address
+      </span>
+      <input
+        type="email"
+        placeholder="you@university.edu.au"
+        value={forgotEmail}
+        onChange={(e) => setForgotEmail(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !forgotLoading) {
+            handleForgotPassword();
+          }
+        }}
+        className={inputCls}
+      />
+    </label>
+
+    {forgotError && (
+      <div
+        role="alert"
+        className="mt-4 px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg"
+      >
+        <p className="text-xs text-red-700">{forgotError}</p>
+      </div>
+    )}
+
+    {forgotSuccess && (
+      <div
+        role="status"
+        className="mt-4 px-3 py-2.5 bg-green-50 border border-green-200 rounded-lg"
+      >
+        <p className="text-xs text-green-700">{forgotSuccess}</p>
+      </div>
+    )}
+
+    <button
+      type="button"
+      onClick={handleForgotPassword}
+      disabled={forgotLoading}
+      className="w-full mt-5 bg-[#4f46e5] text-white font-medium py-2.5 rounded-lg hover:bg-[#4338ca] transition-colors text-sm disabled:opacity-60"
+    >
+      {forgotLoading ? "Processing..." : "Request password reset"}
+    </button>
+
+    <button
+      type="button"
+      onClick={() => {
+        setMode("signin");
+        setSiError("");
+      }}
+      className="block mx-auto mt-4 text-xs text-[#4f46e5] font-medium hover:underline"
+    >
+      Back to Sign In
+    </button>
+  </div>
+)}
 
           {/* ── SIGN UP ── */}
           {mode === "signup" && (
@@ -3888,7 +4016,13 @@ const location = useLocation();
     let cancelled = false;
 
     const restoreSession = async () => {
-      try {
+  if (window.location.pathname === "/reset-password") {
+    setScreen("reset-password");
+    setCheckingSession(false);
+    return;
+  }
+
+  try {
         const response = await fetch("http://localhost:8000/api/me.php", {
           credentials: "include",
         });
@@ -4038,23 +4172,47 @@ const resetActivity = () => {
   window.scrollTo(0, 0);
 };
 
+
 useEffect(() => {
   if (checkingSession) return;
 
-  if (!userId) {
-    const publicPaths = ["/", "/login"];
-
-    if (!publicPaths.includes(location.pathname)) {
-      setScreen("auth");
-      navigate("/login", { replace: true });
-    }
+  // 1. Reset Password screen (public)
+  if (location.pathname === "/reset-password") {
+    setScreen("reset-password");
     return;
   }
 
+  // 2. Sign In screen (public)
+  if (location.pathname === "/login") {
+    setScreen("auth");
+    return;
+  }
+
+  // 3. Landing page (public)
+  if (location.pathname === "/") {
+    if (!userId) {
+      setScreen("landing");
+      return;
+    }
+
+    setScreen("dashboard");
+    navigate("/dashboard", { replace: true });
+    return;
+  }
+
+  // 4. Protect private pages
+  if (!userId) {
+    setScreen("auth");
+    navigate("/login", { replace: true });
+    return;
+  }
+
+  // 5. Find the screen matching the current URL
   const requestedScreen = (
     Object.entries(SCREEN_PATHS) as [Screen, string][]
   ).find(([, path]) => path === location.pathname)?.[0];
 
+  // 6. Screens that can be opened directly through URLs
   const safeScreens: Screen[] = [
     "dashboard",
     "resume-upload",
@@ -4064,6 +4222,7 @@ useEffect(() => {
     "responsible-ai",
   ];
 
+  // 7. Update screen and sidebar navigation
   if (requestedScreen && safeScreens.includes(requestedScreen)) {
     setScreen(requestedScreen);
 
@@ -4077,9 +4236,14 @@ useEffect(() => {
     };
 
     const navItem = navMap[requestedScreen];
-    if (navItem) setActiveNav(navItem);
+
+    if (navItem) {
+      setActiveNav(navItem);
+    }
   }
-}, [location.pathname, checkingSession, userId]);
+}, [location.pathname, checkingSession, userId, navigate]);
+
+
 
 const completeInterviewSession = async (
   sessionStatus: "completed" | "ended_early" = "completed"
@@ -4207,6 +4371,9 @@ go("interview-summary");
       </div>
     );
   }
+  if (screen === "reset-password") {
+  return <ResetPasswordScreen />;
+}
 
   return (
     <div className="font-sans bg-[#f8fafc] min-h-screen">
