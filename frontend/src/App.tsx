@@ -1921,21 +1921,84 @@ function LandingScreen({ onStart, onLearn }: { onStart: () => void; onLearn: () 
       </section>
 
       {/* Responsible AI trust */}
-      <section id="responsible" className="max-w-6xl mx-auto px-8 py-16">
-        <p className="text-xs font-semibold text-[#64748b] uppercase tracking-widest mb-8 text-center">Responsible AI principles</p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: "⚖️", label: "Fairness", desc: "Feedback focuses on career preparation, not personal characteristics." },
-            { icon: "🔍", label: "Transparency", desc: "AI-generated content is clearly identified throughout the platform." },
-            { icon: "🔒", label: "Privacy", desc: "Only information necessary for career preparation support is collected." },
-            { icon: "👤", label: "Human Oversight", desc: "AI feedback supports preparation and does not replace professional advisers." },
-          ].map((p) => (
-            <div key={p.label} className="border border-[#e2e8f0] rounded-xl p-5 text-center">
-              <span className="text-2xl block mb-2">{p.icon}</span>
-              <p className="text-xs font-semibold text-[#0f172a] mb-1">{p.label}</p>
-              <p className="text-xs text-[#64748b] leading-relaxed">{p.desc}</p>
-            </div>
-          ))}
+      <section id="responsible" className="bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-6xl px-6 sm:px-8">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <span className="inline-flex rounded-full bg-violet-50 px-4 py-2 text-xs font-semibold text-violet-700">
+              RESPONSIBLE AI
+            </span>
+
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Career support guided by responsible AI
+            </h2>
+
+            <p className="mt-4 text-base leading-relaxed text-slate-600">
+              Our platform is designed around four principles that support
+              responsible, transparent and student-centred AI assistance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                icon: "⚖️",
+                label: "Fairness",
+                desc: "Feedback focuses on career preparation, not personal characteristics.",
+                background: "bg-indigo-50",
+                accent: "from-indigo-500 to-blue-600",
+              },
+              {
+                icon: "🔍",
+                label: "Transparency",
+                desc: "AI-generated content is clearly identified throughout the platform.",
+                background: "bg-violet-50",
+                accent: "from-violet-500 to-purple-600",
+              },
+              {
+                icon: "🔒",
+                label: "Privacy",
+                desc: "Only information necessary for career preparation support is collected.",
+                background: "bg-cyan-50",
+                accent: "from-cyan-500 to-teal-600",
+              },
+              {
+                icon: "👤",
+                label: "Human Oversight",
+                desc: "AI feedback supports preparation and does not replace professional advisers.",
+                background: "bg-purple-50",
+                accent: "from-purple-500 to-fuchsia-600",
+              },
+            ].map((principle) => (
+              <div
+                key={principle.label}
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className={`h-1.5 bg-gradient-to-r ${principle.accent}`} />
+
+                <div className="flex flex-1 flex-col items-center p-7 text-center">
+                  <div className={`mb-5 flex h-16 w-16 items-center justify-center rounded-2xl ${principle.background} text-3xl`}>
+                    {principle.icon}
+                  </div>
+
+                  <h3 className="mb-3 text-lg font-bold text-slate-900">
+                    {principle.label}
+                  </h3>
+
+                  <p className="text-sm leading-6 text-slate-600">
+                    {principle.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-indigo-100 bg-indigo-50/70 px-6 py-5 text-center">
+            <p className="text-sm leading-relaxed text-indigo-900">
+              <span className="font-semibold">Important:</span>{" "}
+              AI-generated recommendations should be reviewed critically
+              and used alongside professional career guidance.
+            </p>
+          </div>
         </div>
       </section>
 
