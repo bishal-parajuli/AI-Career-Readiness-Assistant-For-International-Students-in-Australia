@@ -60,7 +60,7 @@ try {
 AND user_id = ?
          LIMIT 1"
     );
-
+$sessionStatement->execute([$sessionId, $authenticatedUserId]);
     $session = $sessionStatement->fetch();
 
     if (!$session) {
