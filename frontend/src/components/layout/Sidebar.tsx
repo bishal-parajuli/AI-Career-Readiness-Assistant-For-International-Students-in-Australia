@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AppLogo from "../branding/AppLogo";
 
 export type NavItem = "dashboard" | "resume" | "interview" | "job-matching" | "progress" | "responsible-ai";
 
@@ -252,38 +253,87 @@ function SidebarContents({ active, onNav, userId, userName, userEmail, onLogout,
 
   return (
     <>
-      {/* Logo / brand */}
-      <div className="px-5 py-5 border-b border-[#f1f5f9] flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="size-9 rounded-xl bg-[#4f46e5] flex items-center justify-center text-white text-xs font-bold tracking-wide flex-shrink-0">AI</div>
-          <div>
-            <p className="text-sm font-bold text-[#0f172a] leading-snug">Career Readiness</p>
-            <p className="text-[11px] text-[#94a3b8] leading-none mt-0.5">AI Assistant</p>
-          </div>
-        </div>
-      </div>
+      {/* Logo / brand — shared with landing page */}
+<div className="px-4 pt-6 pb-5 border-b border-slate-100 flex-shrink-0">
+  <AppLogo size="md" />
+</div>
+      
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 pt-4 pb-2 space-y-0.5 overflow-y-auto">
-        {NAV_ITEMS.map(({ id, label, Icon }) => {
-          const isActive = active === id;
-          return (
-            <button
-              key={id}
-              onClick={() => handleNav(id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors group
-                ${isActive
-                  ? "bg-[#eef2ff] text-[#4f46e5]"
-                  : "text-[#64748b] hover:text-[#0f172a] hover:bg-[#f8fafc]"
-                }`}
-            >
-              <Icon className={`w-4.5 h-4.5 flex-shrink-0 ${isActive ? "text-[#4f46e5]" : "text-[#94a3b8] group-hover:text-[#64748b]"}`} />
-              <span className={`text-[13px] font-medium leading-none ${isActive ? "text-[#4f46e5]" : ""}`}>{label}</span>
-              {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#4f46e5] flex-shrink-0" />}
-            </button>
-          );
-        })}
+      <nav
+        aria-label="Main navigation"
+        className="flex-1 px-3 py-5 overflow-y-auto"
+      >
+        {[
+          {
+            heading: "OVERVIEW",
+            items: NAV_ITEMS.filter((item) => item.id === "dashboard"),
+          },
+          {
+            heading: "CAREER TOOLS",
+            items: NAV_ITEMS.filter((item) =>
+              ["resume", "interview", "job-matching"].includes(item.id)
+            ),
+          },
+          {
+            heading: "INSIGHTS & TRUST",
+            items: NAV_ITEMS.filter((item) =>
+              ["progress", "responsible-ai"].includes(item.id)
+            ),
+          },
+        ].map((section) => (
+          <div key={section.heading} className="mb-6 last:mb-0">
+            <p className="px-3 mb-3 text-[10px] font-bold tracking-[0.14em] text-slate-400">
+              {section.heading}
+            </p>
+
+            <div className="space-y-1">
+              {section.items.map(({ id, label, Icon }) => {
+                const isActive = active === id;
+
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => handleNav(id)}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`relative w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group ${
+                      isActive
+                        ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
+                  >
+                    {isActive && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-indigo-600"
+                      />
+                    )}
+
+                    <Icon
+                      className={`w-[19px] h-[19px] flex-shrink-0 ${
+                        isActive
+                          ? "text-indigo-600"
+                          : "text-slate-400 group-hover:text-slate-600"
+                      }`}
+                    />
+
+                    <span
+                      className={`text-[13px] leading-snug ${
+                        isActive ? "font-semibold" : "font-medium"
+                      }`}
+                    >
+                      {label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
+
+
 
       {/* User profile */}
       <div className="px-3 pb-4 pt-2 border-t border-[#f1f5f9] flex-shrink-0 relative">

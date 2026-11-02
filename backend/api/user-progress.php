@@ -111,11 +111,57 @@ try {
         ];
     }
 
-    echo json_encode([
-        "status" => "success",
-        "resumeReviews" => $resumeReviews,
-        "interviewSessions" => $interviewSessions
-    ]);
+    // Retrieve the authenticated user's AI job matching history.
+    $jobMatchStatement = $pdo->prepare(
+        "SELECT
+            a.analysis_id,
+            a.job_ad_id,
+            a.resume_id,
+            a.match_score,
+            a.generated_at,
+            j.job_title,
+            j.company_name,
+            j.input_method,
+            r.target_role AS resume_target_role
+        FROM job_match_analysis a
+        INNER JOIN job_advertisement j
+            ON j.job_ad_id = a.job_ad_id
+        INNER JOIN resume r
+            ON r.resume_id = a.resume_id
+        WHERE j.user_id = ?
+          AND r.user_id = ?
+          AND a.analysis_type = 'ai_job_match'
+        ORDER BY a.generated_at DESC, a.analysis_id DESC"
+    );
+
+    $jobMatchStatement->execute([$userId, $userId]);
+
+    $jobMatches = [];
+
+    foreach ($jobMatchStatement->fetchAll() as $match) {
+        $jobMatches[] = [
+            "analysis_id" => (int) $match["analysis_id"],
+            "job_ad_id" => (int) $match["job_ad_id"],
+            "resume_id" => (int) $match["resume_id"],
+            "date" => $match["generated_at"],
+            "role" => $match["job_title"]
+                ?: $match["resume_target_role"]
+                ?: "Role not specified",
+            "company" => $match["company_name"]
+                ?: "Company not specified",
+            "matchScore" => $match["match_score"] !== null
+                ? (float) $match["match_score"]
+                : null,
+            "inputMethod" => $match["input_method"]
+        ];
+    }
+
+   echo json_encode([
+    "status" => "success",
+    "resumeReviews" => $resumeReviews,
+    "interviewSessions" => $interviewSessions,
+    "jobMatches" => $jobMatches
+]); 
 
 } catch (Throwable $exception) {
     error_log("User progress error: " . $exception->getMessage());

@@ -1327,24 +1327,23 @@ setSuLoading(true);
   };
 
   const Logo = () => (
-    <div className="flex items-center justify-center gap-2.5 mb-8">
-      <div className="size-9 rounded-xl bg-[#4f46e5] flex items-center justify-center text-white text-sm font-bold shadow-sm">AI</div>
-      <div>
-        <p className="text-sm font-bold text-[#0f172a] leading-tight">Career Readiness Assistant</p>
-        <p className="text-[10px] text-[#94a3b8]">For international students in Australia</p>
-      </div>
+    <div className="mb-8 flex flex-col items-center gap-3">
+      <AppLogo size="lg" />
+      <p className="text-center text-xs font-medium text-slate-500">
+        For international students in Australia
+      </p>
     </div>
   );
 
-  const inputCls = "w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent bg-white placeholder:text-[#94a3b8]";
+  const inputCls = "w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 bg-slate-50/50 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:bg-white transition-all";
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] font-sans flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-violet-200 font-sans flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <Logo />
 
         {/* Tab toggle */}
-        <div className="flex bg-white border border-[#e2e8f0] rounded-xl p-1 mb-6 shadow-sm">
+        <div className="flex bg-white/90 border border-indigo-100 rounded-2xl p-1.5 mb-6 shadow-md shadow-indigo-100/50">
           {(["signin", "signup"] as const).map((m) => (
             <button
               key={m}
@@ -1356,10 +1355,10 @@ setSuLoading(true);
           ))}
         </div>
 
-        <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-white border border-indigo-100 rounded-3xl shadow-xl shadow-indigo-200/40 overflow-hidden">
           {/* ── SIGN IN ── */}
           {mode === "signin" && (
-            <div className="p-7">
+            <div className="p-7 sm:p-9">
               <h2 className="text-lg font-semibold text-[#0f172a] mb-1">Welcome back</h2>
               <p className="text-xs text-[#64748b] mb-6">Sign in to continue your career preparation.</p>
 
@@ -1422,7 +1421,7 @@ aria-invalid={!!suFieldErrors.password}
               <button
                 onClick={handleSignIn}
                 disabled={siLoading}
-                className="w-full mt-5 bg-[#4f46e5] text-white font-medium py-2.5 rounded-lg hover:bg-[#4338ca] transition-colors text-sm disabled:opacity-60 flex items-center justify-center gap-2"
+                className="w-full mt-5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold py-3 rounded-xl hover:from-indigo-700 hover:to-violet-700 transition-all shadow-md shadow-indigo-200 text-sm disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {siLoading ? (
                   <>
@@ -1443,7 +1442,7 @@ aria-invalid={!!suFieldErrors.password}
 
 {/* ── FORGOT PASSWORD ── */}
 {mode === "forgot" && (
-  <div className="p-7">
+  <div className="p-7 sm:p-9">
     <h2 className="text-lg font-semibold text-[#0f172a] mb-1">
       Forgot your password?
     </h2>
@@ -1492,7 +1491,7 @@ aria-invalid={!!suFieldErrors.password}
       type="button"
       onClick={handleForgotPassword}
       disabled={forgotLoading}
-      className="w-full mt-5 bg-[#4f46e5] text-white font-medium py-2.5 rounded-lg hover:bg-[#4338ca] transition-colors text-sm disabled:opacity-60"
+      className="w-full mt-5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold py-3 rounded-xl hover:from-indigo-700 hover:to-violet-700 transition-all shadow-md shadow-indigo-200 text-sm disabled:opacity-60"
     >
       {forgotLoading ? "Processing..." : "Request password reset"}
     </button>
@@ -1512,7 +1511,7 @@ aria-invalid={!!suFieldErrors.password}
 
           {/* ── SIGN UP ── */}
           {mode === "signup" && (
-            <div className="p-7">
+            <div className="p-7 sm:p-9">
               <h2 className="text-lg font-semibold text-[#0f172a] mb-1">Create your account</h2>
               <p className="text-xs text-[#64748b] mb-6">Set up your career readiness profile.</p>
 
@@ -1676,7 +1675,7 @@ aria-invalid={!!suFieldErrors.password}
               <button
                 onClick={handleSignUp}
                 disabled={suLoading}
-                className="w-full mt-5 bg-[#4f46e5] text-white font-medium py-2.5 rounded-lg hover:bg-[#4338ca] transition-colors text-sm disabled:opacity-60 flex items-center justify-center gap-2"
+                className="w-full mt-5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold py-3 rounded-xl hover:from-indigo-700 hover:to-violet-700 transition-all shadow-md shadow-indigo-200 text-sm disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {suLoading ? (
                   <>
@@ -2151,9 +2150,29 @@ const interviewProgress =
 
   return (
     <div className="py-8 px-8 max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">Welcome, {userName}</h1>
-        <p className="text-sm text-[#64748b]">Continue building your career readiness for the Australian job market.</p>
+      <div className="relative mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 p-7 sm:p-9 text-white shadow-lg shadow-indigo-200/50">
+
+        <div className="pointer-events-none absolute -right-12 -top-16 h-52 w-52 rounded-full bg-white/10 blur-2xl" />
+
+        <div className="pointer-events-none absolute bottom-0 right-20 h-24 w-24 rounded-full bg-violet-300/20 blur-xl" />
+
+        <div className="relative z-10">
+
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+            Your Career Dashboard
+          </p>
+
+          <h1 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
+            Welcome back, {userName}!
+          </h1>
+
+          <p className="max-w-xl text-sm leading-relaxed text-indigo-100">
+            Your next career opportunity starts with preparation. Continue building
+            your skills and confidence for the Australian job market.
+          </p>
+
+        </div>
+
       </div>
       {activityLoading && (
 
@@ -2168,102 +2187,199 @@ const interviewProgress =
         </div>
       )}
       {/* Primary feature cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {[
           {
-            icon: "📄", title: "Resume Feedback", badge: "Ready",
-            desc: "Upload your resume and receive personalised, contextualised feedback for Australian graduate applications.",
-            cta: "Review My Resume", action: onResume, accent: true,
+            icon: "📄",
+            title: "Resume Feedback",
+            desc: "Upload your resume and receive personalised feedback to strengthen your Australian graduate applications.",
+            cta: "Review My Resume",
+            action: onResume,
+            gradient: "from-indigo-500 to-violet-600",
+            light: "bg-indigo-50",
           },
           {
-            icon: "🎙", title: "Interview Preparation", badge: "Ready",
-            desc: "Practise interview questions and receive constructive, structured feedback to build your confidence.",
-            cta: "Start Interview Practice", action: onInterview, accent: false,
+            icon: "🎙",
+            title: "Interview Preparation",
+            desc: "Practise interview questions and receive structured feedback to build confidence for your next interview.",
+            cta: "Start Interview Practice",
+            action: onInterview,
+            gradient: "from-violet-500 to-purple-600",
+            light: "bg-violet-50",
           },
-        ].map((c) => (
-          <Card key={c.title} className={`p-6 ${c.accent ? "border-[#a5b4fc]" : ""}`}>
-            <div className="flex items-start justify-between mb-4">
-              <span className="text-3xl">{c.icon}</span>
-              <span className="text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">{c.badge}</span>
+        ].map((card) => (
+          <div
+            key={card.title}
+            className="group flex flex-col rounded-3xl border border-indigo-100 bg-white p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-100/60"
+          >
+            <div className="mb-5 flex items-start justify-between">
+              <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${card.gradient} text-2xl shadow-md`}>
+                <span aria-hidden="true">{card.icon}</span>
+              </div>
+              <span className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+                Ready
+              </span>
             </div>
-            <h3 className="text-base font-semibold text-[#0f172a] mb-2">{c.title}</h3>
-            <p className="text-xs text-[#64748b] leading-relaxed mb-5">{c.desc}</p>
-            <Btn onClick={c.action} variant={c.accent ? "primary" : "secondary"} size="sm" full>{c.cta}</Btn>
-          </Card>
+
+            <h3 className="mb-2 text-lg font-bold text-slate-900">
+              {card.title}
+            </h3>
+
+            <p className="mb-6 flex-1 text-sm leading-relaxed text-slate-500">
+              {card.desc}
+            </p>
+
+            <button
+              type="button"
+              onClick={card.action}
+              className={`w-full rounded-xl bg-gradient-to-r ${card.gradient} px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2`}
+            >
+              {card.cta} →
+            </button>
+          </div>
         ))}
       </div>
 
-      {/* Job Matching card — full width, distinguishable */}
-      <Card className="p-6 mb-8 border-[#c7d2fe] bg-gradient-to-r from-[#f5f3ff] to-white">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex items-start gap-4 flex-1 min-w-0">
-            <span className="text-3xl flex-shrink-0">🎯</span>
+      {/* Job Matching card */}
+      <div className="relative mb-8 overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-purple-100 p-6 shadow-sm sm:p-7">
+
+        <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-violet-200/50 blur-2xl" />
+
+        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+
+          <div className="flex min-w-0 items-start gap-4">
+
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-2xl shadow-md">
+              <span aria-hidden="true">🎯</span>
+            </div>
+
             <div className="min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-base font-semibold text-[#0f172a]">Job Advertisement Matching</h3>
-                <span className="text-xs font-medium bg-[#eef2ff] text-[#4f46e5] border border-[#c7d2fe] px-2 py-0.5 rounded-full flex-shrink-0">New</span>
+
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <h3 className="text-lg font-bold text-slate-900">
+                  Job Advertisement Matching
+                </h3>
+                <span className="rounded-full border border-violet-200 bg-white/80 px-3 py-1 text-xs font-semibold text-violet-700">
+                  Ready
+                </span>
               </div>
-              <p className="text-xs text-[#64748b] leading-relaxed">Compare your resume with an Australian job advertisement and identify matching skills, missing requirements and areas for improvement.</p>
+
+              <p className="max-w-lg text-sm leading-relaxed text-slate-600">
+                Compare your resume with Australian job advertisements,
+                identify matching skills and discover areas for improvement.
+              </p>
+
             </div>
           </div>
-          <div className="flex-shrink-0">
-            <Btn onClick={onJobMatch} variant="primary" size="sm">Analyse Job Match</Btn>
-          </div>
+
+          <button
+            type="button"
+            onClick={onJobMatch}
+            className="w-full flex-shrink-0 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-indigo-200 transition-all hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 sm:w-auto"
+          >
+            Analyse Job Match →
+          </button>
+
         </div>
-      </Card>
+      </div>
+
       {/* Dashboard activity summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="mb-5 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-bold text-slate-900">
+            Your Activity Overview
+          </h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Track your career preparation progress.
+          </p>
+        </div>
+      </div>
+
+      <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
         {[
           {
             label: "Resumes Reviewed",
             value: activity.resumeReviews.length,
             action: onResumeHistory,
+            icon: "📄",
+            iconBg: "bg-indigo-100",
+            accent: "text-indigo-600",
+            link: "View resume history",
           },
           {
             label: "Interview Sessions",
             value: activity.interviewSessions.length,
             action: onInterview,
+            icon: "🎙️",
+            iconBg: "bg-violet-100",
+            accent: "text-violet-600",
+            link: "Practise interviews",
           },
           {
             label: "Questions Answered",
             value: answeredInterviewQuestions,
             action: onInterview,
+            icon: "💬",
+            iconBg: "bg-purple-100",
+            accent: "text-purple-600",
+            link: "Continue practising",
           },
         ].map((item) => (
           <button
             key={item.label}
             type="button"
             onClick={item.action}
-            className="rounded-xl border border-[#e2e8f0] bg-white p-5 text-left hover:border-[#a5b4fc] transition-colors"
+            className="group rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
           >
-            <p className="text-xs text-[#64748b] mb-2">
+            <div className="mb-5 flex items-center justify-between">
+              <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${item.iconBg} text-2xl`}>
+                <span aria-hidden="true">{item.icon}</span>
+              </div>
+              <span className="text-slate-300 transition-colors group-hover:text-indigo-500">
+                ↗
+              </span>
+            </div>
+
+            <p className="mb-2 text-sm font-medium text-slate-500">
               {item.label}
             </p>
-            <p className="text-2xl font-semibold text-[#0f172a]">
+
+            <p className="text-3xl font-bold tracking-tight text-slate-900">
               {activityLoading || activityError ? "—" : item.value}
             </p>
-            <p className="text-xs text-[#6366f1] mt-2">
-  {item.label === "Resumes Reviewed"
-    ? "View activity →"
-    : "Start interview practice →"}
-</p>
+
+            <p className={`mt-4 text-xs font-semibold ${item.accent}`}>
+              {item.link} →
+            </p>
           </button>
         ))}
       </div>
+
       {/* Recent Activity */}
-      <Card className="p-6 mb-5">
-        <h3 className="text-sm font-semibold text-[#0f172a] mb-4">
-          Recent Activity
-        </h3>
+      <div className="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
+
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900">
+              Recent Activity
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Your latest career preparation activities.
+            </p>
+          </div>
+          <div className="hidden h-11 w-11 items-center justify-center rounded-2xl bg-indigo-50 text-xl sm:flex">
+            🕒
+          </div>
+        </div>
 
         {activityLoading ? (
-          <p className="text-sm text-[#64748b]">
+          <div role="status" className="rounded-2xl bg-slate-50 p-5 text-sm text-slate-500">
             Loading recent activity...
-          </p>
+          </div>
         ) : activityError ? (
-          <p className="text-sm text-red-600">
+          <div role="alert" className="rounded-2xl border border-red-100 bg-red-50 p-5 text-sm text-red-600">
             Recent activity is temporarily unavailable.
-          </p>
+          </div>
         ) : (
           (() => {
             const recentActivities = [
@@ -2273,6 +2389,8 @@ const interviewProgress =
                 description: resume.file || "Pasted resume",
                 date: resume.date,
                 action: onResumeHistory,
+                icon: "📄",
+                iconBg: "bg-indigo-100",
               })),
               ...activity.interviewSessions.map((session) => ({
                 id: `interview-${session.session_id}`,
@@ -2280,6 +2398,8 @@ const interviewProgress =
                 description: `${session.questionsAnswered} questions answered`,
                 date: session.date,
                 action: onInterview,
+                icon: "🎙️",
+                iconBg: "bg-violet-100",
               })),
             ]
               .sort(
@@ -2289,11 +2409,22 @@ const interviewProgress =
               .slice(0, 3);
 
             return recentActivities.length === 0 ? (
-              <div>
-                <p className="text-sm text-[#64748b]">
-                  No recent activity yet. Upload a resume or start an
-                  interview practice session to begin.
+              <div className="rounded-2xl border border-dashed border-indigo-200 bg-indigo-50/50 px-6 py-10 text-center">
+                <div className="mb-4 text-4xl" aria-hidden="true">📋</div>
+                <h3 className="mb-2 text-base font-semibold text-slate-900">
+                  No recent activity yet
+                </h3>
+                <p className="mx-auto max-w-sm text-sm leading-relaxed text-slate-500">
+                  Upload your first resume or start an interview practice
+                  session to begin tracking your progress.
                 </p>
+                <button
+                  type="button"
+                  onClick={onResume}
+                  className="mt-5 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+                >
+                  Review Your Resume →
+                </button>
               </div>
             ) : (
               <div className="space-y-3">
@@ -2302,45 +2433,142 @@ const interviewProgress =
                     key={item.id}
                     type="button"
                     onClick={item.action}
-                    className="w-full text-left rounded-lg border border-[#e2e8f0] p-4 hover:border-[#a5b4fc] transition-colors"
+                    className="group flex w-full items-center gap-4 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 text-left transition-all hover:border-indigo-200 hover:bg-indigo-50/60 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
                   >
-                    <p className="text-sm font-medium text-[#0f172a]">
-                      {item.title}
-                    </p>
-                    <p className="text-xs text-[#64748b] mt-1">
-                      {item.description}
-                    </p>
-                    <p className="text-xs text-[#94a3b8] mt-2">
-                      {item.date || "Date unavailable"}
-                    </p>
+                    <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl ${item.iconBg} text-xl`}>
+                      <span aria-hidden="true">{item.icon}</span>
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <p className="break-words text-sm font-semibold text-slate-900">
+                        {item.title}
+                      </p>
+                      <p className="mt-1 break-words text-xs text-slate-500">
+                        {item.description}
+                      </p>
+                      <p className="mt-2 text-xs text-slate-400">
+                        {item.date
+                          ? (() => {
+                              const parsed = new Date(item.date);
+                              return Number.isNaN(parsed.getTime())
+                                ? item.date
+                                : parsed.toLocaleDateString("en-AU", {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                  });
+                            })()
+                          : "Date unavailable"}
+                      </p>
+                    </div>
+
+                    <span aria-hidden="true" className="flex-shrink-0 text-lg text-slate-300 transition-colors group-hover:text-indigo-600">
+                      →
+                    </span>
                   </button>
                 ))}
               </div>
             );
           })()
         )}
-      </Card>
+      </div>
+
       {/* Progress */}
-      <Card className="p-6 mb-5">
-        <h3 className="text-sm font-semibold text-[#0f172a] mb-4">Your progress</h3>
-        <div className="space-y-5">
-          <div>
-            <Progress value={resumeProgress} label="Resume Review" />
-            {resumeProgress === 0 && (
-              <p className="text-xs text-[#94a3b8] mt-1.5">Upload your resume to begin your first review.</p>
-            )}
-          </div>
-          <div>
-            <Progress value={interviewProgress} label="Interview Practice" />
-            {interviewProgress === 0 && (
-              <p className="text-xs text-[#94a3b8] mt-1.5">Start an interview practice session to begin tracking your progress.</p>
-            )}
-          </div>
+      <div className="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
+
+        <div className="mb-6">
+          <h2 className="text-lg font-bold text-slate-900">
+            Your Progress
+          </h2>
+          <p className="mt-1 text-sm text-slate-500">
+            See how much of your recorded preparation activity you have completed.
+          </p>
         </div>
-        <p className="text-xs text-[#94a3b8] mt-5">
-  Progress reflects your recorded activity within this platform. It does not measure actual job readiness or predict employment outcomes.
-</p>
-      </Card>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+          {/* Resume Review Progress */}
+          <div className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-5">
+
+            <div className="mb-5 flex items-center justify-between">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-2xl">
+                <span aria-hidden="true">📄</span>
+              </div>
+              <span className="text-2xl font-bold text-indigo-700">
+                {resumeProgress}%
+              </span>
+            </div>
+
+            <h3 className="mb-2 text-sm font-semibold text-slate-900">
+              Resume Review
+            </h3>
+
+            <p className="mb-4 text-xs leading-relaxed text-slate-500">
+              {resumeProgress === 0
+                ? "Upload your first resume to begin."
+                : "At least one resume review has been recorded."}
+            </p>
+
+            <div
+              role="progressbar"
+              aria-label="Resume review activity"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={resumeProgress}
+              className="h-2.5 overflow-hidden rounded-full bg-indigo-100"
+            >
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 transition-all duration-500"
+                style={{ width: `${resumeProgress}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Interview Practice Progress */}
+          <div className="rounded-2xl border border-violet-100 bg-violet-50/50 p-5">
+
+            <div className="mb-5 flex items-center justify-between">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-2xl">
+                <span aria-hidden="true">🎙️</span>
+              </div>
+              <span className="text-2xl font-bold text-violet-700">
+                {interviewProgress}%
+              </span>
+            </div>
+
+            <h3 className="mb-2 text-sm font-semibold text-slate-900">
+              Interview Practice
+            </h3>
+
+            <p className="mb-4 text-xs leading-relaxed text-slate-500">
+              {totalInterviewQuestions === 0
+                ? "Start your first interview practice session."
+                : `${answeredInterviewQuestions} of ${totalInterviewQuestions} recorded questions answered.`}
+            </p>
+
+            <div
+              role="progressbar"
+              aria-label="Interview practice activity"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={interviewProgress}
+              className="h-2.5 overflow-hidden rounded-full bg-violet-100"
+            >
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-600 transition-all duration-500"
+                style={{ width: `${interviewProgress}%` }}
+              />
+            </div>
+          </div>
+
+        </div>
+
+        <p className="mt-6 border-t border-slate-100 pt-4 text-xs leading-relaxed text-slate-500">
+          Progress reflects recorded activity within this platform.
+          It does not measure actual job readiness or predict employment outcomes.
+        </p>
+
+      </div>
 
       <AIDisclaimer text="AI-generated feedback should be reviewed critically and used alongside professional career advice. This platform supports career preparation and does not guarantee employment outcomes." />
     </div>
@@ -2357,50 +2585,112 @@ function ResumeHistoryScreen({
   onUpload: () => void;
 }) {
   return (
-    <div className="py-8 px-8 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-semibold text-[#0f172a] mb-2">
-        My Resume Reviews
-      </h1>
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
 
-      <p className="text-sm text-[#64748b] mb-8">
-        View your previously submitted resumes and target job roles.
-      </p>
+      {/* Resume History header */}
+      <div className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6 text-white shadow-lg shadow-indigo-100 sm:p-8">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+          Career Preparation
+        </p>
 
+        <h1 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
+          My Resume Reviews
+        </h1>
+
+        <p className="max-w-xl text-sm leading-relaxed text-indigo-100">
+          Keep track of your previously submitted resumes and the job roles
+          you have targeted during your career preparation.
+        </p>
+
+        <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-white/20 bg-white/15 px-4 py-3">
+          <span className="text-2xl font-bold">{resumes.length}</span>
+          <span className="text-xs font-medium text-indigo-100">
+            {resumes.length === 1 ? "Resume Submitted" : "Resumes Submitted"}
+          </span>
+        </div>
+      </div>
+
+      {/* History content */}
       {resumes.length === 0 ? (
-        <Card className="p-6">
-          <p className="text-sm text-[#64748b] mb-4">
-            You haven't submitted any resumes yet.
+        <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-3xl">
+            📄
+          </div>
+
+          <h2 className="mb-2 text-lg font-bold text-slate-900">
+            No Resume Reviews Yet
+          </h2>
+
+          <p className="mx-auto mb-6 max-w-md text-sm leading-relaxed text-slate-500">
+            You have not submitted a resume yet. Start by uploading your
+            resume or pasting its text to receive AI-assisted feedback.
           </p>
-          <Btn onClick={onUpload} variant="primary" size="sm">
-            Upload Your First Resume
-          </Btn>
-        </Card>
+
+          <button
+            type="button"
+            onClick={onUpload}
+            className="rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:from-indigo-700 hover:to-violet-700"
+          >
+            Analyse Your First Resume →
+          </button>
+        </div>
       ) : (
-        <div className="space-y-4">
-          {resumes.map((resume) => (
-            <Card key={resume.resume_id} className="p-5">
-              <h3 className="text-sm font-semibold text-[#0f172a] mb-2">
-                {resume.file || "Pasted Resume"}
-              </h3>
-              <p className="text-sm text-[#64748b]">
-                Target Role: {resume.role || "Not specified"}
+        <div>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-base font-bold text-slate-900">
+                Submission History
+              </h2>
+              <p className="mt-1 text-xs text-slate-500">
+                Your previously submitted resumes and target roles.
               </p>
-              <p className="text-xs text-[#94a3b8] mt-2">
-                Uploaded: {resume.date || "Date unavailable"}
-              </p>
-            </Card>
-          ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={onUpload}
+              className="rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+            >
+              + Analyse Another Resume
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {resumes.map((resume) => (
+              <div
+                key={resume.resume_id}
+                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-2xl">
+                    📄
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <h3 className="break-words text-sm font-bold text-slate-900 sm:text-base">
+                      {resume.file || "Pasted Resume"}
+                    </h3>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <span className="rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-700">
+                        Target Role: {resume.role || "Not specified"}
+                      </span>
+
+                      <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
+                        Submitted: {resume.date || "Date unavailable"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
-
-      <div className="mt-6">
-        <Btn onClick={onUpload} variant="secondary" size="sm">
-          Analyse Another Resume
-        </Btn>
-      </div>
     </div>
   );
 }
+
 /* ─────────────────────────────────────────
    SCREEN 4 — Resume upload
 ───────────────────────────────────────── */
@@ -2448,136 +2738,276 @@ const handleFileSelect = () => {
     ? resumeText.trim().length >= 50
     : selectedFile !== null;
   return (
-    <div className="py-8 px-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">Resume Feedback</h1>
-      <p className="text-sm text-[#64748b] mb-6">Upload your resume or use a demo resume to receive personalised feedback for the Australian employment context.</p>
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-8">
 
-      
+      {/* Resume Feedback header */}
+      <div className="relative mb-7 overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 p-7 text-white shadow-lg shadow-indigo-200/50 sm:p-9">
+        <div className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+
+        <div className="relative z-10">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+            Career Preparation
+          </p>
+
+          <h1 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
+            Resume Feedback
+          </h1>
+
+          <p className="max-w-xl text-sm leading-relaxed text-indigo-100">
+            Upload your resume or paste its text to receive personalised
+            AI-assisted feedback for Australian job applications.
+          </p>
+        </div>
+      </div>
 
       {/* Input mode toggle */}
-      <div className="flex gap-1 mb-4 bg-[#f8fafc] p-1 rounded-lg w-fit">
-        {(["upload", "paste"] as const).map((m) => (
-          <button key={m} onClick={() => setInputMode(m)}
-            className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${inputMode === m ? "bg-white text-[#0f172a] shadow-sm" : "text-[#64748b] hover:text-[#0f172a]"}`}>
-            {m === "upload" ? "Upload file" : "Paste resume text"}
-          </button>
-        ))}
+      <div className="mb-5 rounded-2xl border border-indigo-100 bg-white p-2 shadow-sm">
+        <div className="grid grid-cols-2 gap-2">
+          {(["upload", "paste"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setInputMode(m)}
+              aria-pressed={inputMode === m}
+              className={`rounded-xl px-3 py-3 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 ${
+                inputMode === m
+                  ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-indigo-50 hover:text-indigo-700"
+              }`}
+            >
+              {m === "upload" ? "📄 Upload File" : "✍️ Paste Resume Text"}
+            </button>
+          ))}
+        </div>
       </div>
 
       {inputMode === "upload" ? (
-        <Card className="mb-5 overflow-hidden">
+        <div className="mb-6 overflow-hidden rounded-3xl border border-indigo-100 bg-white p-4 shadow-sm sm:p-6">
+
           <div
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDragOver(true);
+            }}
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
-            className={`m-4 border-2 border-dashed rounded-xl p-10 text-center transition-colors cursor-pointer ${dragOver ? "border-[#4f46e5] bg-[#eef2ff]" : file ? "border-emerald-400 bg-emerald-50" : "border-[#e2e8f0] hover:border-[#a5b4fc] hover:bg-[#eef2ff]/30"}`}
             onClick={handleFileSelect}
->
-  <input
-    ref={fileInputRef}
-    type="file"
-    accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    className="hidden"
-    onClick={(e) => e.stopPropagation()}
-    onChange={(e) => {
-  const chosenFile = e.target.files?.[0];
-  if (!chosenFile) return;
+            className={`cursor-pointer rounded-2xl border-2 border-dashed px-5 py-10 text-center transition-all sm:px-8 ${
+              dragOver
+                ? "border-indigo-500 bg-indigo-100"
+                : file
+                  ? "border-emerald-300 bg-emerald-50"
+                  : "border-indigo-200 bg-indigo-50/40 hover:border-indigo-400 hover:bg-indigo-50"
+            }`}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              className="hidden"
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => {
+                const chosenFile = e.target.files?.[0];
+                if (!chosenFile) return;
 
-  if (
-    ![
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ].includes(chosenFile.type)
-  ) {
-    setError("Unsupported file type. Please upload a PDF or DOCX file.");
-    setSelectedFile(null);
-    e.target.value = "";
-    return;
-  }
+                if (
+                  ![
+                    "application/pdf",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                  ].includes(chosenFile.type)
+                ) {
+                  setError("Unsupported file type. Please upload a PDF or DOCX file.");
+                  setFile(null);
+                  setSelectedFile(null);
+                  e.target.value = "";
+                  return;
+                }
 
-  setError("");
-  setFile(chosenFile.name);
-  setSelectedFile(chosenFile);
-  setResumeText("");
-}}
-  />
+                setError("");
+                setFile(chosenFile.name);
+                setSelectedFile(chosenFile);
+                setResumeText("");
+              }}
+            />
 
-  {file ? (
+            {file ? (
               <>
-                <span className="text-4xl block mb-3">📄</span>
-                <p className="text-sm font-medium text-emerald-700 mb-1">{file}</p>
-<p className="text-xs text-[#64748b]">File selected</p>
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-3xl">
+                  📄
+                </div>
+
+                <p className="mb-2 break-all text-sm font-semibold text-emerald-800">
+                  {file}
+                </p>
+
+                <p className="text-xs font-medium text-emerald-600">
+                  File selected successfully
+                </p>
+
                 <button
-  onClick={(e) => {
-    e.stopPropagation();
-    setFile(null);
-    setSelectedFile(null);
-    setResumeText("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  }}
-  className="text-xs text-red-500 hover:underline mt-2"
->
-  Remove
-</button>
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFile(null);
+                    setSelectedFile(null);
+                    setResumeText("");
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = "";
+                    }
+                  }}
+                  className="mt-4 rounded-lg border border-red-200 bg-white px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50"
+                >
+                  Remove File
+                </button>
               </>
             ) : (
               <>
-                <span className="text-4xl block mb-3">⬆</span>
-                <p className="text-sm font-medium text-[#0f172a] mb-1">Drag and drop your resume here</p>
-                <p className="text-xs text-[#64748b] mb-3">or click to select a file</p>
-<span className="text-xs bg-[#f1f5f9] px-3 py-1 rounded-full text-[#64748b]">DOCX supported · PDF coming soon</span>
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-3xl text-white shadow-md shadow-indigo-200">
+                  ↑
+                </div>
+
+                <h3 className="mb-2 text-base font-bold text-slate-900">
+                  Drag and drop your resume here
+                </h3>
+
+                <p className="mb-5 text-sm text-slate-500">
+                  Or click anywhere in this box to choose a file.
+                </p>
+
+                <span className="inline-flex rounded-full border border-indigo-100 bg-white px-4 py-2 text-xs font-medium text-indigo-700">
+                  DOCX supported · PDF text extraction not yet supported
+                </span>
               </>
             )}
           </div>
+
           {error && (
-            <div className="mx-4 mb-4 flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
-              <span className="text-red-500 text-sm">✕</span>
-              <p className="text-xs text-red-700">{error}</p>
+            <div role="alert" className="mt-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+              <span className="text-sm text-red-600">✕</span>
+              <p className="text-xs leading-relaxed text-red-700">{error}</p>
             </div>
           )}
-          <div className="px-4 pb-4">
-<p className="text-xs text-[#94a3b8]">DOCX files are processed automatically. For PDF resumes, please use the "Paste resume text" option in the current MVP.</p>
-          </div>
-        </Card>
+
+          <p className="mt-4 text-xs leading-relaxed text-slate-500">
+            DOCX files are processed automatically. For PDF resumes, use the
+            "Paste Resume Text" option in the current MVP.
+          </p>
+        </div>
       ) : (
-        <Card className="mb-5 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <label htmlFor="resume-text" className="text-xs font-medium text-[#0f172a]">Paste your resume text</label>
-            {file && <span className="text-xs text-emerald-700 font-medium">📄 {file}</span>}
+        <div className="mb-6 rounded-3xl border border-indigo-100 bg-white p-5 shadow-sm sm:p-7">
+
+          <div className="mb-5 flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-2xl">
+              <span aria-hidden="true">✍️</span>
+            </div>
+
+            <div>
+              <h2 className="text-base font-bold text-slate-900">
+                Paste Your Resume
+              </h2>
+              <p className="text-xs text-slate-500">
+                Enter your resume content for AI-assisted analysis.
+              </p>
+            </div>
           </div>
 
-<textarea
-  id="resume-text"
-  rows={10}
-  value={resumeText}
-  onChange={(e) => {
-  setResumeText(e.target.value);
-  setFile(null);
-  setSelectedFile(null);
-  if (fileInputRef.current) {
-    fileInputRef.current.value = "";
-  }
-}}
-           placeholder="Paste the full text of your resume here. Include your name, education, work experience, skills and any other sections…"
-            className="w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-xs text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent resize-none leading-relaxed font-mono" />
-          <p className="text-xs text-[#94a3b8] mt-2">{resumeText.length > 0 ? `${resumeText.trim().split(/\s+/).length} words detected` : "Minimum 50 words required for analysis"}</p>
-        </Card>
+          <label
+            htmlFor="resume-text"
+            className="mb-2 block text-sm font-semibold text-slate-700"
+          >
+            Resume Text
+          </label>
+
+          <textarea
+            id="resume-text"
+            rows={12}
+            value={resumeText}
+            onChange={(e) => {
+              setResumeText(e.target.value);
+              setFile(null);
+              setSelectedFile(null);
+
+              if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+              }
+            }}
+            placeholder="Paste your resume here. Include your education, professional experience, technical skills, projects and other relevant information..."
+            className="w-full resize-y rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-4 text-sm leading-relaxed text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+          />
+
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs text-slate-500">
+              Minimum 50 characters required for analysis.
+            </p>
+
+            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+              resumeText.trim().length >= 50
+                ? "bg-emerald-50 text-emerald-700"
+                : "bg-indigo-50 text-indigo-600"
+            }`}>
+              {resumeText.trim().length} characters
+            </span>
+          </div>
+        </div>
       )}
 
-      <Card className="p-5 mb-5">
-        <label className="block">
-          <span className="text-xs font-medium text-[#0f172a] block mb-1.5">Target role or job title</span>
-          <input value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g. Software Developer"
-            className="w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent" />
-        </label>
-      </Card>
+      {/* Target Role */}
+      <div className="mb-6 rounded-3xl border border-indigo-100 bg-white p-5 shadow-sm sm:p-7">
 
-      <PrivacyNotice text="Your resume may contain personal information. Only upload information you are comfortable using for this assessment." />
+        <div className="mb-5 flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-2xl">
+            <span aria-hidden="true">🎯</span>
+          </div>
+
+          <div>
+            <h2 className="text-base font-bold text-slate-900">
+              Target Job Role
+            </h2>
+            <p className="text-xs text-slate-500">
+              Tailor your resume feedback to your preferred career.
+            </p>
+          </div>
+        </div>
+
+        <label htmlFor="target-resume-role" className="mb-2 block text-sm font-semibold text-slate-700">
+          Job Title
+        </label>
+
+        <input
+          id="target-resume-role"
+          type="text"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          placeholder="e.g. Software Developer"
+          className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+        />
+
+        <p className="mt-3 text-xs leading-relaxed text-slate-500">
+          Choose a role that matches the type of job you want to apply for in Australia.
+        </p>
+      </div>
+
+      <div className="rounded-2xl border border-sky-100 bg-sky-50/70 p-5">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-sky-100 text-xl">
+            🔒
+          </div>
+          <div>
+            <h3 className="mb-1 text-sm font-semibold text-slate-900">
+              Your Privacy Matters
+            </h3>
+            <p className="text-xs leading-relaxed text-slate-600">
+              Your resume may contain personal information. Only upload
+              information you are comfortable sharing for AI-assisted analysis.
+              Review your resume before submitting it.
+            </p>
+          </div>
+        </div>
+      </div>
       <div className="mt-4">
 
-<Btn
+<button
+  type="button"
   onClick={async () => {
     setError("");
 
@@ -2632,14 +3062,13 @@ const handleFileSelect = () => {
       setError("Unable to process the resume file. Please try again.");
     }
   }}
-  size="lg"
-  full
   disabled={!canAnalyse}
+  className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-4 text-sm font-semibold text-white shadow-md shadow-indigo-200 transition-all hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
 >
   {canAnalyse
     ? "Analyse Resume →"
     : "Upload or paste your resume to continue"}
-</Btn>
+</button>
       </div>
     </div>
   );
@@ -2660,33 +3089,83 @@ function AIErrorScreen({
   onBack: () => void;
 }) {
   return (
-    <div className="py-8 px-8 max-w-md mx-auto flex flex-col items-center justify-center min-h-[calc(100vh-56px)] text-center">
-      {/* Icon */}
-      <div className="size-16 rounded-2xl bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center mb-6">
-        <svg className="w-7 h-7 text-[#94a3b8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-        </svg>
+    <div className="mx-auto flex min-h-[calc(100vh-56px)] max-w-3xl flex-col justify-center px-4 py-10 sm:px-8">
+
+      {/* Error header */}
+      <div className="mb-6 rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-7 text-center text-white shadow-lg shadow-indigo-100 sm:p-9">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+          AI Career Readiness Assistant
+        </p>
+
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Something Went Wrong
+        </h1>
+
+        <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-indigo-100">
+          We could not complete your AI-assisted request.
+        </p>
       </div>
 
-      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">
-        We couldn't generate your results
-      </h1>
-      <p className="text-sm text-[#64748b] leading-relaxed mb-2 max-w-sm">
-  {message ??
-    "The AI service is temporarily unavailable or the request could not be completed. Your results have not been generated. Please try again."}
-</p>
-      <p className="text-xs text-[#94a3b8] mb-8 max-w-xs leading-relaxed">
-        {context} features may occasionally be unavailable due to technical or service issues.
-      </p>
+      {/* Error information */}
+      <div
+        role="alert"
+        className="rounded-2xl border border-slate-200 bg-white px-6 py-9 text-center shadow-sm sm:px-10"
+      >
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-rose-100 bg-rose-50">
+          <svg
+            className="h-10 w-10 text-rose-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+            />
+          </svg>
+        </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
-        <Btn onClick={onRetry} size="md" full>Retry</Btn>
-        <Btn onClick={onBack} variant="secondary" size="md" full>Go Back</Btn>
+        <h2 className="mb-3 text-xl font-bold text-slate-900">
+          We Couldn't Generate Your Results
+        </h2>
+
+        <p className="mx-auto mb-4 max-w-md text-sm leading-relaxed text-slate-600">
+          {message ??
+            "The AI service is temporarily unavailable or the request could not be completed. Your results have not been generated. Please try again."}
+        </p>
+
+        <div className="mx-auto mb-7 max-w-md rounded-xl border border-amber-100 bg-amber-50/70 p-4">
+          <p className="text-xs leading-relaxed text-amber-900">
+            {context} features may occasionally be unavailable due to
+            technical or service issues.
+          </p>
+        </div>
+
+        <div className="mx-auto flex max-w-sm flex-col gap-3 sm:flex-row">
+          <button
+            type="button"
+            onClick={onRetry}
+            className="flex-1 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-3 text-sm font-semibold text-white transition-all hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+          >
+            Try Again
+          </button>
+
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex-1 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+          >
+            Go Back
+          </button>
+        </div>
+
+        <p className="mx-auto mt-6 max-w-sm text-xs leading-relaxed text-slate-500">
+          Retrying does not guarantee success if the service remains unavailable.
+        </p>
       </div>
-
-      <p className="text-xs text-[#94a3b8] mt-6 max-w-xs leading-relaxed">
-        Retrying does not guarantee success if the service remains unavailable.
-      </p>
     </div>
   );
 }
@@ -2695,74 +3174,70 @@ function AIErrorScreen({
    SCREEN 4b — Resume analysing
 ───────────────────────────────────────── */
 function ResumeAnalysingScreen() {
-  const [progress, setProgress] = useState(12);
-
-  const STEPS = [
-    "Reading resume…",
-    "Identifying skills and experience…",
-    "Comparing resume with target role…",
-    "Generating personalised recommendations…",
-  ];
-
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    const progressTimer = setInterval(() => {
-      setProgress((current) => {
-        if (current >= 90) {
-          return current;
-        }
-
-        return Math.min(current + 4, 90);
-      });
-    }, 700);
-
-    const stepTimer = setInterval(() => {
-      setStep((current) =>
-        Math.min(current + 1, STEPS.length - 1)
-      );
-    }, 1800);
-
-    return () => {
-      clearInterval(progressTimer);
-      clearInterval(stepTimer);
-    };
-  }, []);
-
   return (
-    <div className="py-8 px-8 max-w-md mx-auto text-center flex flex-col items-center justify-center min-h-[calc(100vh-56px)]">
-      <div className="size-20 rounded-2xl bg-[#eef2ff] flex items-center justify-center text-4xl mb-8">
-        📄
+    <div className="mx-auto flex min-h-[calc(100vh-56px)] max-w-3xl flex-col justify-center px-4 py-10 sm:px-8">
+
+      {/* Loading header */}
+      <div className="mb-6 rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-7 text-center text-white shadow-lg shadow-indigo-100 sm:p-9">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+          AI Career Readiness Assistant
+        </p>
+
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Analysing Your Resume
+        </h1>
+
+        <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-indigo-100">
+          Please wait while we prepare personalised AI-assisted feedback
+          for your target job role.
+        </p>
       </div>
 
-      <h1 className="text-xl font-semibold text-[#0f172a] mb-3 tracking-tight">
-        Analysing your resume…
-      </h1>
+      {/* Analysis status */}
+      <div
+        className="rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm sm:px-10"
+        role="status"
+        aria-live="polite"
+      >
+        <div className="relative mx-auto mb-7 flex h-24 w-24 items-center justify-center">
+          <div className="absolute inset-0 rounded-full border-4 border-indigo-100" />
+          <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-indigo-600 border-r-violet-500" />
 
-      <p className="text-sm text-[#64748b] mb-10 leading-relaxed max-w-xs">
-        Please wait while AI analyses your resume in the context of Australian graduate employment.
-      </p>
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-50 text-3xl">
+            📄
+          </div>
+        </div>
 
-      <div className="w-full bg-[#f1f5f9] rounded-full h-2 mb-4 overflow-hidden">
-        <div
-          className="h-2 rounded-full bg-[#4f46e5] transition-all duration-500"
-          style={{ width: `${progress}%` }}
-        />
+        <h2 className="mb-3 text-lg font-bold text-slate-900">
+          Preparing Your Feedback
+        </h2>
+
+        <p className="mx-auto max-w-md text-sm leading-relaxed text-slate-600">
+          Your resume is being processed to identify relevant skills,
+          experience and potential improvements.
+        </p>
+
+        <div className="mx-auto mt-7 flex max-w-sm items-center justify-center gap-3 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3">
+          <span className="relative flex h-3 w-3 shrink-0">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-50" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-indigo-600" />
+          </span>
+          <span className="text-xs font-semibold text-indigo-700">
+            AI analysis in progress
+          </span>
+        </div>
+
+        <p className="mt-5 text-xs leading-relaxed text-slate-500">
+          Processing time may vary depending on your resume and the AI service.
+        </p>
       </div>
 
-      <p className="text-xs text-[#64748b] h-4">
-        {STEPS[step]}
-      </p>
-
-      <p className="text-xs text-[#94a3b8] mt-1">
-        {progress}%
-      </p>
-
-      <AIDisclaimer text="AI analysis is in progress. Generated feedback should be reviewed critically before making changes to your resume." />
+      <div className="mt-6">
+        <AIDisclaimer text="AI analysis is in progress. Generated feedback should be reviewed critically before making changes to your resume." />
+      </div>
     </div>
   );
 }
-      
 
 /* ─────────────────────────────────────────
    SCREEN 5 — Resume feedback results
@@ -2788,21 +3263,57 @@ function ResumeResultsScreen({ onBack, onUploadNew, feedback }: { onBack: () => 
   const highCount = allItems.filter((i) => i.priority === "High").length;
 
   return (
-    <div className="py-8 px-8 max-w-4xl mx-auto">
-      <div className="flex items-start justify-between mb-2">
-        <div>
-          <p className="text-xs text-[#64748b] mb-1">Resume Feedback · {feedback.resumeLabel}</p>
-          <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight">Your Resume Feedback</h1>
-        </div>
-        <Btn onClick={onUploadNew} variant="secondary" size="sm">Analyse another resume</Btn>
-      </div>
-      <p className="text-xs text-[#94a3b8] mb-6">Target role: <span className="text-[#64748b] font-medium">{feedback.targetRole}</span></p>
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
 
-      {/* Tab nav */}
-      <div className="flex gap-1 mb-6 bg-[#f8fafc] p-1 rounded-lg w-fit">
+      {/* Results header */}
+      <div className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6 text-white shadow-lg shadow-indigo-100 sm:p-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+              AI Career Readiness Assistant
+            </p>
+            <h1 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
+              Your Resume Feedback
+            </h1>
+            <p className="max-w-xl text-sm leading-relaxed text-indigo-100">
+              Explore your resume strengths, identify areas for improvement,
+              and prepare a stronger application for your target role.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onUploadNew}
+            className="shrink-0 rounded-xl border border-white/30 bg-white/15 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-white"
+          >
+            Analyse Another Resume
+          </button>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <span className="max-w-full break-words rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-xs text-indigo-50">
+            Resume: {feedback.resumeLabel}
+          </span>
+          <span className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-xs text-indigo-50">
+            Target role: {feedback.targetRole}
+          </span>
+        </div>
+      </div>
+
+      {/* Results navigation */}
+      <div className="mb-6 flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
         {([["overview", "Overview"], ["sections", "Detailed Feedback"]] as const).map(([key, label]) => (
-          <button key={key} onClick={() => setActiveTab(key)}
-            className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${activeTab === key ? "bg-white text-[#0f172a] shadow-sm" : "text-[#64748b] hover:text-[#0f172a]"}`}>
+          <button
+            key={key}
+            type="button"
+            onClick={() => setActiveTab(key)}
+            aria-pressed={activeTab === key}
+            className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+              activeTab === key
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-600 hover:bg-indigo-50 hover:text-indigo-700"
+            }`}
+          >
             {label}
           </button>
         ))}
@@ -2811,82 +3322,212 @@ function ResumeResultsScreen({ onBack, onUploadNew, feedback }: { onBack: () => 
       {activeTab === "overview" && (
         <>
           {/* AI Overview */}
-          <Card className="p-5 mb-5 border-[#a5b4fc]">
-            <div className="flex items-start gap-3">
-              <span className="text-[#4f46e5] mt-0.5 text-lg">✦</span>
-              <div>
-                <p className="text-xs font-semibold text-[#4f46e5] uppercase tracking-widest mb-2">AI Overview</p>
-                <p className="text-sm text-[#0f172a] leading-relaxed">{feedback.overview}</p>
+          <div className="mb-6 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-violet-50 p-5 shadow-sm sm:p-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-xl text-indigo-700">
+                ✦
+              </div>
+              <div className="min-w-0">
+                <h2 className="mb-2 text-base font-bold text-slate-900">
+                  AI Overview
+                </h2>
+                <p className="text-sm leading-7 text-slate-700">
+                  {feedback.overview}
+                </p>
               </div>
             </div>
-          </Card>
+            <p className="mt-4 border-t border-indigo-100 pt-3 text-xs leading-relaxed text-slate-500">
+              AI-generated guidance is intended to support your review,
+              not guarantee employment outcomes.
+            </p>
+          </div>
 
           {/* Role Relevance */}
-          <Card className="p-5 mb-5">
-            <h2 className="text-sm font-semibold text-[#0f172a] mb-4">Role Relevance</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-xs font-semibold mb-2 text-emerald-700">Strong match</p>
-                <ul className="space-y-1.5">
+          <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="mb-5">
+              <h2 className="text-base font-bold text-slate-900">
+                Role Relevance
+              </h2>
+              <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                How your resume evidence relates to your selected target role.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-4">
+                <div className="mb-4 flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                    ✓
+                  </span>
+                  <h3 className="text-sm font-semibold text-emerald-900">
+                    Strong Match
+                  </h3>
+                </div>
+                <ul className="space-y-2">
                   {feedback.roleRelevance.strong.map((item, i) => (
-                    <li key={i} className="text-xs text-emerald-800 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 leading-relaxed">{item}</li>
+                    <li
+                      key={i}
+                      className="rounded-lg border border-emerald-100 bg-white px-3 py-3 text-xs leading-relaxed text-slate-700"
+                    >
+                      {item}
+                    </li>
                   ))}
+                  {feedback.roleRelevance.strong.length === 0 && (
+                    <li className="text-xs text-slate-500">
+                      No strong matches identified.
+                    </li>
+                  )}
                 </ul>
               </div>
-              <div>
-                <p className="text-xs font-semibold mb-2 text-amber-700">Partial match</p>
-                <ul className="space-y-1.5">
+
+              <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-4">
+                <div className="mb-4 flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+                    ◐
+                  </span>
+                  <h3 className="text-sm font-semibold text-amber-900">
+                    Partial Match
+                  </h3>
+                </div>
+                <ul className="space-y-2">
                   {feedback.roleRelevance.partial.map((item, i) => (
-                    <li key={i} className="text-xs text-amber-800 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 leading-relaxed">{item}</li>
+                    <li
+                      key={i}
+                      className="rounded-lg border border-amber-100 bg-white px-3 py-3 text-xs leading-relaxed text-slate-700"
+                    >
+                      {item}
+                    </li>
                   ))}
+                  {feedback.roleRelevance.partial.length === 0 && (
+                    <li className="text-xs text-slate-500">
+                      No partial matches identified.
+                    </li>
+                  )}
                 </ul>
               </div>
-              <div>
-                <p className="text-xs font-semibold mb-2 text-red-700">Not evidenced</p>
-                <ul className="space-y-1.5">
+
+              <div className="rounded-xl border border-rose-100 bg-rose-50/60 p-4">
+                <div className="mb-4 flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-100 text-rose-700">
+                    !
+                  </span>
+                  <h3 className="text-sm font-semibold text-rose-900">
+                    Not Evidenced
+                  </h3>
+                </div>
+                <ul className="space-y-2">
                   {feedback.roleRelevance.missing.map((item, i) => (
-                    <li key={i} className="text-xs text-red-800 bg-red-50 border border-red-100 rounded-lg px-3 py-2 leading-relaxed">{item}</li>
+                    <li
+                      key={i}
+                      className="rounded-lg border border-rose-100 bg-white px-3 py-3 text-xs leading-relaxed text-slate-700"
+                    >
+                      {item}
+                    </li>
                   ))}
+                  {feedback.roleRelevance.missing.length === 0 && (
+                    <li className="text-xs text-slate-500">
+                      No evidence gaps identified.
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* Key Strengths */}
-          <Card className="p-5 mb-5">
-            <h2 className="text-sm font-semibold text-[#0f172a] mb-3">Key Strengths</h2>
-            <ul className="space-y-2">
-              {feedback.strengths.map((s, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-[#475569] leading-relaxed">
-                  <span className="text-emerald-500 mt-0.5 shrink-0">✓</span>
-                  {s}
+          <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-xl text-emerald-700">
+                ✓
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-slate-900">
+                  Key Strengths
+                </h2>
+                <p className="mt-1 text-xs text-slate-500">
+                  Positive elements identified in your resume.
+                </p>
+              </div>
+            </div>
+
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {feedback.strengths.map((strength, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4"
+                >
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
+                    ✓
+                  </span>
+                  <p className="text-sm leading-relaxed text-slate-700">
+                    {strength}
+                  </p>
                 </li>
               ))}
+              {feedback.strengths.length === 0 && (
+                <li className="text-sm text-slate-500">
+                  No specific strengths were identified in this analysis.
+                </li>
+              )}
             </ul>
-          </Card>
+          </div>
 
           {/* Priority Improvements summary */}
-          <Card className="p-5 mb-5">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-[#0f172a]">Priority Improvements</h2>
-              {highCount > 0 && <span className="text-xs font-medium bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-full">{highCount} high priority</span>}
+          <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-base font-bold text-slate-900">
+                  Priority Improvements
+                </h2>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                  Actionable recommendations to strengthen your resume.
+                </p>
+              </div>
+
+              {highCount > 0 && (
+                <span className="rounded-full border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700">
+                  {highCount} High Priority
+                </span>
+              )}
             </div>
-            <div className="space-y-2">
-              {allItems.filter((i) => i.priority === "High").map((item, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 bg-[#f8fafc] rounded-lg border border-[#f1f5f9]">
-                  <span className={`text-xs font-medium px-1.5 py-0.5 rounded border shrink-0 ${PRIORITY_STYLES[item.priority]}`}>{item.priority}</span>
-                  <p className="text-xs text-[#475569] leading-relaxed">{item.suggestion}</p>
+
+            <div className="space-y-3">
+              {[
+                ...allItems.filter((item) => item.priority === "High"),
+                ...allItems.filter((item) => item.priority !== "High").slice(0, 3),
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-4 sm:flex-row sm:items-start"
+                >
+                  <span
+                    className={`w-fit shrink-0 rounded-lg border px-2.5 py-1 text-xs font-semibold ${PRIORITY_STYLES[item.priority]}`}
+                  >
+                    {item.priority} Priority
+                  </span>
+
+                  <p className="text-sm leading-relaxed text-slate-700">
+                    {item.suggestion}
+                  </p>
                 </div>
               ))}
-              {allItems.filter((i) => i.priority !== "High").slice(0, 3).map((item, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 bg-[#f8fafc] rounded-lg border border-[#f1f5f9]">
-                  <span className={`text-xs font-medium px-1.5 py-0.5 rounded border shrink-0 ${PRIORITY_STYLES[item.priority]}`}>{item.priority}</span>
-                  <p className="text-xs text-[#475569] leading-relaxed">{item.suggestion}</p>
-                </div>
-              ))}
+
+              {allItems.length === 0 && (
+                <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
+                  No specific improvements were identified in this analysis.
+                </p>
+              )}
             </div>
-            <button onClick={() => setActiveTab("sections")} className="text-xs text-[#4f46e5] hover:underline mt-3 block">View detailed feedback →</button>
-          </Card>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("sections")}
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
+              View Detailed Feedback
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
 
           <AIDisclaimer />
         </>
@@ -2896,63 +3537,174 @@ function ResumeResultsScreen({ onBack, onUploadNew, feedback }: { onBack: () => 
         <>
           <AIDisclaimer />
 
-          {/* Section tabs */}
-          <div className="flex gap-1 flex-wrap mt-5 mb-4">
-            {feedback.sections.map((s, i) => (
-              <button key={i} onClick={() => setActiveSection(i)}
-                className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${activeSection === i ? "bg-[#eef2ff] text-[#4f46e5]" : "text-[#64748b] hover:bg-[#f8fafc] hover:text-[#0f172a]"}`}>
-                {s.icon} {s.title}
-              </button>
-            ))}
+          {/* Section navigation */}
+          <div className="mb-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+            <div className="mb-4">
+              <h2 className="text-base font-bold text-slate-900">
+                Explore Detailed Feedback
+              </h2>
+              <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                Select a resume section to review observations and
+                actionable suggestions.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {feedback.sections.map((section, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setActiveSection(i)}
+                  aria-pressed={activeSection === i}
+                  className={`rounded-xl border px-4 py-2.5 text-sm font-semibold transition-all ${
+                    activeSection === i
+                      ? "border-indigo-600 bg-indigo-600 text-white shadow-sm"
+                      : "border-slate-200 bg-slate-50 text-slate-600 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700"
+                  }`}
+                >
+                  <span className="mr-1.5">{section.icon}</span>
+                  {section.title}
+                </button>
+              ))}
+            </div>
           </div>
 
           {feedback.sections.map((section, si) =>
             si !== activeSection ? null : (
               <div key={si}>
-                <Card className="p-5 mb-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xl">{section.icon}</span>
-                    <h2 className="text-sm font-semibold text-[#0f172a]">{section.title}</h2>
+                <div className="mb-5 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                  <div className="border-b border-indigo-100 bg-gradient-to-r from-indigo-50 to-violet-50 p-5 sm:p-6">
+                    <div className="mb-2 flex items-center gap-3">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm">
+                        {section.icon}
+                      </span>
+                      <div>
+                        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-indigo-600">
+                          Resume Section
+                        </p>
+                        <h2 className="text-lg font-bold text-slate-900">
+                          {section.title}
+                        </h2>
+                      </div>
+                    </div>
+                    <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                      {section.summary}
+                    </p>
                   </div>
-                  <p className="text-xs text-[#64748b] mb-4">{section.summary}</p>
 
-                  <div className="space-y-4">
+                  <div className="space-y-4 p-4 sm:p-6">
                     {section.items.map((item, ii) => (
-                      <div key={ii} className="border border-[#f1f5f9] rounded-xl p-4">
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className={`text-xs font-medium px-1.5 py-0.5 rounded border ${PRIORITY_STYLES[item.priority]}`}>{item.priority} priority</span>
+                      <div
+                        key={ii}
+                        className="overflow-hidden rounded-xl border border-slate-200 bg-white"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/70 px-4 py-3">
+                          <h3 className="text-sm font-semibold text-slate-800">
+                            Feedback {ii + 1}
+                          </h3>
+                          <span
+                            className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${PRIORITY_STYLES[item.priority]}`}
+                          >
+                            {item.priority} Priority
+                          </span>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          {[
-                            { label: "Observation", icon: "👁", text: item.observation },
-                            { label: "Why it matters", icon: "💡", text: item.why },
-                            { label: "Suggested improvement", icon: "✏️", text: item.suggestion },
-                          ].map((col) => (
-                            <div key={col.label}>
-                              <p className="text-xs font-semibold text-[#94a3b8] mb-1.5">{col.icon} {col.label}</p>
-                              <p className="text-xs text-[#475569] leading-relaxed">{col.text}</p>
-                              {col.label === "Suggested improvement" && (
-                                <button onClick={() => copy(col.text, `${si}-${ii}`)} className="text-xs text-[#4f46e5] hover:underline mt-2">
-                                  {copied === `${si}-${ii}` ? "✓ Copied" : "Copy suggestion"}
-                                </button>
-                              )}
+
+                        <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-3">
+                          <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-4">
+                            <div className="mb-3 flex items-center gap-2">
+                              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-200 text-sm">
+                                👁
+                              </span>
+                              <h4 className="text-sm font-semibold text-slate-800">
+                                Observation
+                              </h4>
                             </div>
-                          ))}
+                            <p className="text-sm leading-relaxed text-slate-600">
+                              {item.observation}
+                            </p>
+                          </div>
+
+                          <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-4">
+                            <div className="mb-3 flex items-center gap-2">
+                              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-sm">
+                                💡
+                              </span>
+                              <h4 className="text-sm font-semibold text-slate-800">
+                                Why It Matters
+                              </h4>
+                            </div>
+                            <p className="text-sm leading-relaxed text-slate-600">
+                              {item.why}
+                            </p>
+                          </div>
+
+                          <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
+                            <div className="mb-3 flex items-center gap-2">
+                              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-sm">
+                                ✏️
+                              </span>
+                              <h4 className="text-sm font-semibold text-slate-800">
+                                Suggested Improvement
+                              </h4>
+                            </div>
+                            <p className="text-sm leading-relaxed text-slate-600">
+                              {item.suggestion}
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => copy(item.suggestion, `${si}-${ii}`)}
+                              className="mt-4 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-xs font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            >
+                              {copied === `${si}-${ii}` ? "✓ Copied" : "Copy Suggestion"}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))}
-                  </div>
-                </Card>
 
-                <div className="flex gap-3">
-                  {si > 0 && <Btn onClick={() => setActiveSection(si - 1)} variant="secondary" size="sm">← Previous</Btn>}
-                  {si < feedback.sections.length - 1 && <Btn onClick={() => setActiveSection(si + 1)} variant="secondary" size="sm">Next section →</Btn>}
-                  <div className="flex-1" />
-                  <Btn onClick={onUploadNew} variant="secondary" size="sm">Analyse another resume</Btn>
+                    {section.items.length === 0 && (
+                      <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
+                        No detailed feedback was generated for this section.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  {si > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection(si - 1)}
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                    >
+                      ← Previous
+                    </button>
+                  )}
+
+                  {si < feedback.sections.length - 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection(si + 1)}
+                      className="rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+                    >
+                      Next Section →
+                    </button>
+                  )}
+
+                  <div className="hidden flex-1 sm:block" />
+
+                  <button
+                    type="button"
+                    onClick={onUploadNew}
+                    className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition-colors hover:bg-indigo-100"
+                  >
+                    Analyse Another Resume
+                  </button>
                 </div>
               </div>
             )
           )}
+
         </>
       )}
     </div>
@@ -3052,7 +3804,20 @@ function InterviewFeedbackGeneratingScreen() {
 /* ─────────────────────────────────────────
    SCREEN 6 — Interview setup
 ───────────────────────────────────────── */
- function InterviewSetupScreen({ onStart, userName }: { onStart: (config: { role: string; industry: string; type: string; difficulty: string; count: number; useProfile: boolean }) => void; userName: string }) {
+ function InterviewSetupScreen({
+  onStart,
+  userName,
+}: {
+  onStart: (config: {
+    role: string;
+    industry: string;
+    type: string;
+    difficulty: string;
+    count: number;
+    useProfile: boolean;
+  }) => void;
+  userName: string;
+}) {
   const [role, setRole] = useState("Software Developer");
   const [industry, setIndustry] = useState("Technology");
   const [type, setType] = useState("Behavioural");
@@ -3060,79 +3825,208 @@ function InterviewFeedbackGeneratingScreen() {
   const [count, setCount] = useState(5);
   const [useProfile, setUseProfile] = useState(false);
 
-  const TYPES = ["Behavioural", "General graduate interview", "Role-specific", "Mixed practice"];
+  const TYPES = [
+    "Behavioural",
+    "General graduate interview",
+    "Role-specific",
+    "Mixed practice",
+  ];
   const DIFFICULTIES = ["Beginner", "Intermediate", "Advanced"];
   const COUNTS = [3, 5, 10];
 
   return (
-    <div className="py-8 px-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">Interview Preparation</h1>
-      <p className="text-sm text-[#64748b] mb-7">Practise interview questions relevant to your target role and receive constructive feedback.</p>
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
+      {/* Interview header */}
+      <div className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6 text-white shadow-lg shadow-indigo-100 sm:p-8">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+          Career Preparation
+        </p>
+        <h1 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
+          Interview Preparation
+        </h1>
+        <p className="max-w-xl text-sm leading-relaxed text-indigo-100">
+          Build confidence through AI-assisted mock interviews tailored to
+          your target role, experience and career goals.
+        </p>
+      </div>
 
-      <Card className="p-5 mb-5 space-y-5">
-        <label className="block">
-          <span className="text-xs font-medium text-[#0f172a] block mb-1.5">Target role</span>
-          <input value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g. Software Developer"
-            className="w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent" />
-        </label>
-        <label className="block">
-          <span className="text-xs font-medium text-[#0f172a] block mb-1.5">Industry</span>
-          <input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="e.g. Technology"
-            className="w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent" />
-        </label>
-        <div>
-          <span className="text-xs font-medium text-[#0f172a] block mb-2">Interview type</span>
-          <div className="grid grid-cols-2 gap-2">
-            {TYPES.map((t) => (
-              <button key={t} onClick={() => setType(t)}
-                className={`px-3 py-2.5 rounded-lg border text-xs font-medium text-left transition-colors ${type === t ? "bg-[#eef2ff] border-[#a5b4fc] text-[#4f46e5]" : "border-[#e2e8f0] text-[#64748b] hover:border-[#94a3b8]"}`}>
-                {t}
+      {/* Interview configuration */}
+      <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <div className="mb-6">
+          <h2 className="text-lg font-bold text-slate-900">
+            Set Up Your Practice Interview
+          </h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Choose your preferences to personalise your interview session.
+          </p>
+        </div>
+
+        {/* Target role and industry */}
+        <div className="mb-7 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-2 block text-sm font-semibold text-slate-700">
+              Target Job Role
+            </span>
+            <input
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              placeholder="e.g. Software Developer"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-2 block text-sm font-semibold text-slate-700">
+              Industry
+            </span>
+            <input
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+              placeholder="e.g. Technology"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
+            />
+          </label>
+        </div>
+
+        {/* Interview type */}
+        <div className="mb-7">
+          <h3 className="mb-2 text-sm font-semibold text-slate-800">
+            Interview Type
+          </h3>
+          <p className="mb-4 text-xs text-slate-500">
+            Select the type of questions you would like to practise.
+          </p>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {TYPES.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setType(option)}
+                aria-pressed={type === option}
+                className={`rounded-xl border px-4 py-4 text-left text-sm font-semibold transition-all ${
+                  type === option
+                    ? "border-indigo-400 bg-indigo-50 text-indigo-700 shadow-sm ring-1 ring-indigo-200"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-indigo-200 hover:bg-indigo-50/40"
+                }`}
+              >
+                <span className="mr-2">{type === option ? "◉" : "○"}</span>
+                {option}
               </button>
             ))}
           </div>
         </div>
-        <div>
-          <span className="text-xs font-medium text-[#0f172a] block mb-2">Difficulty</span>
-          <div className="flex gap-2">
-            {DIFFICULTIES.map((d) => (
-              <button key={d} onClick={() => setDifficulty(d)}
-                className={`flex-1 py-2 rounded-lg border text-xs font-medium transition-colors ${difficulty === d ? "bg-[#eef2ff] border-[#a5b4fc] text-[#4f46e5]" : "border-[#e2e8f0] text-[#64748b] hover:border-[#94a3b8]"}`}>
-                {d}
+
+        {/* Difficulty */}
+        <div className="mb-7">
+          <h3 className="mb-2 text-sm font-semibold text-slate-800">
+            Difficulty Level
+          </h3>
+          <p className="mb-4 text-xs text-slate-500">
+            Choose a level that matches your interview experience.
+          </p>
+
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            {DIFFICULTIES.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setDifficulty(option)}
+                aria-pressed={difficulty === option}
+                className={`rounded-xl border px-2 py-3 text-xs font-semibold transition-all sm:px-4 sm:text-sm ${
+                  difficulty === option
+                    ? "border-indigo-500 bg-indigo-600 text-white shadow-sm"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-indigo-200 hover:bg-indigo-50"
+                }`}
+              >
+                {option}
               </button>
             ))}
           </div>
         </div>
-        <div>
-          <span className="text-xs font-medium text-[#0f172a] block mb-2">Number of questions</span>
-          <div className="flex gap-2">
-            {COUNTS.map((c) => (
-              <button key={c} onClick={() => setCount(c)}
-                className={`size-12 rounded-lg border text-sm font-semibold transition-colors ${count === c ? "bg-[#eef2ff] border-[#a5b4fc] text-[#4f46e5]" : "border-[#e2e8f0] text-[#64748b] hover:border-[#94a3b8]"}`}>
-                {c}
+
+        {/* Question count */}
+        <div className="mb-7">
+          <h3 className="mb-2 text-sm font-semibold text-slate-800">
+            Number of Questions
+          </h3>
+          <p className="mb-4 text-xs text-slate-500">
+            Decide how many interview questions you want to practise.
+          </p>
+
+          <div className="grid grid-cols-3 gap-3">
+            {COUNTS.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setCount(option)}
+                aria-pressed={count === option}
+                className={`rounded-xl border px-4 py-4 text-center transition-all ${
+                  count === option
+                    ? "border-indigo-500 bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-indigo-200"
+                }`}
+              >
+                <span className="block text-xl font-bold">{option}</span>
+                <span className="mt-1 block text-xs">Questions</span>
               </button>
             ))}
           </div>
         </div>
-        <button onClick={() => setUseProfile(!useProfile)}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border text-sm transition-colors ${useProfile ? "bg-[#eef2ff] border-[#a5b4fc] text-[#4f46e5]" : "border-[#e2e8f0] text-[#64748b] hover:border-[#94a3b8]"}`}>
-          <div className={`size-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${useProfile ? "bg-[#4f46e5] border-[#4f46e5]" : "border-[#cbd5e1]"}`}>
-            {useProfile && <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-          </div>
-          <span className="text-xs">Use my career profile ({userName}, Software Developer)</span>
+
+        {/* Career profile */}
+        <button
+          type="button"
+          onClick={() => setUseProfile(!useProfile)}
+          aria-pressed={useProfile}
+          className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all ${
+            useProfile
+              ? "border-indigo-300 bg-indigo-50"
+              : "border-slate-200 bg-slate-50/50 hover:border-indigo-200"
+          }`}
+        >
+          <span
+            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 text-xs font-bold ${
+              useProfile
+                ? "border-indigo-600 bg-indigo-600 text-white"
+                : "border-slate-300 bg-white"
+            }`}
+          >
+            {useProfile ? "✓" : ""}
+          </span>
+
+          <span>
+            <span className="block text-sm font-semibold text-slate-800">
+              Use My Career Profile
+            </span>
+            <span className="mt-1 block text-xs leading-relaxed text-slate-500">
+              {userName
+                ? `Use available career profile information for ${userName} to personalise questions.`
+                : "Use available career profile information to personalise questions."}
+            </span>
+          </span>
         </button>
-      </Card>
+      </div>
 
-      <p className="text-xs text-[#94a3b8] mb-5">This session does not include video, audio, facial or emotion analysis.</p>
+      {/* Responsible AI notice */}
+      <div className="mb-5 rounded-2xl border border-sky-100 bg-sky-50/70 p-4">
+        <p className="text-xs leading-relaxed text-slate-600">
+          🔒 This practice session uses text-based responses. It does not
+          include video, audio, facial or emotion analysis. AI feedback is
+          intended for practice and should be reviewed critically.
+        </p>
+      </div>
 
-      <Btn
-  onClick={() =>
-    onStart({ role, industry, type, difficulty, count, useProfile })
-  }
-  size="lg"
-  full
->
-  Start Practice →
-</Btn>
+      {/* Start practice */}
+      <button
+        type="button"
+        onClick={() =>
+          onStart({ role, industry, type, difficulty, count, useProfile })
+        }
+        className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-4 text-sm font-semibold text-white shadow-md shadow-indigo-200 transition-all hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+      >
+        Start Practice →
+      </button>
     </div>
   );
 }
@@ -3140,98 +4034,243 @@ function InterviewFeedbackGeneratingScreen() {
 /* ─────────────────────────────────────────
    SCREEN 7 — Interview question
 ───────────────────────────────────────── */
-function InterviewQuestionScreen({ qIndex, total, answeredCount, question, onSubmit, onSkip, onEnd }: {
-  qIndex: number; total: number; answeredCount: number; question: IQ; onSubmit: (answer: string) => void; onSkip: () => void; onEnd: () => void;
+function InterviewQuestionScreen({
+  qIndex,
+  total,
+  answeredCount,
+  question,
+  onSubmit,
+  onSkip,
+  onEnd,
+}: {
+  qIndex: number;
+  total: number;
+  answeredCount: number;
+  question: IQ;
+  onSubmit: (answer: string) => void;
+  onSkip: () => void;
+  onEnd: () => void;
 }) {
   const [answer, setAnswer] = useState("");
   const [showGuidance, setShowGuidance] = useState(false);
   const [showSample, setShowSample] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
-  const pct = Math.round((qIndex / total) * 100);
 
-  // Reset collapsibles when question changes
+  const completed = total > 0 ? Math.min(qIndex, total) : 0;
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
   const q = question;
 
   return (
-    <div className="py-8 px-8 max-w-3xl mx-auto">
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="mb-6 rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6 text-white shadow-lg shadow-indigo-100 sm:p-8">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+          Mock Interview Session
+        </p>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Interview Practice
+        </h1>
+        <p className="mt-3 text-sm leading-relaxed text-indigo-100">
+          Take your time, reflect on your experience and practise responding
+          confidently to each question.
+        </p>
+      </div>
+
       {/* Progress */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-medium text-[#64748b]">Question {qIndex + 1} of {total}</p>
-          <span className="text-xs font-medium text-[#4f46e5]">{pct}% complete</span>
+      <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-sm font-bold text-slate-900">
+              Question {qIndex + 1} of {total}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              {answeredCount} {answeredCount === 1 ? "response" : "responses"} submitted
+            </p>
+          </div>
+          <span className="rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700">
+            {pct}% of questions completed
+          </span>
         </div>
-        <div className="h-1.5 bg-[#f1f5f9] rounded-full overflow-hidden">
-          <div className="h-full bg-[#4f46e5] rounded-full transition-all" style={{ width: `${pct}%` }} />
+        <div
+          className="h-2 overflow-hidden rounded-full bg-slate-100"
+          role="progressbar"
+          aria-label="Interview questions completed"
+          aria-valuenow={completed}
+          aria-valuemin={0}
+          aria-valuemax={total}
+        >
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-indigo-600 to-violet-500 transition-all"
+            style={{ width: `${pct}%` }}
+          />
         </div>
       </div>
 
-      <Card className="p-6 mb-5">
-        <div className="flex items-center gap-2 mb-4">
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-            q.type === "Behavioural" ? "bg-[#eef2ff] text-[#4f46e5]" :
-            q.type === "General Graduate" ? "bg-emerald-50 text-emerald-700" :
-            "bg-amber-50 text-amber-700"
-          }`}>{q.type}</span>
-          <span className="text-[11px] text-[#94a3b8]">{q.difficulty}</span>
+      {/* Question card */}
+      <div className="mb-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <div className="mb-5 flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+            {q.type}
+          </span>
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+            {q.difficulty}
+          </span>
         </div>
-        <h2 className="text-lg font-semibold text-[#0f172a] leading-relaxed mb-6">"{q.q}"</h2>
 
-        <label className="block mb-4">
-          <span className="text-xs font-medium text-[#64748b] block mb-2">Your response</span>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-indigo-600">
+          Your Interview Question
+        </p>
+        <h2 className="mb-7 text-lg font-bold leading-relaxed text-slate-900 sm:text-xl">
+          {q.q}
+        </h2>
+
+        <label className="block">
+          <span className="mb-2 block text-sm font-semibold text-slate-800">
+            Your Response
+          </span>
+          <span className="mb-3 block text-xs leading-relaxed text-slate-500">
+            Write your answer as though you were speaking to an interviewer.
+            Use examples from your own experience where possible.
+          </span>
           <textarea
-            rows={7}
+            rows={8}
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            placeholder="Type your response here…"
-            className="w-full border border-[#e2e8f0] rounded-xl px-4 py-3 text-sm text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent resize-none"
+            placeholder="Type your interview response here..."
+            className="w-full resize-y rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-4 text-sm leading-relaxed text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100"
           />
         </label>
 
-        {/* Guidance toggle */}
-        <button onClick={() => setShowGuidance((v) => !v)} className="text-xs text-[#4f46e5] hover:underline mb-2 block">
-          {showGuidance ? "Hide guidance ▲" : "Show guidance ▼"}
-        </button>
-        {showGuidance && (
-          <div className="px-4 py-3 bg-[#eef2ff] rounded-lg text-xs text-[#3730a3] leading-relaxed mb-3">
-            💡 {q.guidance}
-          </div>
-        )}
-
-        {/* Sample answer toggle */}
-        <button onClick={() => setShowSample((v) => !v)} className="text-xs text-[#64748b] hover:text-[#0f172a] hover:underline mb-2 block">
-          {showSample ? "Hide sample answer ▲" : "View sample answer ▼"}
-        </button>
-        {showSample && (
-          <div className="border border-emerald-200 bg-emerald-50 rounded-lg px-4 py-3">
-            <p className="text-xs font-semibold text-emerald-800 mb-2">Sample answer</p>
-            <p className="text-xs text-emerald-900 leading-relaxed">{q.sampleAnswer}</p>
-            <p className="text-[11px] text-emerald-700 mt-3 italic">Example only — adapt your answer to reflect your own experience, skills and circumstances.</p>
-          </div>
-        )}
-      </Card>
-
-      <div className="flex items-center gap-3">
-        <Btn onClick={() => { if (answer.trim()) { onSubmit(answer); setAnswer(""); } }} disabled={!answer.trim()} size="md">
-          Submit Response →
-        </Btn>
-        <Btn onClick={() => { onSkip(); setAnswer(""); }} variant="secondary" size="md">Skip</Btn>
-        <div className="flex-1" />
-        <Btn onClick={() => setShowEndModal(true)} variant="ghost" size="sm">End practice</Btn>
+        <p className="mt-2 text-right text-xs text-slate-400">
+          {answer.trim().length} characters
+        </p>
       </div>
 
-      {showEndModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowEndModal(false)} />
-          <Card className="relative p-6 max-w-sm w-full shadow-xl">
-            <h3 className="text-base font-semibold text-[#0f172a] mb-2">End practice session?</h3>
-            <p className="text-sm text-[#64748b] mb-5">
-  You have progressed through {qIndex} of {total} questions and submitted {answeredCount} {answeredCount === 1 ? "response" : "responses"}. A session summary will be shown.
-</p>
-            <div className="flex gap-3">
-              <Btn onClick={() => setShowEndModal(false)} variant="secondary" size="sm" full>Continue</Btn>
-              <Btn onClick={onEnd} size="sm" full>End session</Btn>
+      {/* Preparation resources */}
+      <div className="mb-6 space-y-3">
+        <div className="overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-sm">
+          <button
+            type="button"
+            onClick={() => setShowGuidance((value) => !value)}
+            aria-expanded={showGuidance}
+            className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left text-sm font-semibold text-indigo-700 hover:bg-indigo-50/50"
+          >
+            <span>💡 Interview Guidance</span>
+            <span aria-hidden="true">{showGuidance ? "−" : "+"}</span>
+          </button>
+          {showGuidance && (
+            <div className="border-t border-indigo-100 bg-indigo-50/50 px-5 py-4">
+              <p className="text-sm leading-relaxed text-slate-700">
+                {q.guidance}
+              </p>
             </div>
-          </Card>
+          )}
+        </div>
+
+        <div className="overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm">
+          <button
+            type="button"
+            onClick={() => setShowSample((value) => !value)}
+            aria-expanded={showSample}
+            className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left text-sm font-semibold text-emerald-700 hover:bg-emerald-50/50"
+          >
+            <span>📖 View Sample Answer</span>
+            <span aria-hidden="true">{showSample ? "−" : "+"}</span>
+          </button>
+          {showSample && (
+            <div className="border-t border-emerald-100 bg-emerald-50/50 px-5 py-4">
+              <p className="text-sm leading-relaxed text-slate-700">
+                {q.sampleAnswer}
+              </p>
+              <p className="mt-3 text-xs italic leading-relaxed text-emerald-800">
+                This is an example only. Adapt your response to reflect
+                your own experience, skills and circumstances.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <button
+          type="button"
+          onClick={() => {
+            if (answer.trim()) {
+              onSubmit(answer);
+              setAnswer("");
+            }
+          }}
+          disabled={!answer.trim()}
+          className="rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Submit Response →
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            onSkip();
+            setAnswer("");
+          }}
+          className="rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+        >
+          Skip Question
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowEndModal(true)}
+          className="rounded-xl px-5 py-3.5 text-sm font-semibold text-rose-600 transition-colors hover:bg-rose-50 sm:ml-auto"
+        >
+          End Practice
+        </button>
+      </div>
+
+      {/* End session confirmation */}
+      {showEndModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm"
+          role="presentation"
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="end-interview-title"
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-7"
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-2xl">
+              ⚠️
+            </div>
+            <h3
+              id="end-interview-title"
+              className="mb-3 text-lg font-bold text-slate-900"
+            >
+              End Practice Session?
+            </h3>
+            <p className="mb-6 text-sm leading-relaxed text-slate-600">
+              You have progressed through {qIndex} of {total} questions
+              and submitted {answeredCount}{" "}
+              {answeredCount === 1 ? "response" : "responses"}.
+              A session summary will be shown.
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => setShowEndModal(false)}
+                className="flex-1 rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Continue Practice
+              </button>
+              <button
+                type="button"
+                onClick={onEnd}
+                className="flex-1 rounded-xl bg-rose-600 px-5 py-3 text-sm font-semibold text-white hover:bg-rose-700"
+              >
+                End Session
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -3241,71 +4280,173 @@ function InterviewQuestionScreen({ qIndex, total, answeredCount, question, onSub
 /* ─────────────────────────────────────────
    SCREEN 8 — Interview feedback
 ───────────────────────────────────────── */
-function InterviewFeedbackScreen({ qIndex, total, question, answer, onNext, onRetry, onEnd }: {
-  qIndex: number; total: number; question: IQ; answer: string; onNext: () => void; onRetry: () => void; onEnd: () => void;
+function InterviewFeedbackScreen({
+  qIndex,
+  total,
+  question,
+  answer,
+  onNext,
+  onRetry,
+  onEnd,
+}: {
+  qIndex: number;
+  total: number;
+  question: IQ;
+  answer: string;
+  onNext: () => void;
+  onRetry: () => void;
+  onEnd: () => void;
 }) {
   const q = question;
   const fb = getFeedbackForQuestion(q, qIndex);
   const isLast = qIndex === total - 1;
 
+  const guidanceItems = [
+    {
+      icon: "✓",
+      label: "What Worked Well",
+      text: fb.strength,
+      style: "border-emerald-200 bg-emerald-50/70",
+      heading: "text-emerald-800",
+    },
+    {
+      icon: "△",
+      label: "Areas for Improvement",
+      text: fb.improvement,
+      style: "border-amber-200 bg-amber-50/70",
+      heading: "text-amber-800",
+    },
+    {
+      icon: "✏",
+      label: "Suggested Approach",
+      text: fb.suggestion,
+      style: "border-indigo-200 bg-indigo-50/70",
+      heading: "text-indigo-800",
+    },
+    {
+      icon: "⊞",
+      label: "Response Structure",
+      text: fb.structure,
+      style: "border-slate-200 bg-slate-50",
+      heading: "text-slate-800",
+    },
+    {
+      icon: "◉",
+      label: "Clarity and Relevance",
+      text: fb.clarity,
+      style: "border-slate-200 bg-slate-50",
+      heading: "text-slate-800",
+    },
+  ];
+
   return (
-    <div className="py-8 px-8 max-w-3xl mx-auto">
-      <div className="mb-6">
-        <p className="text-xs text-[#64748b] mb-1">Question {qIndex + 1} of {total} — Feedback</p>
-<h1 className="text-xl font-semibold text-[#0f172a] tracking-tight">Answer guidance</h1>
-<p className="text-xs text-[#64748b] mt-2">
-  General practice guidance is shown in the current MVP. Your response has not been analysed by AI.
-</p>
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="mb-6 rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6 text-white shadow-lg shadow-indigo-100 sm:p-8">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+          Question {qIndex + 1} of {total}
+        </p>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Interview Answer Guidance
+        </h1>
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-indigo-100">
+          Review practical suggestions to strengthen your interview
+          preparation and build confidence.
+        </p>
+      </div>
+
+      {/* Guidance transparency */}
+      <div className="mb-6 rounded-2xl border border-sky-200 bg-sky-50 p-4">
+        <div className="flex items-start gap-3">
+          <span className="text-xl" aria-hidden="true">ℹ️</span>
+          <div>
+            <p className="text-sm font-semibold text-sky-900">
+              About This Guidance
+            </p>
+            <p className="mt-1 text-xs leading-relaxed text-sky-800">
+              This version provides general practice guidance based on
+              predefined examples. Your submitted response has not been
+              individually analysed by AI.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Question recap */}
-      <Card className="p-4 mb-5">
-        <div className="flex items-center gap-2 mb-1.5">
-          <p className="text-xs text-[#94a3b8]">Your question</p>
-          <span className={`text-[11px] font-medium px-1.5 py-0.5 rounded-full ${
-            q.type === "Behavioural" ? "bg-[#eef2ff] text-[#4f46e5]" :
-            q.type === "General Graduate" ? "bg-emerald-50 text-emerald-700" :
-            "bg-amber-50 text-amber-700"
-          }`}>{q.type}</span>
+      <div className="mb-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Interview Question
+          </p>
+          <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+            {q.type}
+          </span>
         </div>
-        <p className="text-sm text-[#475569] italic">"{q.q}"</p>
-      </Card>
-
-      {/* Your response */}
-      <Card className="p-4 mb-5">
-        <p className="text-xs text-[#94a3b8] mb-1">Your response</p>
-        <p className="text-sm text-[#475569] leading-relaxed">{answer || "No response provided."}</p>
-      </Card>
-
-     {/* General practice guidance */}
-      <div className="space-y-4 mb-6">
-        {[
-          { icon: "✓", label: "What worked well", color: "emerald", text: fb.strength },
-          { icon: "△", label: "What could be improved", color: "amber", text: fb.improvement },
-          { icon: "✏", label: "Suggested approach", color: "indigo", text: fb.suggestion },
-          { icon: "⊞", label: "Response structure", color: "slate", text: fb.structure },
-          { icon: "◉", label: "Clarity and relevance", color: "slate", text: fb.clarity },
-        ].map((item) => {
-          const bg = item.color === "emerald" ? "bg-emerald-50 border-emerald-200" : item.color === "amber" ? "bg-amber-50 border-amber-200" : item.color === "indigo" ? "bg-[#eef2ff] border-[#a5b4fc]" : "bg-[#f8fafc] border-[#e2e8f0]";
-          const txt = item.color === "emerald" ? "text-emerald-800" : item.color === "amber" ? "text-amber-800" : item.color === "indigo" ? "text-[#3730a3]" : "text-[#475569]";
-          const lbl = item.color === "emerald" ? "text-emerald-700" : item.color === "amber" ? "text-amber-700" : item.color === "indigo" ? "text-[#4f46e5]" : "text-[#64748b]";
-          return (
-            <Card key={item.label} className={`p-4 ${bg}`}>
-              <p className={`text-xs font-semibold uppercase tracking-widest mb-1.5 ${lbl}`}>{item.icon} {item.label}</p>
-              <p className={`text-sm leading-relaxed ${txt}`}>{item.text}</p>
-            </Card>
-          );
-        })}
+        <p className="text-base font-semibold leading-relaxed text-slate-900">
+          {q.q}
+        </p>
       </div>
 
-<AIDisclaimer text="This is general practice guidance from predefined examples and does not analyse your submitted response. It does not assess personality, accent, ethnicity or predict interview success." />
+      {/* Student response */}
+      <div className="mb-7 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <h2 className="mb-3 text-sm font-bold text-slate-900">
+          Your Submitted Response
+        </h2>
+        <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+          <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-700">
+            {answer || "No response provided."}
+          </p>
+        </div>
+      </div>
 
-      <div className="flex items-center gap-3 mt-5">
-        {isLast
-          ? <Btn onClick={onEnd} size="md">View session summary →</Btn>
-          : <Btn onClick={onNext} size="md">Next question →</Btn>
-        }
-        <Btn onClick={onRetry} variant="secondary" size="md">Try again</Btn>
+      {/* General guidance */}
+      <div className="mb-6">
+        <h2 className="mb-2 text-lg font-bold text-slate-900">
+          Practice Guidance
+        </h2>
+        <p className="mb-5 text-sm leading-relaxed text-slate-500">
+          Use these suggestions to reflect on your answer and prepare
+          for future interviews.
+        </p>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {guidanceItems.map((item) => (
+            <div
+              key={item.label}
+              className={`rounded-2xl border p-5 ${item.style}`}
+            >
+              <h3 className={`mb-3 text-sm font-bold ${item.heading}`}>
+                <span className="mr-2" aria-hidden="true">{item.icon}</span>
+                {item.label}
+              </h3>
+              <p className="text-sm leading-relaxed text-slate-700">
+                {item.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Responsible AI */}
+      <AIDisclaimer text="This is general practice guidance from predefined examples and does not analyse your submitted response. It does not assess personality, accent, ethnicity or predict interview success." />
+
+      {/* Actions */}
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <button
+          type="button"
+          onClick={isLast ? onEnd : onNext}
+          className="rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-all hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+        >
+          {isLast ? "View Session Summary →" : "Next Question →"}
+        </button>
+
+        <button
+          type="button"
+          onClick={onRetry}
+          className="rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+        >
+          Try Again
+        </button>
       </div>
     </div>
   );
@@ -3314,6 +4455,7 @@ function InterviewFeedbackScreen({ qIndex, total, question, answer, onNext, onRe
 /* ─────────────────────────────────────────
    SCREEN 9 — Interview summary
 ───────────────────────────────────────── */
+
 function InterviewSummaryScreen({
   total,
   completed,
@@ -3329,283 +4471,677 @@ function InterviewSummaryScreen({
   onPracticeAgain: () => void;
   onDashboard: () => void;
 }) {
+  const safeTotal = Math.max(0, total);
+  const answered = Math.min(Math.max(0, completed), safeTotal);
+  const progress = safeTotal > 0
+    ? Math.round((answered / safeTotal) * 100)
+    : 0;
+
+  const endedEarly =
+    sessionStatus === "ended_early" || answered < safeTotal;
+
+  const hasFeedback = answered > 0 && feedback !== null;
+
   return (
-    <div className="py-8 px-8 max-w-2xl mx-auto">
-      <div className="text-center mb-8">
-        <div className="size-16 rounded-2xl bg-[#eef2ff] flex items-center justify-center text-3xl mx-auto mb-5">🎙</div>
-        <p className="text-xs font-semibold text-[#4f46e5] uppercase tracking-widest mb-2">Practice Complete</p>
-        <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-2">Session complete</h1>
-        <p className="text-sm text-[#64748b]">You answered {completed} of {total} questions in this session.</p>
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      {/* Header */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 p-7 sm:p-9 text-white shadow-lg">
+        <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10" />
+        <div className="absolute right-12 bottom-0 h-32 w-32 rounded-full bg-white/5" />
+
+        <div className="relative z-10">
+          <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-3xl">
+            🎙️
+          </div>
+
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-100">
+            Interview preparation
+          </p>
+
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Your Interview Summary
+          </h1>
+
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-indigo-100">
+            Review your practice session, explore personalised AI feedback
+            and identify practical ways to improve your interview responses.
+          </p>
+
+          <div className="mt-6 inline-flex items-center rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs font-semibold">
+            {endedEarly ? "Session ended early" : "Session completed"}
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-7">
+      {/* Session overview */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
-  ["Questions", completed.toString()],
-  ["Session", sessionStatus === "ended_early" ? "Ended early" : "Complete"],
-  ["Progress", `${Math.round((completed / total) * 100)}%`],
-].map(([l, v]) => (
-          <Card key={l} className="p-4 text-center">
-            <p className="text-xl font-bold text-[#4f46e5] mb-0.5">{v}</p>
-            <p className="text-xs text-[#64748b]">{l}</p>
-          </Card>
+          {
+            label: "Questions answered",
+            value: `${answered} / ${safeTotal}`,
+            detail: "Submitted responses",
+            icon: "📝",
+          },
+          {
+            label: "Session status",
+            value: endedEarly ? "Ended early" : "Complete",
+            detail: endedEarly
+              ? "You can practise again anytime"
+              : "All questions answered",
+            icon: "🎯",
+          },
+          {
+            label: "Session progress",
+            value: `${progress}%`,
+            detail: "Questions answered",
+            icon: "📈",
+          },
+        ].map((stat) => (
+          <div
+            key={stat.label}
+            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-xs font-medium text-slate-500">
+                {stat.label}
+              </p>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-xl">
+                {stat.icon}
+              </span>
+            </div>
+
+            <p className="text-2xl font-bold tracking-tight text-slate-900">
+              {stat.value}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              {stat.detail}
+            </p>
+          </div>
         ))}
       </div>
 
-      {completed > 0 && feedback && (
-  <>
-    <Card className="p-5 mb-4">
-      <h3 className="text-sm font-semibold text-[#0f172a] mb-3">
-        Overall feedback
-      </h3>
-      <p className="text-xs text-[#475569] leading-relaxed">
-        {feedback.overall_feedback}
-      </p>
-    </Card>
-
-    <Card className="p-5 mb-4">
-      <h3 className="text-sm font-semibold text-[#0f172a] mb-3">
-        Strengths
-      </h3>
-
-      <ul className="space-y-2">
-        {feedback.strengths.map((strength) => (
-          <li
-            key={strength}
-            className="flex items-start gap-2 text-xs text-[#475569]"
-          >
-            <span className="text-emerald-500 flex-shrink-0 mt-0.5">
-              ✓
-            </span>
-            {strength}
-          </li>
-        ))}
-      </ul>
-    </Card>
-  </>
-)}
-
-      {completed > 0 && feedback && (
-  <Card className="p-5 mb-4">
-    <h3 className="text-sm font-semibold text-[#0f172a] mb-3">
-      Areas to focus on
-    </h3>
-
-    <ul className="space-y-2">
-      {feedback.areas_for_improvement.map((area) => (
-        <li
-          key={area}
-          className="flex items-start gap-2 text-xs text-[#475569]"
-        >
-          <span className="text-amber-400 flex-shrink-0 mt-0.5">
-            △
+      {/* Progress */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900">
+              Interview progress
+            </h2>
+            <p className="mt-1 text-xs text-slate-500">
+              {answered} of {safeTotal} questions answered
+            </p>
+          </div>
+          <span className="text-lg font-bold text-indigo-600">
+            {progress}%
           </span>
-          {area}
-        </li>
-      ))}
-    </ul>
-  </Card>
-)}
+        </div>
 
-      {completed === 0 && (
-        <Card className="p-5 mb-5 border-[#e2e8f0]">
-<p className="text-sm text-[#64748b] leading-relaxed">
-  No responses were submitted in this session. Complete at least one question to receive personalised feedback when the AI feedback service is available.
-</p>
-        </Card>
+        <div
+          className="h-3 overflow-hidden rounded-full bg-slate-100"
+          role="progressbar"
+          aria-label="Interview completion progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progress}
+        >
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      {hasFeedback && feedback && (
+        <>
+          {/* Overall feedback */}
+          <section className="overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-sm">
+            <div className="border-b border-indigo-100 bg-indigo-50/60 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-xl">
+                  ✨
+                </span>
+                <div>
+                  <h2 className="text-base font-semibold text-slate-900">
+                    Your personalised AI feedback
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Based on your submitted interview responses
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <h3 className="mb-3 text-sm font-semibold text-indigo-700">
+                Overall assessment
+              </h3>
+              <p className="text-sm leading-7 text-slate-600 whitespace-pre-line">
+                {feedback.overall_feedback}
+              </p>
+            </div>
+          </section>
+
+          {/* Strengths and improvements */}
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            <section className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+              <div className="mb-5 flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-xl">
+                  ✓
+                </span>
+                <div>
+                  <h2 className="text-base font-semibold text-slate-900">
+                    Your strengths
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    What you demonstrated well
+                  </p>
+                </div>
+              </div>
+
+              <ul className="space-y-3">
+                {feedback.strengths.map((strength, index) => (
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 rounded-xl bg-emerald-50/60 p-4"
+                  >
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
+                      ✓
+                    </span>
+                    <p className="text-sm leading-6 text-slate-700">
+                      {strength}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="rounded-2xl border border-amber-100 bg-white p-6 shadow-sm">
+              <div className="mb-5 flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-xl">
+                  ↗
+                </span>
+                <div>
+                  <h2 className="text-base font-semibold text-slate-900">
+                    Areas for improvement
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Opportunities to strengthen your answers
+                  </p>
+                </div>
+              </div>
+
+              <ul className="space-y-3">
+                {feedback.areas_for_improvement.map((area, index) => (
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 rounded-xl bg-amber-50/60 p-4"
+                  >
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700">
+                      !
+                    </span>
+                    <p className="text-sm leading-6 text-slate-700">
+                      {area}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+
+          {/* Next steps */}
+          <section className="rounded-2xl border border-violet-100 bg-white p-6 shadow-sm">
+            <div className="mb-5 flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-xl">
+                🚀
+              </span>
+              <div>
+                <h2 className="text-base font-semibold text-slate-900">
+                  Your recommended next steps
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Practical actions for your next practice session
+                </p>
+              </div>
+            </div>
+
+            <ol className="space-y-3">
+              {feedback.next_steps.map((step, index) => (
+                <li
+                  key={index}
+                  className="flex items-start gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-sm font-bold text-violet-700">
+                    {index + 1}
+                  </span>
+                  <p className="pt-1 text-sm leading-6 text-slate-700">
+                    {step}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </>
       )}
 
-      {completed > 0 && feedback && (
-  <Card className="p-5 mb-5">
-    <h3 className="text-sm font-semibold text-[#0f172a] mb-3">
-      Suggested next steps
-    </h3>
+      {/* No submitted responses */}
+      {answered === 0 && (
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+          <div className="mb-3 text-3xl">📝</div>
+          <h2 className="text-base font-semibold text-slate-900">
+            No responses submitted
+          </h2>
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
+            You ended this practice session without submitting an answer.
+            Complete at least one question to receive personalised AI feedback.
+          </p>
+        </div>
+      )}
 
-    <ul className="space-y-2">
-      {feedback.next_steps.map((step) => (
-        <li
-          key={step}
-          className="flex items-start gap-2 text-xs text-[#475569]"
-        >
-          <span className="text-[#a5b4fc] flex-shrink-0 mt-0.5">
-            →
-          </span>
-          {step}
-        </li>
-      ))}
-    </ul>
-  </Card>
-)}
-<AIDisclaimer
-  text={
-  completed === 0
-    ? "No personalised AI feedback was generated because no interview responses were submitted."
-    : feedback
-      ? "This feedback was generated by AI from your submitted interview responses. AI-generated feedback may be incomplete or inaccurate, so review the recommendations critically. This platform does not predict interview success or guarantee employment outcomes."
-      : "Personalised AI feedback is currently unavailable. Your interview responses have been submitted, but no AI feedback is available to display."
-}
-   />
+      {/* AI disclaimer */}
+      <AIDisclaimer
+        text={
+          answered === 0
+            ? "No personalised AI feedback was generated because no interview responses were submitted."
+            : feedback
+              ? "This feedback was generated by AI from your submitted interview responses. AI-generated feedback may be incomplete or inaccurate, so review the recommendations critically. This platform does not predict interview success or guarantee employment outcomes."
+              : "Personalised AI feedback is currently unavailable. Your interview responses have been submitted, but no AI feedback is available to display."
+        }
+      />
 
-      <div className="flex gap-3 mt-5">
-        <Btn onClick={onPracticeAgain} size="md">Practice again</Btn>
-        <Btn onClick={onDashboard} variant="secondary" size="md">Return to Dashboard</Btn>
+      {/* Actions */}
+      <div className="flex flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row">
+        <Btn onClick={onPracticeAgain} size="md">
+          Practice again
+        </Btn>
+        <Btn onClick={onDashboard} variant="secondary" size="md">
+          Return to Dashboard
+        </Btn>
       </div>
     </div>
   );
 }
 
+
 /* ─────────────────────────────────────────
    SCREEN 10 — Progress
 ───────────────────────────────────────── */
+
 function ProgressScreen({ userId }: { userId: number }) {
-  const [tab, setTab] = useState<"resume" | "interview">("resume");
+  const [tab, setTab] = useState<"resume" | "interview" | "job">("resume");
   const [activity, setActivity] = useState<ActivityState>(EMPTY_ACTIVITY);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+
     const loadProgress = async () => {
       try {
         setLoading(true);
         setError("");
 
-        const response = await fetch("http://localhost:8000/api/user-progress.php", {
-          credentials: "include",
-        });
+        const response = await fetch(
+          "http://localhost:8000/api/user-progress.php",
+          { credentials: "include" }
+        );
 
         const data = await response.json();
 
-        if (!response.ok) {
-          throw new Error(
-            data.message || "Unable to retrieve progress information."
-          );
+        if (!response.ok || data.status !== "success") {
+          throw new Error(data.message || "Unable to retrieve progress.");
         }
 
-        setActivity({
-          resumeReviews: data.resumeReviews ?? [],
-          interviewSessions: data.interviewSessions ?? [],
-          currentInterviewAnswered: 0,
-          currentInterviewTotal: 0,
-        });
+        if (!cancelled) {
+          setActivity({
+            resumeReviews: data.resumeReviews ?? [],
+            interviewSessions: data.interviewSessions ?? [],
+            jobMatches: data.jobMatches ?? [],
+            currentInterviewAnswered: 0,
+            currentInterviewTotal: 0,
+          });
+        }
       } catch (err) {
         console.error("Unable to load progress:", err);
-        setError("Unable to load your progress. Please try again.");
+        if (!cancelled) {
+          setError("Unable to load your progress. Please try again.");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     loadProgress();
+    return () => {
+      cancelled = true;
+    };
   }, [userId]);
 
-  const resumeProgress = activity.resumeReviews.length > 0 ? 100 : 0;
+  const resumes = activity.resumeReviews;
+  const interviews = activity.interviewSessions;
+  const matches = activity.jobMatches;
 
-  const answeredInterviewQuestions = activity.interviewSessions.reduce(
-    (total, session) => total + session.questionsAnswered,
+  const completedInterviews = interviews.filter(
+    (session) => session.status === "completed"
+  ).length;
+
+  const endedEarly = interviews.filter(
+    (session) => session.status === "ended_early"
+  ).length;
+
+  const questionsAnswered = interviews.reduce(
+    (sum, session) => sum + session.questionsAnswered,
     0
   );
 
-  const totalInterviewQuestions = activity.interviewSessions.reduce(
-    (total, session) => total + session.total,
-    0
-  );
+  const formatDate = (value: string) => {
+    if (!value) return "Date unavailable";
+    const date = new Date(value.replace(" ", "T"));
+    return Number.isNaN(date.getTime())
+      ? value
+      : date.toLocaleDateString("en-AU", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+  };
 
-  const interviewProgress =
-    totalInterviewQuestions > 0
-      ? Math.round(
-          (answeredInterviewQuestions / totalInterviewQuestions) * 100
-        )
-      : 0;
+  const statusLabel = (status: string) => {
+    if (status === "completed") return "Completed";
+    if (status === "ended_early") return "Ended early";
+    if (status === "in_progress") return "In progress";
+    return status.replace(/_/g, " ");
+  };
+
+  const statusStyle = (status: string) => {
+    if (status === "completed")
+      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+    if (status === "ended_early")
+      return "bg-amber-50 text-amber-700 border-amber-200";
+    return "bg-slate-50 text-slate-600 border-slate-200";
+  };
+
+  const tabs = [
+    { id: "resume", label: "Resume Activity", count: resumes.length },
+    { id: "interview", label: "Interview Practice", count: interviews.length },
+    { id: "job", label: "Job Matching", count: matches.length },
+  ] as const;
 
   return (
-    <div className="py-8 px-8 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">My Progress</h1>
-      <p className="text-sm text-[#64748b] mb-7">A summary of your career preparation activity.</p>
-{loading && (
-  <Card className="p-4 mb-5">
-    <p className="text-sm text-[#64748b]">
-      Loading your progress...
-    </p>
-  </Card>
-)}
-
-{error && (
-  <div className="mb-5 px-4 py-3 rounded-lg bg-red-50 border border-red-200">
-    <p className="text-sm text-red-700">
-      {error}
-    </p>
-  </div>
-)}
-      <div className="flex gap-2 mb-5">
-        {(["resume", "interview"] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors capitalize ${tab === t ? "bg-[#4f46e5] text-white" : "bg-white border border-[#e2e8f0] text-[#64748b] hover:border-[#94a3b8]"}`}>
-            {t === "resume" ? "Resume Activity" : "Interview Practice"}
-          </button>
-        ))}
+    <div className="py-8 px-4 sm:px-8 max-w-6xl mx-auto space-y-7">
+      <div className="rounded-2xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6 sm:p-8 text-white">
+        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-100 mb-2">
+          Career preparation overview
+        </p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">
+          My Progress
+        </h1>
+        <p className="text-sm text-indigo-100 max-w-2xl leading-relaxed">
+          Review your resume submissions, interview practice and job matching
+          activity in one place. Your history is retrieved from your account.
+        </p>
       </div>
 
-      {tab === "resume" && (
-        <div>
-          <Card className="overflow-hidden mb-4">
-            <div className="px-5 py-3 border-b border-[#f8fafc] bg-[#f8fafc]">
-              <div className="grid grid-cols-4 gap-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">
-                <span>Date</span><span>Target role</span><span>Input</span><span>Status</span>
-              </div>
-            </div>
-            {activity.resumeReviews.length === 0 ? (
-              <div className="px-5 py-6 text-center">
-                <p className="text-sm text-[#94a3b8]">No resume reviews yet.</p>
-              </div>
-            ) : activity.resumeReviews.map((r, i) => (
-              <div key={i} className="px-5 py-3.5 border-b border-[#f8fafc] last:border-0">
-                <div className="grid grid-cols-4 gap-4 text-sm">
-                  <span className="text-[#64748b] text-xs">{r.date}</span>
-                  <span className="text-[#0f172a] text-xs font-medium">{r.role}</span>
-                  <span className="text-[#64748b] text-xs">{r.file}</span>
-                  <span className="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full w-fit">Submitted</span>
-                </div>
-              </div>
-            ))}
-          </Card>
+      {loading && (
+        <Card className="p-5">
+          <p className="text-sm text-slate-500">Loading your progress...</p>
+        </Card>
+      )}
+
+      {error && (
+        <div
+          role="alert"
+          className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+        >
+          {error}
         </div>
       )}
 
-      {tab === "interview" && (
-        <div>
-          <Card className="overflow-hidden mb-4">
-            <div className="px-5 py-3 border-b border-[#f8fafc] bg-[#f8fafc]">
-              <div className="grid grid-cols-3 gap-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">
-                <span>Date</span><span>Role</span><span>Questions answered</span>
+      {!loading && !error && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                label: "Resumes submitted",
+                value: resumes.length,
+                detail: "Saved resume submissions",
+                accent: "text-indigo-600",
+              },
+              {
+                label: "Interview sessions",
+                value: interviews.length,
+                detail: `${completedInterviews} completed · ${endedEarly} ended early`,
+                accent: "text-violet-600",
+              },
+              {
+                label: "Job match analyses",
+                value: matches.length,
+                detail: "Saved AI job comparisons",
+                accent: "text-purple-600",
+              },
+            ].map((stat) => (
+              <Card key={stat.label} className="p-5">
+                <p className="text-sm font-medium text-slate-500 mb-3">
+                  {stat.label}
+                </p>
+                <p className={`text-4xl font-bold tracking-tight ${stat.accent}`}>
+                  {stat.value}
+                </p>
+                <p className="text-xs text-slate-500 mt-3">
+                  {stat.detail}
+                </p>
+              </Card>
+            ))}
+          </div>
+
+          <Card className="p-5 sm:p-6">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">
+              Your activity at a glance
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="rounded-xl bg-indigo-50 p-4">
+                <p className="text-xs font-medium text-indigo-700">
+                  Resume submissions
+                </p>
+                <p className="text-2xl font-bold text-indigo-900 mt-2">
+                  {resumes.length}
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-violet-50 p-4">
+                <p className="text-xs font-medium text-violet-700">
+                  Interview questions answered
+                </p>
+                <p className="text-2xl font-bold text-violet-900 mt-2">
+                  {questionsAnswered}
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-purple-50 p-4">
+                <p className="text-xs font-medium text-purple-700">
+                  Job comparisons
+                </p>
+                <p className="text-2xl font-bold text-purple-900 mt-2">
+                  {matches.length}
+                </p>
               </div>
             </div>
-            {activity.interviewSessions.length === 0 ? (
-              <div className="px-5 py-6 text-center">
-                <p className="text-sm text-[#94a3b8]">No interview sessions yet.</p>
-              </div>
-            ) : activity.interviewSessions.map((r, i) => (
-              <div key={i} className="px-5 py-3.5 border-b border-[#f8fafc] last:border-0">
-                <div className="grid grid-cols-3 gap-4">
-                  <span className="text-[#64748b] text-xs">{r.date}</span>
-                  <span className="text-[#0f172a] text-xs font-medium">{r.role}</span>
-                  <span className="text-[#64748b] text-xs">{r.questionsAnswered} of {r.total}</span>
-                </div>
-              </div>
-            ))}
           </Card>
-        </div>
-      )}
 
-      <Card className="p-5">
-    <h3 className="text-sm font-semibold text-[#0f172a] mb-3">Platform activity</h3>
-        <div className="space-y-3">
-          <Progress value={resumeProgress} label="Resume submission activity" />
-<Progress value={interviewProgress} label="Interview question completion" />
-        </div>
-        <p className="text-xs text-[#94a3b8] mt-4">Progress indicators reflect activity within this platform only. They do not measure actual job readiness or predict employment outcomes.</p>
-      </Card>
+          <div>
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold text-slate-900">
+                Activity history
+              </h2>
+              <p className="text-sm text-slate-500 mt-1">
+                Explore your saved activity across the platform.
+              </p>
+            </div>
+
+            <div
+              role="tablist"
+              aria-label="Activity history categories"
+              className="flex flex-wrap gap-2 mb-5"
+            >
+              {tabs.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === item.id}
+                  onClick={() => setTab(item.id)}
+                  className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
+                    tab === item.id
+                      ? "bg-indigo-600 text-white shadow-sm"
+                      : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"
+                  }`}
+                >
+                  {item.label}
+                  <span className="ml-2 opacity-75">({item.count})</span>
+                </button>
+              ))}
+            </div>
+
+            {tab === "resume" && (
+              <div role="tabpanel" className="space-y-3">
+                {resumes.length === 0 ? (
+                  <Card className="p-8 text-center">
+                    <p className="text-sm text-slate-500">
+                      No resume submissions yet.
+                    </p>
+                  </Card>
+                ) : (
+                  resumes.map((resume) => (
+                    <Card key={resume.resume_id} className="p-5">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-slate-900">
+                            {resume.role || "Role not specified"}
+                          </p>
+                          <p className="text-sm text-slate-500 mt-1 break-words">
+                            {resume.file}
+                          </p>
+                          <p className="text-xs text-slate-400 mt-2">
+                            {formatDate(resume.date)}
+                          </p>
+                        </div>
+                        <span className="self-start rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">
+                          {resume.input_method === "paste"
+                            ? "Pasted resume"
+                            : "Uploaded file"}
+                        </span>
+                      </div>
+                    </Card>
+                  ))
+                )}
+              </div>
+            )}
+
+            {tab === "interview" && (
+              <div role="tabpanel" className="space-y-3">
+                {interviews.length === 0 ? (
+                  <Card className="p-8 text-center">
+                    <p className="text-sm text-slate-500">
+                      No interview practice sessions yet.
+                    </p>
+                  </Card>
+                ) : (
+                  interviews.map((session) => (
+                    <Card key={session.session_id} className="p-5">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-slate-900">
+                            {session.role || "Role not specified"}
+                          </p>
+                          <p className="text-xs text-slate-400 mt-1">
+                            {formatDate(session.date)}
+                          </p>
+                          <p className="text-sm text-slate-600 mt-3">
+                            <span className="font-semibold text-slate-900">
+                              {session.questionsAnswered}
+                            </span>{" "}
+                            of {session.total} questions answered
+                          </p>
+                        </div>
+                        <span
+                          className={`self-start rounded-full border px-3 py-1 text-xs font-medium ${statusStyle(
+                            session.status
+                          )}`}
+                        >
+                          {statusLabel(session.status)}
+                        </span>
+                      </div>
+                    </Card>
+                  ))
+                )}
+              </div>
+            )}
+
+            {tab === "job" && (
+              <div role="tabpanel" className="space-y-3">
+                {matches.length === 0 ? (
+                  <Card className="p-8 text-center">
+                    <p className="text-sm text-slate-500">
+                      No job matching analyses yet.
+                    </p>
+                  </Card>
+                ) : (
+                  matches.map((match) => (
+                    <Card key={match.analysis_id} className="p-5">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-slate-900">
+                            {match.role || "Role not specified"}
+                          </p>
+                          <p className="text-sm text-slate-500 mt-1">
+                            {match.company}
+                          </p>
+                          <p className="text-xs text-slate-400 mt-2">
+                            {formatDate(match.date)} ·{" "}
+                            {match.inputMethod === "url"
+                              ? "Job URL"
+                              : "Pasted job advertisement"}
+                          </p>
+                        </div>
+
+                        <div className="sm:text-right">
+                          <p className="text-3xl font-bold text-indigo-600">
+                            {match.matchScore === null
+                              ? "N/A"
+                              : `${Math.round(match.matchScore)}%`}
+                          </p>
+                          <p className="text-xs text-slate-500 mt-1">
+                            AI-estimated alignment
+                          </p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
+            <h3 className="text-sm font-semibold text-slate-900 mb-2">
+              Understanding your progress
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              These statistics describe your recorded activity within this
+              platform. Resume submissions do not necessarily indicate
+              completed AI feedback. Interview statuses are shown as stored,
+              independently of the number of questions answered. Job alignment
+              percentages are AI-generated estimates, not hiring probabilities.
+              Activity totals do not measure overall career readiness or
+              guarantee employment outcomes.
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 }
+
 
 /* ─────────────────────────────────────────
    Job Match Analysis Engine
@@ -3718,158 +5254,325 @@ const handleAnalyse = () => {
 
 
   return (
-    <div className="py-8 px-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">Match Your Resume to a Job</h1>
-      <p className="text-sm text-[#64748b] mb-7">Add a job advertisement to compare its requirements with your resume.</p>
+    <div className="py-8 px-4 sm:px-8 max-w-6xl mx-auto space-y-7">
+      {/* Page header */}
+      <div className="rounded-2xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6 sm:p-8 text-white">
+        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-100 mb-2">
+          Career preparation tools
+        </p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">
+          Match Your Resume to a Job
+        </h1>
+        <p className="text-sm text-indigo-100 max-w-2xl leading-relaxed">
+          Compare your resume with a real job advertisement, identify
+          relevant strengths and discover opportunities to improve your
+          application.
+        </p>
+      </div>
 
-      {/* Step 1 — Job advertisement */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="size-5 rounded-full bg-[#4f46e5] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
-          <p className="text-sm font-semibold text-[#0f172a]">Job Advertisement</p>
-        </div>
+      {/* Steps overview */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {[
+          { number: "01", title: "Add a job", detail: "Paste text or provide a URL" },
+          { number: "02", title: "Select a resume", detail: "Choose a saved resume" },
+          { number: "03", title: "Analyse match", detail: "Review AI-generated feedback" },
+        ].map((step) => (
+          <div
+            key={step.number}
+            className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-sm font-bold text-indigo-600">
+              {step.number}
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-slate-900">
+                {step.title}
+              </p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {step.detail}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        {/* Input mode toggle */}
-        <div className="flex gap-1 mb-4 bg-[#f8fafc] p-1 rounded-lg w-fit">
-          {(["paste", "url"] as const).map((m) => (
-            <button key={m} onClick={() => setInputMode(m)}
-              className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${inputMode === m ? "bg-white text-[#0f172a] shadow-sm" : "text-[#64748b] hover:text-[#0f172a]"}`}>
-              {m === "paste" ? "Paste Job Advertisement" : "Job Advertisement Link"}
-            </button>
-          ))}
-        </div>
-
-        {inputMode === "paste" ? (
-          <Card className="p-4 mb-3">
-            <textarea
-              rows={9}
-              value={jobText}
-              onChange={(e) => setJobText(e.target.value)}
-              placeholder="Paste the job title, responsibilities and requirements here..."
-              className="w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-xs text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent resize-none leading-relaxed"
-            />
-            <p className="text-xs text-[#94a3b8] mt-2">
-              {jobText.trim().length > 0 ? `${jobText.trim().split(/\s+/).length} words` : "Paste the full job advertisement for best results"}
+      {/* Step 1 */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
+            1
+          </span>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">
+              Job Advertisement
+            </h2>
+            <p className="text-sm text-slate-500">
+              Choose how you want to provide the job requirements.
             </p>
-          </Card>
-        ) : (
-          <Card className="p-4 mb-3">
-            <label className="block mb-3">
-              <span className="text-xs font-medium text-[#0f172a] block mb-1.5">Job advertisement URL</span>
+          </div>
+        </div>
+
+        <Card className="p-5 sm:p-6">
+          {/* Input mode selector */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+            <button
+              type="button"
+              onClick={() => setInputMode("paste")}
+              aria-pressed={inputMode === "paste"}
+              className={`rounded-xl border p-4 text-left transition-colors ${
+                inputMode === "paste"
+                  ? "border-indigo-400 bg-indigo-50"
+                  : "border-slate-200 bg-white hover:border-indigo-200"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-semibold text-slate-900">
+                  Paste Job Advertisement
+                </span>
+                <span className={inputMode === "paste" ? "text-indigo-600" : "text-slate-300"}>
+                  {inputMode === "paste" ? "●" : "○"}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">
+                Copy and paste the full job description.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setInputMode("url")}
+              aria-pressed={inputMode === "url"}
+              className={`rounded-xl border p-4 text-left transition-colors ${
+                inputMode === "url"
+                  ? "border-indigo-400 bg-indigo-50"
+                  : "border-slate-200 bg-white hover:border-indigo-200"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-semibold text-slate-900">
+                  Job Advertisement Link
+                </span>
+                <span className={inputMode === "url" ? "text-indigo-600" : "text-slate-300"}>
+                  {inputMode === "url" ? "●" : "○"}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">
+                Provide a public job advertisement URL.
+              </p>
+            </button>
+          </div>
+
+          {inputMode === "paste" ? (
+            <div>
+              <label
+                htmlFor="job-advertisement-text"
+                className="block text-sm font-semibold text-slate-900 mb-2"
+              >
+                Job description
+              </label>
+              <textarea
+                id="job-advertisement-text"
+                rows={10}
+                value={jobText}
+                onChange={(e) => setJobText(e.target.value)}
+                placeholder="Paste the job title, responsibilities, required skills and qualifications here..."
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 leading-relaxed placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-y"
+              />
+              <div className="flex flex-wrap justify-between gap-2 mt-2">
+                <p className="text-xs text-slate-500">
+                  Include the full advertisement for a more useful comparison.
+                </p>
+                <p className="text-xs font-medium text-slate-500">
+                  {jobText.trim()
+                    ? `${jobText.trim().split(/\s+/).length} words`
+                    : "0 words"}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <label
+                htmlFor="job-advertisement-url"
+                className="block text-sm font-semibold text-slate-900 mb-2"
+              >
+                Job advertisement URL
+              </label>
               <input
+                id="job-advertisement-url"
                 type="url"
                 value={jobUrl}
                 onChange={(e) => setJobUrl(e.target.value)}
-                placeholder="Paste a job advertisement link here..."
-                className="w-full border border-[#e2e8f0] rounded-lg px-3 py-2.5 text-sm text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent"
+                placeholder="https://www.example.com/job-advertisement"
+                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
-            </label>
-            <div className="flex items-start gap-2 px-3 py-2.5 bg-[#f8fafc] border border-[#e2e8f0] rounded-lg">
-              <span className="text-[#94a3b8] text-xs mt-0.5 flex-shrink-0">ℹ</span>
-              <p className="text-xs text-[#64748b] leading-relaxed">
-  Paste a public job advertisement URL to automatically retrieve
-  the job description and compare it with your selected resume.
-  Some websites may restrict automated access. If the job
-  advertisement cannot be retrieved, use the "Paste Job
-  Advertisement" option instead.
-</p>
+              <div className="mt-4 rounded-xl border border-indigo-100 bg-indigo-50 p-4">
+                <p className="text-sm font-semibold text-indigo-900 mb-1">
+                  How URL matching works
+                </p>
+                <p className="text-sm text-indigo-800 leading-relaxed">
+                  The application attempts to retrieve the job description
+                  from the public URL. Some websites restrict automated
+                  access. If retrieval fails, switch to the paste option.
+                </p>
+              </div>
             </div>
-          </Card>
-        )}
+          )}
 
-        {/* Find jobs on SEEK */}
-        <a
-          href="https://www.seek.com.au"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-xs font-medium text-[#4f46e5] hover:text-[#4338ca] hover:underline transition-colors"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-          Find Jobs on SEEK (external website)
-        </a>
-      </div>
-
-      {/* Step 2 — Resume selection */}
-<div className="mb-6">
-  <div className="flex items-center gap-2 mb-3">
-    <span className="size-5 rounded-full bg-[#4f46e5] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
-      2
-    </span>
-    <p className="text-sm font-semibold text-[#0f172a]">
-      Select Your Resume
-    </p>
-  </div>
-
-  {loadingResumes ? (
-    <Card className="p-4">
-      <p className="text-sm text-[#64748b]">
-        Loading your saved resumes...
-      </p>
-    </Card>
-  ) : resumes.length === 0 ? (
-    <Card className="p-4">
-      <p className="text-sm font-medium text-[#0f172a] mb-1">
-        No saved resumes found
-      </p>
-      <p className="text-xs text-[#64748b]">
-        Submit a resume through Resume Feedback before using Job Advertisement Matching.
-      </p>
-    </Card>
-  ) : (
-    <div className="space-y-2">
-      {resumes.map((resume) => (
-        <button
-          key={resume.resume_id}
-          type="button"
-          onClick={() => setSelectedResumeId(resume.resume_id)}
-          className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
-            selectedResumeId === resume.resume_id
-              ? "bg-[#eef2ff] border-[#a5b4fc]"
-              : "bg-white border-[#e2e8f0] hover:border-[#94a3b8]"
-          }`}
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-medium text-[#0f172a]">
-                {resume.target_role}
-              </p>
-              <p className="text-xs text-[#64748b] mt-1">
-                {resume.file_name ?? "Pasted resume"}
-              </p>
-            </div>
-
-            {selectedResumeId === resume.resume_id && (
-              <span className="text-xs font-semibold text-[#4f46e5]">
-                ✓ Selected
-              </span>
-            )}
+          <div className="mt-5 pt-4 border-t border-slate-100">
+            <a
+              href="https://www.seek.com.au"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline"
+            >
+              Find jobs on SEEK (external website)
+              <span aria-hidden="true">↗</span>
+            </a>
           </div>
+        </Card>
+      </section>
 
-          <p className="text-xs text-[#94a3b8] mt-2">
-            Added {new Date(resume.uploaded_at.replace(" ", "T")).toLocaleDateString("en-AU")}
-          </p>
-        </button>
-      ))}
-    </div>
-  )}
-</div>
-
-      {error && (
-        <div className="mt-4 flex items-start gap-2 px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg">
-          <span className="text-red-500 flex-shrink-0 text-xs mt-0.5">✕</span>
-          <p className="text-xs text-red-700">{error}</p>
+      {/* Step 2 */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
+            2
+          </span>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">
+              Select Your Resume
+            </h2>
+            <p className="text-sm text-slate-500">
+              Choose the saved resume you want to compare.
+            </p>
+          </div>
         </div>
-      )}
 
-      <div className="mt-5">
-        <Btn onClick={handleAnalyse} size="lg" full disabled={!canAnalyse}>
-          {canAnalyse ? "Analyse Job Match →" : "Add a job advertisement and select a resume to continue"}
-        </Btn>
-      </div>
+        {loadingResumes ? (
+          <Card className="p-6">
+            <p className="text-sm text-slate-500">
+              Loading your saved resumes...
+            </p>
+          </Card>
+        ) : resumes.length === 0 ? (
+          <Card className="p-6">
+            <h3 className="font-semibold text-slate-900">
+              No saved resumes found
+            </h3>
+            <p className="text-sm text-slate-500 mt-2">
+              Submit a resume through Resume Feedback before using Job Matching.
+            </p>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {resumes.map((resume) => {
+              const selected = selectedResumeId === resume.resume_id;
+
+              return (
+                <button
+                  key={resume.resume_id}
+                  type="button"
+                  onClick={() => setSelectedResumeId(resume.resume_id)}
+                  aria-pressed={selected}
+                  className={`w-full rounded-xl border p-5 text-left transition-all ${
+                    selected
+                      ? "border-indigo-400 bg-indigo-50 shadow-sm"
+                      : "border-slate-200 bg-white hover:border-indigo-200 hover:shadow-sm"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-slate-900">
+                        {resume.target_role || "Untitled resume"}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-1 break-words">
+                        {resume.file_name ?? "Pasted resume"}
+                      </p>
+                    </div>
+
+                    <span
+                      aria-hidden="true"
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs ${
+                        selected
+                          ? "border-indigo-600 bg-indigo-600 text-white"
+                          : "border-slate-300 text-transparent"
+                      }`}
+                    >
+                      ✓
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-2 mt-4">
+                    <span className="text-xs text-slate-400">
+                      Added{" "}
+                      {new Date(
+                        resume.uploaded_at.replace(" ", "T")
+                      ).toLocaleDateString("en-AU")}
+                    </span>
+
+                    {selected && (
+                      <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-semibold text-indigo-700">
+                        Selected
+                      </span>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* Step 3 */}
+      <section>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
+            3
+          </span>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">
+              Analyse Your Job Match
+            </h2>
+            <p className="text-sm text-slate-500">
+              Generate personalised feedback on resume-to-job alignment.
+            </p>
+          </div>
+        </div>
+
+        <Card className="p-5 sm:p-6">
+          {error && (
+            <div
+              role="alert"
+              className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            >
+              {error}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={handleAnalyse}
+            disabled={!canAnalyse}
+            className={`w-full rounded-xl px-5 py-3.5 text-sm font-semibold transition-all ${
+              canAnalyse
+                ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md hover:from-indigo-700 hover:to-purple-700"
+                : "bg-slate-100 text-slate-400 cursor-not-allowed"
+            }`}
+          >
+            {canAnalyse
+              ? "Analyse Job Match →"
+              : "Add a job advertisement and select a resume to continue"}
+          </button>
+
+          <p className="text-xs text-center text-slate-500 mt-3 leading-relaxed">
+            AI-generated alignment is an estimate, not a guarantee of
+            interview selection or employment.
+          </p>
+        </Card>
+      </section>
     </div>
   );
+
 }
 
 /* ─────────────────────────────────────────
@@ -3926,255 +5629,643 @@ function JobMatchAnalysingScreen({ onDone }: { onDone: () => void }) {
 /* ─────────────────────────────────────────
    SCREEN 11c — Job Match Results
 ───────────────────────────────────────── */
+
 function JobMatchResultsScreen({
-  result, onImproveResume, onPracticeInterview, onAnalyseAnother,
+  result,
+  onImproveResume,
+  onPracticeInterview,
+  onAnalyseAnother,
 }: {
   result: JobMatchResult;
   onImproveResume: (role: string) => void;
   onPracticeInterview: (role: string) => void;
   onAnalyseAnother: () => void;
 }) {
-  const pct = result.matchPercent;
-  const pctColor = pct >= 70 ? "text-emerald-700" : pct >= 50 ? "text-amber-600" : "text-red-600";
-  const pctRingColor = pct >= 70 ? "#059669" : pct >= 50 ? "#d97706" : "#dc2626";
-  const circumference = 2 * Math.PI * 36;
-  const dashOffset = circumference - (pct / 100) * circumference;
+  const pct = Math.min(100, Math.max(0, result.matchPercent));
+  const circumference = 2 * Math.PI * 42;
+  const dashOffset = circumference * (1 - pct / 100);
+
+  const scoreColor =
+    pct >= 70 ? "#10b981" : pct >= 50 ? "#f59e0b" : "#f87171";
+
+  const scoreLabel =
+    pct >= 70
+      ? "Stronger alignment"
+      : pct >= 50
+      ? "Partial alignment"
+      : "Limited alignment";
 
   return (
-    <div className="py-8 px-8 max-w-4xl mx-auto">
-      <div className="flex items-start justify-between mb-6">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
+      <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs text-[#64748b] mb-1">Job Advertisement Matching</p>
-          <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight">Job Match Analysis</h1>
-        </div>
-        <Btn onClick={onAnalyseAnother} variant="secondary" size="sm">Analyse Another Job</Btn>
-      </div>
-
-      {/* Role & Company header */}
-      <Card className="p-5 mb-5 border-[#a5b4fc]">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-0.5">
-              <p className="text-xs font-semibold text-[#94a3b8] uppercase tracking-widest">Target Role</p>
-            </div>
-            <p className="text-lg font-semibold text-[#0f172a]">{result.targetRole}</p>
-            <p className="text-sm text-[#64748b] mt-0.5">{result.company}</p>
-          </div>
-          {/* Match ring */}
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="relative">
-              <svg width="88" height="88" viewBox="0 0 88 88">
-                <circle cx="44" cy="44" r="36" fill="none" stroke="#f1f5f9" strokeWidth="8" />
-                <circle cx="44" cy="44" r="36" fill="none" stroke={pctRingColor} strokeWidth="8"
-                  strokeDasharray={circumference} strokeDashoffset={dashOffset}
-                  strokeLinecap="round" transform="rotate(-90 44 44)" style={{ transition: "stroke-dashoffset 1s ease" }} />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className={`text-lg font-bold leading-none ${pctColor}`}>{pct}%</span>
-                <span className="text-[9px] text-[#94a3b8] leading-none mt-0.5">match</span>
-              </div>
-            </div>
-            <p className="text-xs font-semibold text-[#0f172a] mt-1">Job Match Score</p>
-          </div>
-        </div>
-
-        <div className="mt-4 flex items-start gap-2 px-3 py-2 bg-[#fffbeb] border border-amber-200 rounded-lg">
-          <span className="text-amber-500 flex-shrink-0 text-xs mt-0.5">⚠</span>
-          <p className="text-xs text-amber-800 leading-relaxed">
-            This is an indicative AI-generated assessment based on keyword and content comparison only. It does not predict recruitment or employment outcomes and does not guarantee interview selection.
+          <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-[#6366f1]">
+            AI Career Readiness Assistant
+          </p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#0f172a] sm:text-3xl">
+            Job Match Analysis
+          </h1>
+          <p className="mt-2 text-sm text-[#64748b]">
+            Understand how your resume aligns with this opportunity.
           </p>
         </div>
-      </Card>
 
-      {/* Strengths */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-        <Card className="p-5">
-          <h2 className="text-sm font-semibold text-[#0f172a] mb-3 flex items-center gap-2">
-            <span className="text-emerald-500">✓</span> Matching Strengths
-          </h2>
-          <ul className="space-y-2">
-            {result.strengths.map((s, i) => (
-              <li key={i} className="flex items-start gap-2 text-xs text-[#475569] leading-relaxed">
-                <span className="text-emerald-400 flex-shrink-0 mt-0.5">•</span>
-                {s}
-              </li>
-            ))}
-          </ul>
+        <Btn onClick={onAnalyseAnother} variant="secondary" size="sm">
+          Analyse Another Job
+        </Btn>
+      </div>
+
+      {/* Main summary */}
+      <div className="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#4338ca] via-[#4f46e5] to-[#7c3aed] p-6 text-white shadow-sm sm:p-8">
+        <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
+          <div className="min-w-0 flex-1">
+            <span className="inline-flex rounded-full border border-white/20 bg-white/15 px-3 py-1 text-xs font-semibold">
+              AI-generated career guidance
+            </span>
+
+            <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-indigo-100">
+              Target position
+            </p>
+            <h2 className="mt-2 break-words text-2xl font-bold sm:text-3xl">
+              {result.targetRole}
+            </h2>
+            <p className="mt-2 text-sm text-indigo-100">
+              {result.company}
+            </p>
+
+            <p className="mt-5 max-w-lg text-sm leading-relaxed text-indigo-100">
+              Your resume has been compared with the job advertisement
+              to identify relevant experience, evidence gaps and
+              opportunities to improve your application.
+            </p>
+          </div>
+
+          <div className="flex shrink-0 flex-col items-center rounded-2xl border border-white/20 bg-white/10 px-6 py-5">
+            <div className="relative h-32 w-32">
+              <svg
+                viewBox="0 0 112 112"
+                className="h-full w-full"
+                role="img"
+                aria-label={`AI resume-job alignment score: ${pct}%`}
+              >
+                <circle
+                  cx="56"
+                  cy="56"
+                  r="42"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.2)"
+                  strokeWidth="10"
+                />
+                <circle
+                  cx="56"
+                  cy="56"
+                  r="42"
+                  fill="none"
+                  stroke={scoreColor}
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={dashOffset}
+                  transform="rotate(-90 56 56)"
+                />
+              </svg>
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-3xl font-bold">{pct}%</span>
+                <span className="text-[10px] text-indigo-100">
+                  alignment
+                </span>
+              </div>
+            </div>
+
+            <p className="mt-3 text-sm font-semibold">
+              Resume–Job Alignment
+            </p>
+            <p className="mt-1 text-xs text-indigo-100">
+              {scoreLabel}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Score explanation */}
+      <div className="mb-6 rounded-xl border border-[#c7d2fe] bg-[#eef2ff] px-5 py-4">
+        <p className="text-sm font-semibold text-[#312e81]">
+          What does this score mean?
+        </p>
+        <p className="mt-1 text-xs leading-relaxed text-[#4338ca]">
+          This indicative AI-generated score describes the alignment
+          between the evidence in your resume and the job requirements.
+          It is not a hiring probability, employer assessment or
+          guarantee of interview selection.
+        </p>
+      </div>
+
+      {/* Strengths and gaps */}
+      <div className="mb-6 grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <Card className="p-6">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-xl text-emerald-600">
+              ✓
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-[#0f172a]">
+                Matching Strengths
+              </h2>
+              <p className="text-xs text-[#64748b]">
+                Relevant experience identified in your resume
+              </p>
+            </div>
+          </div>
+
+          {result.strengths.length > 0 ? (
+            <div className="space-y-3">
+              {result.strengths.map((strength, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-3"
+                >
+                  <span className="mt-0.5 shrink-0 text-sm font-bold text-emerald-600">
+                    ✓
+                  </span>
+                  <p className="text-sm leading-relaxed text-[#334155]">
+                    {strength}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-[#64748b]">
+              No clear matching strengths were identified.
+            </p>
+          )}
         </Card>
 
-        <Card className="p-5">
-          <h2 className="text-sm font-semibold text-[#0f172a] mb-3 flex items-center gap-2">
-            <span className="text-amber-500">△</span> Missing or Weak Areas
-          </h2>
-          <ul className="space-y-2">
-            {result.missing.map((m, i) => (
-              <li key={i} className="flex items-start gap-2 text-xs text-[#475569] leading-relaxed">
-                <span className="text-amber-400 flex-shrink-0 mt-0.5">•</span>
-                {m}
-              </li>
-            ))}
-          </ul>
+        <Card className="p-6">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-xl text-amber-600">
+              !
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-[#0f172a]">
+                Missing or Weak Areas
+              </h2>
+              <p className="text-xs text-[#64748b]">
+                Requirements needing stronger evidence
+              </p>
+            </div>
+          </div>
+
+          {result.missing.length > 0 ? (
+            <div className="space-y-3">
+              {result.missing.map((gap, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-3 rounded-xl border border-amber-100 bg-amber-50/50 p-3"
+                >
+                  <span className="mt-0.5 shrink-0 text-sm font-bold text-amber-600">
+                    !
+                  </span>
+                  <p className="text-sm leading-relaxed text-[#334155]">
+                    {gap}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-[#64748b]">
+              No specific evidence gaps were identified.
+            </p>
+          )}
         </Card>
       </div>
 
       {/* Keywords */}
-      <Card className="p-5 mb-5">
-        <h2 className="text-sm font-semibold text-[#0f172a] mb-3">Important Keywords</h2>
-        <p className="text-xs text-[#64748b] mb-3">Consider including these terms in your resume where your experience genuinely supports them.</p>
-        <div className="flex flex-wrap gap-2">
-          {result.keywords.map((kw) => (
-            <span key={kw} className="text-xs font-medium bg-[#eef2ff] text-[#4f46e5] border border-[#c7d2fe] px-3 py-1 rounded-full">{kw}</span>
-          ))}
+      <Card className="mb-6 p-6">
+        <h2 className="text-base font-bold text-[#0f172a]">
+          Important Job Keywords
+        </h2>
+        <p className="mt-1 text-sm text-[#64748b]">
+          Consider using these terms only where your actual skills
+          and experience support them.
+        </p>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {result.keywords.length > 0 ? (
+            result.keywords.map((keyword, index) => (
+              <span
+                key={`${keyword}-${index}`}
+                className="rounded-full border border-[#c7d2fe] bg-[#eef2ff] px-3 py-1.5 text-xs font-semibold text-[#4338ca]"
+              >
+                {keyword}
+              </span>
+            ))
+          ) : (
+            <p className="text-sm text-[#64748b]">
+              No specific keywords were identified.
+            </p>
+          )}
         </div>
       </Card>
 
-      {/* Improvements */}
-      <Card className="p-5 mb-5">
-        <h2 className="text-sm font-semibold text-[#0f172a] mb-3 flex items-center gap-2">
-          <span className="text-[#4f46e5]">✏</span> Suggested Resume Improvements
-        </h2>
-        <ul className="space-y-2.5">
-          {result.improvements.map((imp, i) => (
-            <li key={i} className="flex items-start gap-2.5 text-xs text-[#475569] leading-relaxed">
-              <span className="text-[#a5b4fc] flex-shrink-0 mt-0.5">→</span>
-              {imp}
-            </li>
-          ))}
-        </ul>
+      {/* Recommendations */}
+      <Card className="mb-6 p-6">
+        <div className="mb-5">
+          <h2 className="text-base font-bold text-[#0f172a]">
+            Personalised Resume Improvements
+          </h2>
+          <p className="mt-1 text-sm text-[#64748b]">
+            Practical recommendations to strengthen your application.
+          </p>
+        </div>
+
+        {result.improvements.length > 0 ? (
+          <div className="space-y-3">
+            {result.improvements.map((improvement, index) => (
+              <div
+                key={index}
+                className="flex items-start gap-4 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] p-4"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#eef2ff] text-sm font-bold text-[#4f46e5]">
+                  {index + 1}
+                </div>
+                <p className="pt-1 text-sm leading-relaxed text-[#334155]">
+                  {improvement}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-[#64748b]">
+            No additional resume improvements were identified.
+          </p>
+        )}
       </Card>
 
-      {/* Responsible AI notice */}
-      <div className="flex items-start gap-2.5 px-4 py-3.5 bg-[#f8fafc] border border-[#e2e8f0] rounded-xl mb-6">
-        <span className="text-[#94a3b8] flex-shrink-0 mt-0.5 text-sm">⚖</span>
-        <p className="text-xs text-[#64748b] leading-relaxed">
-          <strong className="text-[#0f172a]">Responsible AI Notice:</strong> AI-generated job matching is provided as career preparation guidance only. Match results may be incomplete or inaccurate and do not predict recruitment or employment outcomes. Review the original job advertisement carefully before making application decisions.
+      {/* Responsible AI */}
+      <div className="mb-6 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] p-5">
+        <p className="text-sm font-semibold text-[#0f172a]">
+          Responsible AI & Human Oversight
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-[#64748b]">
+          AI-generated recommendations may be incomplete or inaccurate.
+          Review the original job advertisement, verify suggestions
+          against your real experience and consult a career adviser
+          when needed. Do not add qualifications or experience you
+          do not possess.
         </p>
       </div>
 
-      {/* Bottom CTAs */}
-      <Card className="p-5">
-        <p className="text-sm font-semibold text-[#0f172a] mb-1">Continue your career preparation</p>
-        <p className="text-xs text-[#64748b] mb-4">Use these results to strengthen your resume and practise for the interview.</p>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Btn onClick={() => onImproveResume(result.targetRole)} size="sm" full>
+      {/* Next steps */}
+      <div className="rounded-2xl border border-[#c7d2fe] bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-bold text-[#0f172a]">
+          Continue Your Career Preparation
+        </h2>
+        <p className="mt-2 text-sm text-[#64748b]">
+          Turn your job match insights into practical next steps.
+        </p>
+
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Btn
+            onClick={() => onImproveResume(result.targetRole)}
+            size="sm"
+            full
+          >
             Improve Resume for This Role →
           </Btn>
-          <Btn onClick={() => onPracticeInterview(result.targetRole)} variant="secondary" size="sm" full>
+
+          <Btn
+            onClick={() => onPracticeInterview(result.targetRole)}
+            variant="secondary"
+            size="sm"
+            full
+          >
             Practise Interview for This Role →
           </Btn>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }
 
+
 /* ─────────────────────────────────────────
    SCREEN 11 — Responsible AI & Privacy
 ───────────────────────────────────────── */
+
 function ResponsibleAIScreen() {
   const [open, setOpen] = useState<number | null>(null);
 
-  const PRINCIPLES = [
-    { icon: "⚖️", title: "Fairness", desc: "Feedback is designed to focus on the content and structure of career preparation materials — not personal characteristics such as name, background, ethnicity, accent or nationality. The platform does not assess personality or predicted employability." },
-    { icon: "🔍", title: "Transparency", desc: "AI-generated recommendations are clearly identified throughout the platform. Users are informed when content is AI-generated, and are encouraged to review it critically before acting on it." },
-   { icon: "🔒", title: "Privacy", desc: "The platform minimises unnecessary collection of personal information. Information required for AI-powered features, such as resume content and submitted interview responses, may be sent to the configured external AI provider for processing. Users should avoid including unnecessary sensitive personal information." },
-    { icon: "👤", title: "Human Oversight", desc: "AI feedback is a support tool, not a replacement for professional career advice. Users are encouraged to consult their university career service and professional advisers for important decisions." },
+  const principles = [
+    {
+      icon: "⚖️",
+      title: "Fairness",
+      description:
+        "The platform is designed to evaluate career preparation content rather than personal characteristics. AI-generated recommendations may still contain bias, so users should review them critically.",
+    },
+    {
+      icon: "🔍",
+      title: "Transparency",
+      description:
+        "AI is used for resume feedback, interview preparation and job matching. Results are intended to support career preparation, not make recruitment decisions.",
+    },
+    {
+      icon: "🔒",
+      title: "Privacy",
+      description:
+        "Career preparation information is stored to support platform features. Relevant submitted content is also transmitted to an external AI provider when AI-powered features are used.",
+    },
+    {
+      icon: "👤",
+      title: "Human Oversight",
+      description:
+        "Users remain responsible for reviewing AI suggestions. Important career decisions should also consider trusted information and advice from qualified career professionals.",
+    },
   ];
 
-  const FAQS = [
-    { q: "How is AI used on this platform?", a: "The MVP uses generative AI to provide personalised resume feedback, generate role-relevant interview questions, and analyse submitted interview responses to provide personalised practice feedback. Job advertisement comparison is also included as an MVP feature. AI-dependent results are only displayed when the AI service successfully returns a valid result. If the service is unavailable, the platform displays an error rather than fabricating feedback." },
-    { q: "What are the limitations of AI-generated feedback?", a: "AI can produce inaccurate, incomplete or inappropriate recommendations. Users should verify important career information independently. The platform does not guarantee employment outcomes." },
-    { q: "What information is collected?", a: "The MVP stores account information such as your email address, together with career preparation data you submit, including resume content, target roles, interview session details and responses, and job advertisement text used for comparison. Content required for AI-powered features, such as resume content and interview responses, may also be sent to the configured external AI provider for processing. Users should avoid entering unnecessary sensitive personal information." },
-    { q: "What frameworks guide this platform?", a: "The platform is informed by the NIST AI Risk Management Framework, the Australian Privacy Principles, and the Australian AI Ethics Principles. These frameworks support trustworthy, fair and accountable AI design." },
+  const aiFeatures = [
+    {
+      number: "01",
+      title: "Resume Feedback",
+      description:
+        "The target role and submitted resume content are sent to OpenAI to generate personalised feedback on strengths and areas for improvement.",
+    },
+    {
+      number: "02",
+      title: "Interview Preparation",
+      description:
+        "Role and interview preferences are used to generate practice questions. Submitted interview responses and session configuration are used to generate personalised feedback.",
+    },
+    {
+      number: "03",
+      title: "Job Matching",
+      description:
+        "Resume content and job advertisement information are compared using AI. The resulting alignment percentage is an estimate of how the submitted materials compare, not a prediction of hiring success.",
+    },
+  ];
+
+  const dataCategories = [
+    {
+      title: "Account information",
+      description:
+        "Account details, including your email address and profile information, are stored to support authentication and account management.",
+    },
+    {
+      title: "Resume information",
+      description:
+        "Submitted resumes, target roles and related career preparation records are stored. Resume content may contain personal information that you include.",
+    },
+    {
+      title: "Interview activity",
+      description:
+        "Interview configurations, questions, submitted responses, session statuses and generated feedback may be stored as part of your practice history.",
+    },
+    {
+      title: "Job Matching activity",
+      description:
+        "Submitted job advertisements, selected resume references and generated matching analyses are stored to support job comparison features.",
+    },
+  ];
+
+  const limitations = [
+    "AI can produce inaccurate, incomplete, biased or inappropriate recommendations.",
+    "Generated feedback should be checked against reliable career information and actual job requirements.",
+    "A job alignment percentage does not represent the probability of receiving an interview or job offer.",
+    "The platform does not assess personality, determine employability or make recruitment decisions.",
+    "When an AI request fails or returns an unusable result, the application is designed to display an error rather than fabricate successful AI feedback.",
+    "AI feedback should not be the sole basis for important career decisions.",
+  ];
+
+  const faqs = [
+    {
+      question: "Does the platform send my information to OpenAI?",
+      answer:
+        "Yes. When you use an AI-powered feature, the PHP backend sends the relevant input to OpenAI. This can include resume content, target roles, interview preferences, submitted interview responses and job advertisement text, depending on the feature. Avoid including unnecessary sensitive personal information.",
+    },
+    {
+      question: "Is my information stored in the application?",
+      answer:
+        "Yes. The application uses a database to store account information and career preparation records, including submitted resumes, interview activity and job matching analyses. These records support the application's features and activity history.",
+    },
+    {
+      question: "Can I delete my account or export all my data?",
+      answer:
+        "The current MVP provides account and password management features. Self-service account deletion and a complete personal data export feature have not been implemented as verified user-facing controls. Do not assume that logging out deletes stored information.",
+    },
+    {
+      question: "Does OpenAI retain submitted information?",
+      answer:
+        "Submitted information is processed by OpenAI as an external service. Provider-side storage and retention are separate from this application's database. The current integration does not explicitly disable Responses API storage. Applicable provider data handling and retention practices should be reviewed before submitting sensitive information.",
+    },
+    {
+      question: "Can AI-generated results be inaccurate or biased?",
+      answer:
+        "Yes. Generative AI can produce errors, overlook relevant experience or generate recommendations that do not suit an individual's circumstances. Users should independently review results and seek professional advice when appropriate.",
+    },
+    {
+      question: "Does a high Job Matching score guarantee employment?",
+      answer:
+        "No. The percentage is an AI-generated estimate of alignment between a submitted resume and job advertisement. It does not predict hiring outcomes or guarantee an interview, offer or employment.",
+    },
+    {
+      question: "What happens if the AI service is unavailable?",
+      answer:
+        "The backend includes error handling for unavailable services and invalid AI responses. The application is designed to report a failure rather than display invented AI-generated feedback as a successful result.",
+    },
+    {
+      question: "Which responsible AI frameworks inform the platform?",
+      answer:
+        "The platform draws on principles from the NIST AI Risk Management Framework, Australian Privacy Principles and Australian AI Ethics Principles. These are design references, not a claim of formal certification or demonstrated legal compliance.",
+    },
   ];
 
   return (
-    <div className="py-8 px-8 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-semibold text-[#0f172a] tracking-tight mb-1">Responsible AI & Privacy</h1>
-      <p className="text-sm text-[#64748b] mb-8">How this platform uses AI responsibly to support international students.</p>
-
-      {/* Principles */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        {PRINCIPLES.map((p) => (
-          <Card key={p.title} className="p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-2xl">{p.icon}</span>
-              <h3 className="text-sm font-semibold text-[#0f172a]">{p.title}</h3>
-            </div>
-            <p className="text-xs text-[#64748b] leading-relaxed">{p.desc}</p>
-          </Card>
-        ))}
+    <div className="py-8 px-4 sm:px-8 max-w-6xl mx-auto space-y-7">
+      {/* Header */}
+      <div className="rounded-2xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6 sm:p-8 text-white">
+        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-100 mb-2">
+          Trust, transparency and accountability
+        </p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">
+          Responsible AI &amp; Privacy
+        </h1>
+        <p className="text-sm text-indigo-100 max-w-2xl leading-relaxed">
+          Understand how AI supports your career preparation, what
+          information is processed and why human judgement remains important.
+        </p>
       </div>
 
-      {/* How AI is used */}
-      <Card className="p-5 mb-5">
-        <h3 className="text-sm font-semibold text-[#0f172a] mb-3">How AI is used</h3>
-        <p className="text-xs text-[#64748b] leading-relaxed mb-3">
-  The MVP uses generative AI to support the following career preparation functions:
-</p>
-        <ul className="space-y-2">
-{[
-  "Analysing resume content against Australian graduate employment expectations",
-  "Supporting interview preparation with role-relevant questions and feedback",
-  "Comparing submitted resume information with job advertisement content",
-  "Providing career preparation guidance rather than recruitment or employment decisions"
-].map((item) => (
-            <li key={item} className="flex items-start gap-2 text-xs text-[#475569]">
-              <span className="text-[#a5b4fc] mt-0.5 flex-shrink-0">→</span>
-              {item}
-            </li>
+      {/* Principles */}
+      <section>
+        <div className="mb-4">
+          <h2 className="text-xl font-semibold text-slate-900">
+            Our responsible AI principles
+          </h2>
+          <p className="text-sm text-slate-500 mt-1">
+            Principles guiding the design of this career preparation platform.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {principles.map((principle) => (
+            <Card key={principle.title} className="p-5 sm:p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl" aria-hidden="true">
+                  {principle.icon}
+                </span>
+                <h3 className="font-semibold text-slate-900">
+                  {principle.title}
+                </h3>
+              </div>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {principle.description}
+              </p>
+            </Card>
           ))}
-        </ul>
-      </Card>
+        </div>
+      </section>
+
+      {/* AI features */}
+      <section>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">
+          How AI is used
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {aiFeatures.map((feature) => (
+            <Card key={feature.number} className="p-5">
+              <span className="text-sm font-bold text-indigo-600">
+                {feature.number}
+              </span>
+              <h3 className="font-semibold text-slate-900 mt-3 mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {feature.description}
+              </p>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Data handling */}
+      <section>
+        <h2 className="text-xl font-semibold text-slate-900 mb-2">
+          Your information and privacy
+        </h2>
+        <p className="text-sm text-slate-500 mb-4">
+          Information handled by the application to provide its features.
+        </p>
+
+        <Card className="p-5 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {dataCategories.map((category) => (
+              <div key={category.title}>
+                <h3 className="text-sm font-semibold text-slate-900 mb-2">
+                  {category.title}
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  {category.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 rounded-xl border border-indigo-100 bg-indigo-50 p-4">
+            <h3 className="text-sm font-semibold text-indigo-900 mb-2">
+              External AI processing
+            </h3>
+            <p className="text-sm text-indigo-900 leading-relaxed">
+              Relevant information is transmitted from the PHP backend to
+              OpenAI when an AI-powered feature is used. The application
+              stores career preparation records separately in its database.
+              The current integration does not explicitly disable provider
+              response storage. Avoid submitting unnecessary sensitive
+              information.
+            </p>
+          </div>
+        </Card>
+      </section>
 
       {/* Limitations */}
-      <Card className="p-5 mb-5 border-amber-200">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-amber-500">⚠</span>
-          <h3 className="text-sm font-semibold text-[#0f172a]">Limitations</h3>
-        </div>
-        <ul className="space-y-2">
-          {[
-            "AI can produce inaccurate, incomplete or inappropriate recommendations.",
-            "AI-dependent feedback is not generated when the AI service is unavailable; the platform displays an error rather than creating a fabricated result.",
-            "Users should verify important career information independently.",
-            "The platform does not guarantee employment outcomes.",
-            "Users should seek professional career advice from their university career service when appropriate.",
-            "AI feedback should not be used as the sole basis for important career decisions.",
-          ].map((item) => (
-            <li key={item} className="flex items-start gap-2 text-xs text-[#92400e]">
-              <span className="text-amber-400 mt-0.5 flex-shrink-0">•</span>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </Card>
+      <section>
+        <Card className="p-5 sm:p-6 border-amber-200">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-xl" aria-hidden="true">⚠️</span>
+            <h2 className="text-lg font-semibold text-slate-900">
+              Important AI limitations
+            </h2>
+          </div>
 
-      {/* FAQ */}
-      <Card className="p-5 mb-5">
-        <h3 className="text-sm font-semibold text-[#0f172a] mb-4">Frequently asked questions</h3>
-        <div className="space-y-2">
-          {FAQS.map((faq, i) => (
-            <div key={i} className="border border-[#f1f5f9] rounded-lg overflow-hidden">
-              <button onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[#f8fafc] transition-colors">
-                <span className="text-xs font-medium text-[#0f172a]">{faq.q}</span>
-                <span className={`text-[#94a3b8] transition-transform text-xs ${open === i ? "rotate-180" : ""}`}>▾</span>
-              </button>
-              {open === i && (
-                <div className="px-4 pb-4 pt-0">
-                  <p className="text-xs text-[#64748b] leading-relaxed">{faq.a}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </Card>
+          <ul className="space-y-3">
+            {limitations.map((limitation) => (
+              <li
+                key={limitation}
+                className="flex items-start gap-3 text-sm text-amber-900"
+              >
+                <span className="text-amber-500 shrink-0">•</span>
+                <span className="leading-relaxed">{limitation}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </section>
 
-      <div className="bg-[#f8fafc] border border-[#e2e8f0] rounded-xl p-5 text-center">
-        <p className="text-xs text-[#64748b] leading-relaxed">
-          Informed by the <strong className="text-[#0f172a]">NIST AI Risk Management Framework</strong>, <strong className="text-[#0f172a]">Australian Privacy Principles</strong>, and <strong className="text-[#0f172a]">Australian AI Ethics Principles</strong>.
-          <br />This platform provides career preparation support and does not guarantee employment outcomes. It does not replace professional career advice.
+      {/* FAQs */}
+      <section>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">
+          Frequently asked questions
+        </h2>
+
+        <Card className="p-4 sm:p-5">
+          <div className="space-y-2">
+            {faqs.map((faq, index) => (
+              <div
+                key={faq.question}
+                className="rounded-xl border border-slate-200 overflow-hidden"
+              >
+                <button
+                  type="button"
+                  aria-expanded={open === index}
+                  onClick={() =>
+                    setOpen(open === index ? null : index)
+                  }
+                  className="w-full flex items-center justify-between gap-4 px-4 py-4 text-left hover:bg-slate-50 transition-colors"
+                >
+                  <span className="text-sm font-medium text-slate-900">
+                    {faq.question}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`text-slate-400 transition-transform ${
+                      open === index ? "rotate-180" : ""
+                    }`}
+                  >
+                    ▾
+                  </span>
+                </button>
+
+                {open === index && (
+                  <div className="px-4 pb-4">
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </Card>
+      </section>
+
+      {/* Final notice */}
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
+        <p className="text-xs text-slate-600 leading-relaxed">
+          Informed by the NIST AI Risk Management Framework,
+          Australian Privacy Principles and Australian AI Ethics Principles.
+          This platform provides career preparation support, not recruitment
+          decisions or guaranteed employment outcomes. It does not replace
+          professional career advice.
         </p>
       </div>
     </div>
@@ -4201,15 +6292,27 @@ interface InterviewHistoryEntry {
   status: string;
   completed_at: string | null;
 }
+interface JobMatchHistoryEntry {
+  analysis_id: number;
+  job_ad_id: number;
+  resume_id: number;
+  date: string;
+  role: string;
+  company: string;
+  matchScore: number | null;
+  inputMethod: string;
+}
 interface ActivityState {
   resumeReviews: ResumeHistoryEntry[];
   interviewSessions: InterviewHistoryEntry[];
+  jobMatches: JobMatchHistoryEntry[];
   currentInterviewAnswered: number;
   currentInterviewTotal: number;
 }
 const EMPTY_ACTIVITY: ActivityState = {
   resumeReviews: [],
   interviewSessions: [],
+  jobMatches: [],
   currentInterviewAnswered: 0,
   currentInterviewTotal: 0,
 };
@@ -4338,13 +6441,14 @@ useEffect(() => {
           data.message || "Unable to retrieve progress information."
         );
       }
-
-      setActivity({
-        resumeReviews: data.resumeReviews ?? [],
-        interviewSessions: data.interviewSessions ?? [],
-        currentInterviewAnswered: 0,
-        currentInterviewTotal: 0,
-      });
+setActivity({
+  resumeReviews: data.resumeReviews ?? [],
+  interviewSessions: data.interviewSessions ?? [],
+  jobMatches: data.jobMatches ?? [],
+  currentInterviewAnswered: 0,
+  currentInterviewTotal: 0,
+});
+      
     } catch (error) {
   console.error("Unable to load dashboard activity:", error);
   setActivityError(
@@ -4457,9 +6561,16 @@ useEffect(() => {
 
 
 const completeInterviewSession = async (
-  sessionStatus: "completed" | "ended_early" = "completed"
+  sessionStatus: "completed" | "ended_early" = "completed",
+  answeredCount: number = completedQs
 ) => {
-  setInterviewEndStatus(sessionStatus);
+  const actualStatus: "completed" | "ended_early" =
+    sessionStatus === "ended_early" ||
+    answeredCount < interviewConfig.count
+      ? "ended_early"
+      : "completed";
+
+  setInterviewEndStatus(actualStatus);
 
   if (!interviewSessionId) {
     console.error("No active interview session ID found.");
@@ -4472,13 +6583,14 @@ const completeInterviewSession = async (
       "http://localhost:8000/api/interview-complete.php",
       {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-  session_id: interviewSessionId,
-  session_status: sessionStatus,
-}),
+          session_id: interviewSessionId,
+          session_status: actualStatus,
+        }),
       }
     );
 
@@ -4515,7 +6627,7 @@ await new Promise<void>((resolve) => {
 });
 
 const feedbackResponse = await fetch(
-  "http://localhost:8000/api/interview-feedback.php",
+"http:" + "//" + "localhost:8000/api/interview-feedback.php",
   {
     method: "POST",
     credentials: "include",
@@ -5009,7 +7121,7 @@ credentials: "include",
 
     const next = qIndex + 1;
 if (next >= interviewConfig.count) {
-  completeInterviewSession();
+  completeInterviewSession("completed", newCompleted);
 }
 else {
   setQIndex(next);
