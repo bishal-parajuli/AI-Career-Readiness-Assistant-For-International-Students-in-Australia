@@ -2875,7 +2875,7 @@ const handleFileSelect = () => {
                 </p>
 
                 <span className="inline-flex rounded-full border border-indigo-100 bg-white px-4 py-2 text-xs font-medium text-indigo-700">
-                  DOCX supported · PDF text extraction not yet supported
+                  PDF and DOCX resumes supported (maximum 5 MB).
                 </span>
               </>
             )}
@@ -2889,8 +2889,7 @@ const handleFileSelect = () => {
           )}
 
           <p className="mt-4 text-xs leading-relaxed text-slate-500">
-            DOCX files are processed automatically. For PDF resumes, use the
-            "Paste Resume Text" option in the current MVP.
+            PDF and DOCX resumes are processed automatically. For scanned or image-only PDFs, use the "Paste Resume Text" option.
           </p>
         </div>
       ) : (
