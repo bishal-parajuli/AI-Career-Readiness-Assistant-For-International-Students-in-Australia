@@ -150,7 +150,7 @@ function SidebarContents({ active, onNav, userId, userName, userEmail, onLogout,
 
   try {
     const response = await fetch(
-      "http://localhost:8000/api/update-profile.php",
+      "/api/update-profile.php",
       {
         method: "POST",
   credentials: "include",
@@ -214,7 +214,7 @@ function SidebarContents({ active, onNav, userId, userName, userEmail, onLogout,
 
   try {
     const response = await fetch(
-      "http://localhost:8000/api/change-password.php",
+      "/api/change-password.php",
       {
         method: "POST",
         credentials: "include",
