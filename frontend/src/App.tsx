@@ -1163,7 +1163,7 @@ const handleForgotPassword = async () => {
 
   try {
     const response = await fetch(
-      "http://localhost:8000/api/forgot-password.php",
+      "/api/forgot-password.php",
       {
         method: "POST",
         headers: {
@@ -1205,7 +1205,7 @@ const handleForgotPassword = async () => {
     setSiLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/login.php", {
+      const response = await fetch("/api/login.php", {
         method: "POST",
 credentials: "include",
         headers: {
@@ -1293,7 +1293,7 @@ if (Object.keys(errors).length > 0) {
 setSuLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/register.php", {
+      const response = await fetch("/api/register.php", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -3029,7 +3029,7 @@ const handleFileSelect = () => {
       formData.append("resume", selectedFile);
 
       const response = await fetch(
-        "http://localhost:8000/api/resume-upload.php",
+        "/api/resume-upload.php",
         {
           method: "POST",
         credentials: "include",
@@ -4780,7 +4780,7 @@ function ProgressScreen({ userId }: { userId: number }) {
         setError("");
 
         const response = await fetch(
-          "http://localhost:8000/api/user-progress.php",
+          "/api/user-progress.php",
           { credentials: "include" }
         );
 
@@ -5186,7 +5186,7 @@ function JobMatchInputScreen({
       try {
 
 const response = await fetch(
-  "http://localhost:8000/api/user-resumes.php",
+  "/api/user-resumes.php",
   {
     credentials: "include",
   }
@@ -6336,9 +6336,10 @@ const location = useLocation();
   }
 
   try {
-        const response = await fetch("http://localhost:8000/api/me.php", {
-          credentials: "include",
-        });
+        const response = await fetch("/api/me.php", {
+  credentials: "include",
+  signal: AbortSignal.timeout(10000),
+});
 
         if (!response.ok) return;
 
@@ -6429,7 +6430,7 @@ useEffect(() => {
 
   const loadPersistedActivity = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/user-progress.php", {
+      const response = await fetch("/api/user-progress.php", {
           credentials: "include",
         });
 
@@ -6579,7 +6580,7 @@ const completeInterviewSession = async (
 
   try {
     const response = await fetch(
-      "http://localhost:8000/api/interview-complete.php",
+      "/api/interview-complete.php",
       {
         method: "POST",
         credentials: "include",
@@ -6626,7 +6627,7 @@ await new Promise<void>((resolve) => {
 });
 
 const feedbackResponse = await fetch(
-"http:" + "//" + "localhost:8000/api/interview-feedback.php",
+"/api/interview-feedback.php",
   {
     method: "POST",
     credentials: "include",
@@ -6696,21 +6697,39 @@ go("interview-summary");
   if (screen === "reset-password") {
   return <ResetPasswordScreen />;
 }
+return (
+  <div className="font-sans bg-[#f8fafc] min-h-screen">
 
-  return (
-    <div className="font-sans bg-[#f8fafc] min-h-screen">
-      {/* Landing / Auth / Onboarding — no sidebar */}
-      {screen === "landing" && <LandingScreen onStart={() => go("auth")} onLearn={() => go("auth")} />}
-      {screen === "auth" && (
-       <AuthScreen
-  onSuccess={(id, name, email, isNew) => {
-    resetActivity();
-    setUserId(id);
-    setUserName(name);
-    setUserEmail(email);
-    go(isNew ? "onboarding" : "dashboard");
-  }}
-/>
+    {/* Landing / Auth / Onboarding — no sidebar */}
+
+    {screen === "landing" && (
+      <LandingScreen
+        onStart={() => go("auth")}
+        onLearn={() => go("auth")}
+      />
+    )}
+{screen === "auth" && (
+  <>
+    <div className="absolute top-5 left-5 z-10">
+      <button
+        type="button"
+        onClick={() => go("landing")}
+        className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm border border-slate-200 hover:bg-slate-50 transition-colors"
+      >
+        ← Back to Home
+      </button>
+    </div>
+
+    <AuthScreen
+      onSuccess={(id, name, email, isNew) => {
+        resetActivity();
+        setUserId(id);
+        setUserName(name);
+        setUserEmail(email);
+        go(isNew ? "onboarding" : "dashboard");
+      }}
+    />
+  </>
       )}
       {screen === "onboarding" && <OnboardingScreen onDone={(name) => { setUserName(name); go("dashboard"); }} />}
 
@@ -6725,7 +6744,7 @@ go("interview-summary");
             userEmail={userEmail}
         onLogout={async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/logout.php", {
+    const response = await fetch("/api/logout.php", {
       method: "POST",
       credentials: "include",
     });
@@ -6793,7 +6812,7 @@ setResumeFeedback(null);
 go("resume-analysing");
 
 try {
-    const response = await fetch("http://localhost:8000/api/resume.php", {
+    const response = await fetch("/api/resume.php", {
       method: "POST",
 credentials: "include",
       headers: {
@@ -6818,7 +6837,7 @@ credentials: "include",
 
     console.log("Resume stored successfully:", data.resume_id);
 
-    const feedbackResponse = await fetch("http://localhost:8000/api/resume-feedback.php", {
+    const feedbackResponse = await fetch("/api/resume-feedback.php", {
   method: "POST",
 credentials: "include",
   headers: {
@@ -6924,7 +6943,7 @@ go("resume-results");
         }
     // 1. Create the interview session in the database.
     const sessionResponse = await fetch(
-      "http://localhost:8000/api/interview-session.php",
+      "/api/interview-session.php",
       {
         method: "POST",
 credentials: "include",
@@ -6968,7 +6987,7 @@ await new Promise<void>((resolve) => {
 // 3. Generate interview questions using the backend OpenAI service.
 const aiQuestionsResponse = await fetch(
    
-  "http://localhost:8000/api/interview-generate.php",
+  "/api/interview-generate.php",
   {
     method: "POST",
 credentials: "include",
@@ -6996,7 +7015,7 @@ const generatedQuestions: IQ[] = aiQuestionsData.questions;
 
 // 4. Store the validated AI-generated questions against the real database session.
     const questionsResponse = await fetch(
-      "http://localhost:8000/api/interview-questions.php",
+      "/api/interview-questions.php",
       {
         method: "POST",
 credentials: "include",
@@ -7077,7 +7096,7 @@ credentials: "include",
     }
 
     const response = await fetch(
-      "http://localhost:8000/api/interview-response.php",
+      "/api/interview-response.php",
       {
         method: "POST",
         credentials: "include", 
@@ -7219,7 +7238,7 @@ onEnd={() => completeInterviewSession("ended_early")}
     onAnalyse={async (jobText, jobUrl, resumeId) => {
       try {
         const response = await fetch(
-          "http://localhost:8000/api/job-advertisement.php",
+          "/api/job-advertisement.php",
           {
             method: "POST",
 credentials: "include",
@@ -7287,7 +7306,7 @@ credentials: "include",
 
       try {
         const response = await fetch(
-          "http://localhost:8000/api/job-match-analysis.php",
+          "/api/job-match-analysis.php",
           {
             method: "POST",
             credentials: "include",
