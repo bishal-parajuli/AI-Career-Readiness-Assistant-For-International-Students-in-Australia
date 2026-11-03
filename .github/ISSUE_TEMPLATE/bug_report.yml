@@ -1,0 +1,55 @@
+
+name: Bug Report
+description: Report a defect found during Week 8 testing
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: input
+    id: test_case
+    attributes:
+      label: Test Case ID
+      placeholder: "FT-01, IT-01, SC-01"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Test Environment
+      placeholder: "Local, Cloudflare URL, mobile, desktop"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      placeholder: "Describe how to reproduce the issue"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Result
+    validations:
+      required: true
