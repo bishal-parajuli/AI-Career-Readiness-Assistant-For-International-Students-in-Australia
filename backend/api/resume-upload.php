@@ -119,15 +119,80 @@ if ($extension === 'docx') {
     ]);
     exit;
 }
-
 if ($extension === 'pdf') {
-    http_response_code(501);
+    $signature = file_get_contents($file['tmp_name'], false, null, 0, 5);
 
-    echo json_encode([
-        'status' => 'error',
-        'code' => 'PDF_EXTRACTION_NOT_AVAILABLE',
-        'message' => 'PDF text extraction is not available in the current MVP. Please upload a DOCX file or use the Paste resume text option.'
-    ]);
+    if ($signature !== '%PDF-') {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'The uploaded file is not a valid PDF.'
+        ]);
+        exit;
+    }
 
-    exit;
+    $pdfExtractor = '/opt/homebrew/bin/pdftotext';
+
+    if (!is_executable($pdfExtractor)) {
+        http_response_code(503);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'PDF processing is temporarily unavailable.'
+        ]);
+        exit;
+    }
+
+    $outputFile = tempnam(sys_get_temp_dir(), 'resume_pdf_');
+
+    if ($outputFile === false) {
+        http_response_code(500);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Could not prepare PDF extraction.'
+        ]);
+        exit;
+    }
+
+    try {
+        $command = escapeshellarg($pdfExtractor)
+            . ' -enc UTF-8 '
+            . escapeshellarg($file['tmp_name'])
+            . ' '
+            . escapeshellarg($outputFile)
+            . ' 2>/dev/null';
+
+        exec($command, $unusedOutput, $exitCode);
+
+        if ($exitCode !== 0) {
+            http_response_code(400);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'The PDF file could not be read.'
+            ]);
+            exit;
+        }
+
+        $resumeText = trim(file_get_contents($outputFile) ?: '');
+
+        if ($resumeText === '') {
+            http_response_code(400);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'No readable text was found. Scanned PDFs are not supported.'
+            ]);
+            exit;
+        }
+
+        echo json_encode([
+            'status' => 'success',
+            'file_name' => basename($file['name']),
+            'resume_text' => $resumeText
+        ]);
+        exit;
+
+    } finally {
+        if (is_file($outputFile)) {
+            unlink($outputFile);
+        }
+    }
 }
